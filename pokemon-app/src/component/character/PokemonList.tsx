@@ -59,6 +59,7 @@ const PokemonDetail: React.FC<DetailPoke> = (props) => {
           </section>
           <img src="skill_1.png" style={{height: 60, width: 60}} alt="pokemon" className="detail-img" />
           <img src="skill_2.png" style={{height: 100, width: 100}} alt="pokemon" className="detail-img" />
+          <img src="skill_3.png" alt="pokemon" className="detail-img" />
         </>
       )}
     </div>
