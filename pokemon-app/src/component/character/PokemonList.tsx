@@ -4,26 +4,60 @@ import { Link } from "react-router-dom";
 import { Pokemon, IPokemonDetail } from "../../interface";
 import "./pokemon.css";
 
+// interface DetailPoke {
+//   viewDetail: Detail;
+//   setDetail: React.Dispatch<React.SetStateAction<Detail>>;
+//   abilities:
+//     | {
+//         name: string;
+//         ability: string;
+//       }[]
+//     | undefined;
+//   name: string;
+//   id: number;
+//   image: string;
+// }
 interface DetailPoke {
-  viewDetail: Detail;
+  detail: Detail;
   setDetail: React.Dispatch<React.SetStateAction<Detail>>;
-  abilities:
-    | {
-        name: string;
-        ability: string;
-      }[]
-    | undefined;
-  name: string;
   id: number;
-  image: string;
+}
+
+interface PokemonFight {
+  name: string;
+  sprites: {
+    front_default: string;
+    back_default: string;
+    front_shiny: string;
+  };
 }
 
 const PokemonDetail: React.FC<DetailPoke> = (props) => {
-  const { name, id, image, abilities, viewDetail, setDetail } = props;
-  const [isSelected, setSelected] = useState(false);
+  const { id, detail, setDetail } = props;
+  const [poke, setPoke] = useState<any>();
+  const [pokeList, setPokeList] = useState<any[]>([]);
+  let player1: any = JSON.parse(localStorage.player1);
+  // useEffect(() => {
+  //   console.log(id);
+  //   console.log(detail);
+  // }, [id]);
+
+  const getDetailPoke = async () => {
+    const res = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon/${detail.id}`
+    );
+    setPoke(res.data);
+    setPokeList(res.data)
+    localStorage.setItem("player1", JSON.stringify(res.data))
+  };
   useEffect(() => {
-    setSelected(id === viewDetail?.id);
-  }, [viewDetail]);
+      getDetailPoke();
+  }, []);
+
+  useEffect(() => {
+    console.log(poke);
+    console.log(pokeList)
+  }, [poke]);
 
   const closeDetail = () => {
     setDetail({
@@ -31,88 +65,81 @@ const PokemonDetail: React.FC<DetailPoke> = (props) => {
       isOpened: false,
     });
   };
+
   return (
-    <div className="">
-      {isSelected ? (
-        <section className="pokemon-list-detailed">
-          <div className="detail-container">
-            <p className="detail-close" onClick={closeDetail}>
-              X
-            </p>
-            <div className="detail-info">
-              <img src={image} alt="pokemon" className="detail-img" />
-              <p className="detail-name"> {name}</p>
-            </div>
-            <div className="detail-skill">
-              <p className="detail-ability"> Ablities: </p>
-              {abilities?.map((ab: any) => {
-                return <div className=""> {ab.ability.name}</div>;
-              })}
-            </div>
+    <>
+      {/* {console.log(poke)} */}
+      {console.log(JSON.parse(localStorage.player1))}
+      {console.log(player1.name)}
+      <section className="pokemon-list-detailed">
+        <div className="detail-container">
+          <h1 className="detail-close" onClick={closeDetail}>
+            X
+          </h1>
+          <h1 className="detail-name">
+              {/* {poke.length === 0 ? null : poke[0].name} */}
+              {poke === undefined ? null : poke.name}
+            </h1>
+          <div className="detail-info">
+            <img
+              src={poke === undefined ? null : poke.sprites.front_default}
+              // src={poke.length === 0 ? null : poke[0].sprites.front_default}
+              alt="pokemon"
+              className="detail-img"
+              style={{height: 210}}
+            />
+
           </div>
-        </section>
-      ) : (
-        <>
-          <section className="pokemon-list-container">
-            <p className="pokemon-name"> {name} </p>
-            <img src={image} alt="pokemon" />
-          </section>
-          <img src="skill_1.png" style={{height: 60, width: 60}} alt="pokemon" className="detail-img" />
-          <img src="skill_2.png" style={{height: 100, width: 100}} alt="pokemon" className="detail-img" />
-          <img src="skill_3.png" alt="pokemon" className="detail-img" />
-        </>
-      )}
-    </div>
+        </div>
+      </section>
+    </>
   );
 };
 
 interface Props {
   pokemons: IPokemonDetail[];
-  viewDetail: Detail;
+  detail: Detail;
   setDetail: React.Dispatch<React.SetStateAction<Detail>>;
 }
 
 const PokemonCollection: React.FC<Props> = (props) => {
-  const { pokemons, viewDetail, setDetail } = props;
+  const { pokemons, detail, setDetail } = props;
+  const [idPoke, setIdPoke] = useState<number>(detail.id);
+
   const selectPokemon = (id: number) => {
-    if (!viewDetail.isOpened) {
+    setIdPoke(id);
+    if (!detail.isOpened) {
       setDetail({
         id: id,
         isOpened: true,
       });
     }
   };
-  console.log(pokemons);
   return (
     <>
-      <section
-        className={
-          viewDetail.isOpened
-            ? "collection-container-active"
-            : "collection-container"
-        }
-      >
-        {viewDetail.isOpened ? (
-          <div className="overlay"></div>
-        ) : (
-          <div className=""></div>
-        )}
-        {pokemons.map((pokemon) => {
-          return (
-            <div onClick={() => selectPokemon(pokemon.id)}>
-              <PokemonDetail
-                viewDetail={viewDetail}
-                setDetail={setDetail}
-                key={pokemon.id}
-                name={pokemon.name}
-                id={pokemon.id}
-                abilities={pokemon.abilities}
-                image={pokemon.sprites.front_default}
-              />
-            </div>
-          );
-        })}
-      </section>
+      {detail.isOpened === false ? (
+        <section className="collection-container">
+          {pokemons.map((pokemon) => {
+            return (
+              <>
+                <section
+                  className="pokemon-list-container"
+                  onClick={() => {
+                    selectPokemon(pokemon.id);
+                  }}
+                >
+                  <p className="pokemon-name"> {pokemon.name} </p>
+                  <img src={pokemon.sprites.front_default} alt="pokemon" />
+                </section>
+              </>
+            );
+          })}
+        </section>
+      ) : (
+        <div className="overlay custom-background">
+          <PokemonDetail detail={detail} setDetail={setDetail} id={idPoke} />
+        </div>
+      )}
     </>
   );
 };
@@ -131,10 +158,8 @@ const PokemonList: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [nextUrl, setNextUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [viewDetail, setDetail] = useState<Detail>({
-    id: 0,
-    isOpened: false,
-  });
+  const [detail, setDetail] = useState<Detail>({ id: 0, isOpened: false });
+
   useEffect(() => {
     const getPokemon = async () => {
       const res = await axios.get(
@@ -162,32 +187,39 @@ const PokemonList: React.FC = () => {
       );
       setPokemons((p) => [...p, poke.data]);
       setLoading(false);
-      console.log(pokemons);
     });
-    console.log(nextUrl);
-    console.log(res);
   };
 
   return (
     <>
-      <Link to="/location" style={{ color: "white" }}>
-        To Location
-      </Link>
       <div className="App">
         <div className="container">
-          <header className="pokemon-header"> Pokemon</header>
+          {detail.isOpened === false ? (
+            <>
+              <header className="pokemon-header"> Pokemon</header>
+              <Link to="/location" style={{ color: "white" }}>
+                To Location
+              </Link>
 
-          <PokemonCollection
-            pokemons={pokemons}
-            viewDetail={viewDetail}
-            setDetail={setDetail}
-          />
-          {!viewDetail.isOpened && (
-            <div className="btn">
-              <button onClick={nextPage}>
-                {loading ? "Loading..." : "Load more"}
-              </button>
-            </div>
+              <PokemonCollection
+                pokemons={pokemons}
+                detail={detail}
+                setDetail={setDetail}
+              />
+              {!detail.isOpened && (
+                <div className="btn">
+                  <button onClick={nextPage}>
+                    {loading ? "Loading..." : "Load more"}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <PokemonCollection
+              pokemons={pokemons}
+              detail={detail}
+              setDetail={setDetail}
+            />
           )}
         </div>
       </div>

@@ -33,3 +33,4 @@ export interface VersionDetail extends ILocation {
     url: string;
   }[];
 }
+

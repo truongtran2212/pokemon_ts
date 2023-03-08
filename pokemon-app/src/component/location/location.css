@@ -1,0 +1,124 @@
+.collection-container {
+    color: #3d405b;
+    margin-top: 2rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .custom-background {
+    background-image: url("https://img.freepik.com/free-vector/space-game-background-neon-night-alien-landscape_107791-1624.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .collection-container-active {
+    overflow-y: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .overlay {
+    width: 100vw;
+    height: 100vh;
+  }
+  .detail-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    
+  }
+  .detail-name {
+    color: #3d405b;
+    font-weight: 700;
+  }
+  .detail-info {
+    background-color: #f2cc8f;
+    background-image: linear-gradient(0deg, #f2cc8f 0%, #f8f3d9 100%);
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+  }
+  .detail-abitlity {
+    color: #3d405b;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  .detail-skill {
+    align-self: flex-start;
+    flex-wrap: wrap;
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem;
+    text-align: start;
+  }
+  .detail-close {
+    cursor: pointer;
+    margin: 0.5rem 1rem 0 auto;
+    font-size: 1.5rem;
+  }
+  .pokemon-name {
+    margin-top: 0.5rem;
+  }
+
+  .pokemon-list-detailed1 {
+    background-color: #f4f1de;
+    /* background-color: rgba(0,0,0,0); */
+    position: absolute;
+    text-align: center;
+    width: 270px;
+    height: 300px;
+    top: 5%;
+    left: 70%;
+    border-radius: 12px;
+    display: flex;
+    
+  }
+  
+  .pokemon-list-detailed2 {
+    background-color: #f4f1de;
+    /* background-color: rgba(0,0,0,0); */
+    position: absolute;
+    text-align: center;
+    width: 270px;
+    height: 300px;
+    top: 60%;
+    left: 20%;
+    border-radius: 12px;
+    display: flex;
+  }
+  
+  .btn {
+    width: 50%;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  button {
+    cursor: pointer;
+    background-color: #81b29a;
+    color: #3d405b;
+    padding: 0.5rem;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    border: none;
+    transition: 200ms ease-in-out;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #61997e;
+    color: #3d405b;
+    padding: 0.5rem;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    border: none;
+  }
+  

@@ -1,7 +1,10 @@
+import { PlusCircleOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ILocation } from "../../interface";
+import { ILocation, Pokemon } from "../../interface";
+import "./location.css";
+import PokemonList2 from "../character/PokemonList2";
 
 interface Locations {
   name: string;
@@ -97,52 +100,19 @@ function Location() {
   const [locationList, setLocationList] = useState<ILocation[]>([]);
   const [nextUrl, setNextUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [viewDetail, setDetail] = useState<Detail>({
+  const [isOpenPlayer1, setIsopenPlayer1] = useState<Detail>({
     id: 0,
     isOpened: false,
   });
-
-  const getLocationList = async () => {
-    const res = await axios.get(
-      "https://pokeapi.co/api/v2/location?limit=20&offset=20"
-    );
-    setNextUrl(res.data.next);
-    res.data.result.forEach(async (location: Locations) => {
-      const locat = await axios.get(
-        `https://pokeapi.co/api/v2/location/${location.name}`
-      );
-      setLocationList((loca) => [...loca, locat.data]);
-      setLoading(false);
-    });
-  };
-
-  const nextPage = async () => {
-    setLoading(true);
-    let res = await axios.get(nextUrl);
-    setNextUrl(res.data.next);
-    res.data.results.forEach(async (location: Locations) => {
-      const loca = await axios.get(
-        `https://pokeapi.co/api/v2/location/${location.name}`
-      );
-      setLocationList((p) => [...p, loca.data]);
-      setLoading(false);
-    });
-    console.log(locationList);
-  };
-
-  useEffect(() => {
-    getLocationList();
-  }, []);
-
+  
   return (
     <>
       <div className="custom-background">
         <div className="container">
-          <header className="pokemon-header"> Pokemon</header>
           <Link to="/" style={{ color: "white" }}>
             Back to PokemonList
           </Link>
-          <LocationCollection
+          {/* <LocationCollection
             locationList={locationList}
             viewDetail={viewDetail}
             setDetail={setDetail}
@@ -153,7 +123,51 @@ function Location() {
                 {loading ? "Loading..." : "Load more"}
               </button>
             </div>
-          )}
+          )} */}
+
+          <section className="pokemon-list-detailed1">
+            <div className="detail-container">
+              <Link to="/listPoke">
+                <PlusCircleOutlined style={{ fontSize: 100, color: "gray" }} />
+              </Link>
+              {/* <h1 className="detail-close" onClick={closeDetail}>
+                X
+              </h1>
+              <h1 className="detail-name">
+                {poke === undefined ? null : poke.name}
+              </h1>
+              <div className="detail-info">
+                <img
+                  src={poke === undefined ? null : poke.sprites.front_default}
+                  alt="pokemon"
+                  className="detail-img"
+                  style={{ height: 210 }}
+                />
+              </div> */}
+            </div>
+          </section>
+          <section className="pokemon-list-detailed2">
+            <div className="detail-container">
+              <Link to="/">
+                {" "}
+                <PlusCircleOutlined style={{ fontSize: 100, color: "gray" }} />
+              </Link>
+              {/* <h1 className="detail-close" onClick={closeDetail}>
+                X
+              </h1>
+              <h1 className="detail-name">
+                {poke === undefined ? null : poke.name}
+              </h1>
+              <div className="detail-info">
+                <img
+                  src={poke === undefined ? null : poke.sprites.front_default}
+                  alt="pokemon"
+                  className="detail-img"
+                  style={{ height: 210 }}
+                />
+              </div> */}
+            </div>
+          </section>
         </div>
       </div>
     </>
