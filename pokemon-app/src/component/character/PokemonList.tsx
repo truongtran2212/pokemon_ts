@@ -35,19 +35,13 @@ interface PokemonFight {
 const PokemonDetail: React.FC<DetailPoke> = (props) => {
   const { id, detail, setDetail } = props;
   const [poke, setPoke] = useState<any>();
-  const [pokeList, setPokeList] = useState<any[]>([]);
   let player1: any = JSON.parse(localStorage.player1);
-  // useEffect(() => {
-  //   console.log(id);
-  //   console.log(detail);
-  // }, [id]);
 
   const getDetailPoke = async () => {
     const res = await axios.get(
       `https://pokeapi.co/api/v2/pokemon/${detail.id}`
     );
     setPoke(res.data);
-    setPokeList(res.data)
     localStorage.setItem("player1", JSON.stringify(res.data))
   };
   useEffect(() => {
@@ -56,7 +50,6 @@ const PokemonDetail: React.FC<DetailPoke> = (props) => {
 
   useEffect(() => {
     console.log(poke);
-    console.log(pokeList)
   }, [poke]);
 
   const closeDetail = () => {

@@ -34,3 +34,8 @@ export interface VersionDetail extends ILocation {
   }[];
 }
 
+export interface Detail {
+  id: number;
+  isOpened: boolean;
+}
+

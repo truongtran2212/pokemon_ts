@@ -2,8 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { IPokemonDetail, Pokemon } from "../../interface";
-import Location, { Detail } from "../location/Location";
+import { Detail, IPokemonDetail, Pokemon } from "../../interface";
 import "./pokemon.css";
 
 interface Props {
@@ -15,16 +14,16 @@ interface Props {
 const PokemonCollection: React.FC<Props> = (props) => {
   const { pokemons, detail, setDetail } = props;
   const [idPoke, setIdPoke] = useState<number>(detail.id);
+  const selectPokemon = async (id: number) => {
+    const res =  await axios.get(
+      `https://pokeapi.co/api/v2/pokemon/${id}`
+    );
 
-  const selectPokemon = (id: number) => {
-    setIdPoke(id);
-    if (!detail.isOpened) {
-      setDetail({
-        id: id,
-        isOpened: true,
-      });
-    }
+    localStorage.setItem("player1", JSON.stringify(res.data))
+    window.location.assign("http://localhost:3000")
+
   };
+
   return (
     <>
       {detail.isOpened === false ? (
@@ -32,8 +31,8 @@ const PokemonCollection: React.FC<Props> = (props) => {
           {pokemons.map((pokemon) => {
             return (
               <>
-                <Link to="/location">
-                  <section
+                {/* <a href="http://localhost:3000"> */}
+                  <div
                     className="pokemon-list-container"
                     onClick={() => {
                       selectPokemon(pokemon.id);
@@ -41,8 +40,8 @@ const PokemonCollection: React.FC<Props> = (props) => {
                   >
                     <p className="pokemon-name"> {pokemon.name} </p>
                     <img src={pokemon.sprites.front_default} alt="pokemon" />
-                  </section>
-                </Link>
+                  </div>
+                {/* </a> */}
               </>
             );
           })}
@@ -61,7 +60,7 @@ interface Pokemons {
   url: string;
 }
 
-const PokemonList2: React.FC = () => {
+const ChoosePlayer1: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [nextUrl, setNextUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -127,4 +126,4 @@ const PokemonList2: React.FC = () => {
   );
 };
 
-export default PokemonList2;
+export default ChoosePlayer1;
