@@ -17,9 +17,11 @@ function Location() {
     ? JSON.parse(localStorage.player2)
     : null;
 
-  const fight = () => {
-   
+  const fightP2 = () => {
     setHpPlayer1(hpPlayer1 - (Math.floor(Math.random() * 20) + 10));
+  };
+  const fightP1 = () => {
+    setHpPlayer2(hpPlayer2 - (Math.floor(Math.random() * 20) + 10));
   };
 
   useEffect(() => {
@@ -27,6 +29,12 @@ function Location() {
       setHpPlayer1(0);
     }
   }, [hpPlayer1]);
+
+  useEffect(() => {
+    if (hpPlayer2 <= 0) {
+      setHpPlayer2(0);
+    }
+  }, [hpPlayer2]);
 
   return (
     <>
@@ -50,22 +58,6 @@ function Location() {
               </div>
             ) : (
               <>
-                <div className="meter animate">
-                  <span
-                    style={{
-                      width: `${hpPlayer1}%`,
-                      borderRadius: 25,
-                      backgroundColor:
-                        hpPlayer1 <= 30
-                          ? "red"
-                          : hpPlayer1 <= 65
-                          ? "rgb(225, 235, 39)"
-                          : "rgb(43, 194, 83)",
-                    }}
-                  >
-                    <span></span>
-                  </span>
-                </div>
                 <div className="detail-player">
                   {!player1 ? (
                     <Link to="/choosePlayer1">
@@ -75,16 +67,51 @@ function Location() {
                     </Link>
                   ) : (
                     <>
-                      <h1 className="detail-name">{player1.name}</h1>
-                      <div className="">
-                        <img
-                          // src={player1.sprites.front_default}
-                          src={player1.sprites.other.home.front_default}
-                          // src={player1.sprites.other.home.front_shiny}
-                          alt="pokemon"
-                          className="detail-img"
-                          style={{ height: 210 }}
-                        />
+                      <div style={{ display: "flex" }}>
+                        <div>
+                          <div className="meter animate">
+                            <span
+                              style={{
+                                width: `${hpPlayer1}%`,
+                                borderRadius: 25,
+                                backgroundColor:
+                                  hpPlayer1 <= 30
+                                    ? "red"
+                                    : hpPlayer1 <= 65
+                                    ? "rgb(225, 235, 39)"
+                                    : "rgb(43, 194, 83)",
+                              }}
+                            >
+                              <span></span>
+                            </span>
+                          </div>
+                          <h1 className="detail-name">{player1.name}</h1>
+                          <div className="">
+                            <img
+                              // src={player1.sprites.front_default}
+                              src={player1.sprites.other.home.front_default}
+                              // src={player1.sprites.other.home.front_shiny}
+                              alt="pokemon"
+                              className="detail-img"
+                              style={{ height: 150, width: 230 }}
+                            />
+                          </div>
+                        </div>
+                        {hpPlayer1 > 0 ? (
+                          <div style={{ margin: "auto" }}>
+                            <Button
+                              onClick={fightP1}
+                              style={{
+                                borderRadius: "100%",
+                                height: 100,
+                                width: 100,
+                                marginRight: 20,
+                              }}
+                            >
+                              Đánh
+                            </Button>
+                          </div>
+                        ) : null}
                       </div>
                     </>
                   )}
@@ -92,6 +119,7 @@ function Location() {
               </>
             )}
           </section>
+          {hpPlayer2 === 0 ? <NotificationPlayer2 /> : null}
 
           <section
             className="pokemon-player2"
@@ -116,19 +144,21 @@ function Location() {
                 ) : (
                   <>
                     <div style={{ display: "flex" }}>
-                      <div style={{ margin: "auto" }}>
-                        <Button
-                          onClick={fight}
-                          style={{
-                            borderRadius: "100%",
-                            height: 100,
-                            width: 100,
-                            marginRight: 20,
-                          }}
-                        >
-                          Đánh
-                        </Button>
-                      </div>
+                      {hpPlayer2 > 0 ? (
+                        <div style={{ margin: "auto" }}>
+                          <Button
+                            onClick={fightP2}
+                            style={{
+                              borderRadius: "100%",
+                              height: 100,
+                              width: 100,
+                              marginRight: 20,
+                            }}
+                          >
+                            Đánh
+                          </Button>
+                        </div>
+                      ) : null}
                       <div>
                         <div className="meter animate">
                           <span
@@ -162,20 +192,19 @@ function Location() {
               </div>
             )}
           </section>
-          {hpPlayer1 === 0 ? <Notification /> : null}
-          
+          {hpPlayer1 === 0 ? <NotificationPlayer1 /> : null}
         </div>
       </div>
     </>
   );
 }
 
-const Notification = () => {
+const NotificationPlayer1 = () => {
   return (
     <>
       <div
         style={{
-          height: 100,
+          height: 80,
           width: 200,
           backgroundColor: "white",
           marginTop: "28%",
@@ -189,6 +218,30 @@ const Notification = () => {
         }}
       >
         <h3 style={{ margin: "auto" }}>TUỔI L**</h3>
+      </div>
+    </>
+  );
+};
+
+const NotificationPlayer2 = () => {
+  return (
+    <>
+      <div
+        style={{
+          height: 80,
+          width: 200,
+          backgroundColor: "white",
+          marginTop: "2%",
+          marginLeft: "31%",
+          borderRadius: 30,
+          display: "flex",
+          opacity: 0.9,
+          fontFamily: "Verdana",
+          border: "2px solid blue",
+          boxShadow: "5px 5px 5px #888",
+        }}
+      >
+        <h3 style={{ margin: "auto" }}>Đ** ĐỦ TUỔI</h3>
       </div>
     </>
   );
