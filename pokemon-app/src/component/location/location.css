@@ -223,6 +223,13 @@ button:hover {
   border-radius: 12px;
   font-size: 1.5rem;
   border: none;
+  width: 60px;
+  height: 60px;
+}
+
+.fight-icon {
+  width: 45px;
+   height: 45px;
 }
 
 

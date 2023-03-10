@@ -15,25 +15,6 @@ export interface IPokemonDetail extends Pokemon {
   }[];
 }  
 
-export interface ILocation {
-    id: number;
-    name: string;
-    region?: {
-      name:string;
-    }
-    areas?: {
-      name: string;
-    }[];
-}
-
-export interface VersionDetail extends ILocation {
-  rate: number;
-  version?: {
-    name: string;
-    url: string;
-  }[];
-}
-
 export interface Detail {
   id: number;
   isOpened: boolean;

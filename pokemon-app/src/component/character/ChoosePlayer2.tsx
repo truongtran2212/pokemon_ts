@@ -14,14 +14,13 @@ interface Props {
 const PokemonCollection: React.FC<Props> = (props) => {
   const { pokemons, detail, setDetail } = props;
   const selectPokemon = async (id: number) => {
-    const res =  await axios.get(
-      `https://pokeapi.co/api/v2/pokemon/${id}`
-    );
+    const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
 
-    localStorage.setItem("player2", JSON.stringify(res.data))
-    window.location.assign("http://localhost:3000")
-    console.log("player2")
+    localStorage.setItem("player2", JSON.stringify(res.data));
+    window.location.assign("http://localhost:3000");
+    console.log("player2");
   };
+  
 
   return (
     <>
@@ -30,17 +29,15 @@ const PokemonCollection: React.FC<Props> = (props) => {
           {pokemons.map((pokemon) => {
             return (
               <>
-                {/* <a href="http://localhost:3000"> */}
-                  <section
-                    className="pokemon-list-container"
-                    onClick={() => {
-                      selectPokemon(pokemon.id);
-                    }}
-                  >
-                    <p className="pokemon-name"> {pokemon.name} </p>
-                    <img src={pokemon.sprites.front_default} alt="pokemon" />
-                  </section>
-                {/* </a> */}
+                <section
+                  className="pokemon-list-container"
+                  onClick={() => {
+                    selectPokemon(pokemon.id);
+                  }}
+                >
+                  <p className="pokemon-name"> {pokemon.name} </p>
+                  <img src={pokemon.sprites.front_default} alt="pokemon" />
+                </section>
               </>
             );
           })}

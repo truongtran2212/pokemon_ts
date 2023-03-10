@@ -1,11 +1,10 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ILocation, Pokemon } from "../../interface";
 import "./location.css";
-import PokemonList2 from "../character/ChoosePlayer1";
 import { Button } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 
 function Location() {
   const [hpPlayer1, setHpPlayer1] = useState<number>(100);
@@ -27,12 +26,14 @@ function Location() {
   useEffect(() => {
     if (hpPlayer1 <= 0) {
       setHpPlayer1(0);
+      localStorage.removeItem("player1");
     }
   }, [hpPlayer1]);
 
   useEffect(() => {
     if (hpPlayer2 <= 0) {
       setHpPlayer2(0);
+      localStorage.removeItem("player2");
     }
   }, [hpPlayer2]);
 
@@ -85,11 +86,11 @@ function Location() {
                               <span></span>
                             </span>
                           </div>
-                          <h1 className="detail-name">{player1.name}</h1>
+                          <h1 className="detail-name" style={{fontWeight: 500, color: "#fff"}}>{player1.name}</h1>
                           <div className="">
                             <img
-                              // src={player1.sprites.front_default}
-                              src={player1.sprites.other.home.front_default}
+                              src={player1.sprites.front_default}
+                              // src={player1.sprites.other.home.front_default}
                               // src={player1.sprites.other.home.front_shiny}
                               alt="pokemon"
                               className="detail-img"
@@ -108,7 +109,11 @@ function Location() {
                                 marginRight: 20,
                               }}
                             >
-                              Đánh
+                              <img
+                                src="multimedia.png"
+                                className="fight-icon"
+                                alt=""
+                              />
                             </Button>
                           </div>
                         ) : null}
@@ -155,7 +160,11 @@ function Location() {
                               marginRight: 20,
                             }}
                           >
-                            Đánh
+                            <img
+                              src="multimedia.png"
+                              className="fight-icon"
+                              alt=""
+                            />
                           </Button>
                         </div>
                       ) : null}
@@ -176,7 +185,7 @@ function Location() {
                             <span></span>
                           </span>
                         </div>
-                        <h1 className="detail-name">{player2.name}</h1>
+                        <h1 className="detail-name" style={{fontWeight: 500, color: "#fff"}}>{player2.name}</h1>
                         <div className="">
                           <img
                             src={player2.sprites.back_default}

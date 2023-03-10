@@ -31,7 +31,6 @@ const PokemonCollection: React.FC<Props> = (props) => {
           {pokemons.map((pokemon) => {
             return (
               <>
-                {/* <a href="http://localhost:3000"> */}
                   <div
                     className="pokemon-list-container"
                     onClick={() => {

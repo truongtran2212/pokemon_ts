@@ -120,3 +120,25 @@
   display: flex;
   justify-content: space-around;
 }
+
+button {
+  cursor: pointer;
+  background-color: #fff;
+  color: #3d405b;
+  padding: 0.5rem;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  border: none;
+  transition: 200ms ease-in-out;
+}
+button:hover {
+  cursor: pointer;
+  background-color: #bdf5d7;
+  color: #80828a;
+  padding: 0.5rem;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  border: none;
+  width: 135px;
+  height: 45px;
+}
