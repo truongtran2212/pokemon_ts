@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Detail, IPokemonDetail, Pokemon } from "../../interface";
+import { Detail, IPokemonDetail, Pokemon } from "../../../interface";
 import "./pokemon.css";
 
 interface Props {

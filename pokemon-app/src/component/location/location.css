@@ -205,7 +205,7 @@
   margin: 80px auto;
 }
 
-button {
+/* button {
   cursor: pointer;
   background-color: #fff;
   color: #3d405b;
@@ -225,7 +225,7 @@ button:hover {
   border: none;
   width: 60px;
   height: 60px;
-}
+} */
 
 .fight-icon {
   width: 45px;
