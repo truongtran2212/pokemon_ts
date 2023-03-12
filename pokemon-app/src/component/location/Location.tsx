@@ -2,17 +2,16 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./location.css";
-import { Button } from "antd";
-
+import { Button, Col, Row } from "antd";
 
 function Location() {
   const [hpPlayer1, setHpPlayer1] = useState<number>(100);
   const [hpPlayer2, setHpPlayer2] = useState<number>(100);
-  var player1: any = localStorage.getItem("player1")
-    ? JSON.parse(localStorage.player1)
+  var team1: any = localStorage.getItem("team1")
+    ? JSON.parse(localStorage.team1)
     : null;
-  var player2: any = localStorage.getItem("player2")
-    ? JSON.parse(localStorage.player2)
+  var team2: any = localStorage.getItem("team2")
+    ? JSON.parse(localStorage.team2)
     : null;
 
   const fightP2 = () => {
@@ -36,6 +35,10 @@ function Location() {
     }
   }, [hpPlayer2]);
 
+  useEffect(() => {
+    console.log(team1);
+  }, []);
+
   return (
     <>
       <div className="custom-background">
@@ -45,160 +48,159 @@ function Location() {
           </Link>
 
           <section
+            id="custom-back"
             className="pokemon-player1"
-            style={{ backgroundColor: player1 ? "rgba(0,0,0,0)" : "#f4f1de" }}
+            style={{  border: "4px solid #EAE61A", opacity: 0.9}}
           >
-            {!player1 ? (
-              <div className="detail-container">
-                <Link to="/choosePlayer1">
-                  <PlusCircleOutlined
-                    style={{ fontSize: 100, color: "gray" }}
+            <Row style={{border: "2px solid #EAE61A", borderRadius: "12px 12px 0px 0px" }}>
+              <Col span={5}>
+                <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
+                  <img
+                    style={{ width: 40, height: 40, cursor: "pointer" }}
+                    src={team1[1].pokemon.sprites.other.home.front_default}
+                    alt=""
                   />
-                </Link>
-              </div>
-            ) : (
-              <>
-                <div className="detail-player">
-                  {!player1 ? (
-                    <Link to="/choosePlayer1">
-                      <PlusCircleOutlined
-                        style={{ fontSize: 100, color: "gray" }}
-                      />
-                    </Link>
-                  ) : (
-                    <>
-                      <div style={{ display: "flex" }}>
-                        <div>
-                          <div className="meter animate">
-                            <span
-                              style={{
-                                width: `${hpPlayer1}%`,
-                                borderRadius: 25,
-                                backgroundColor:
-                                  hpPlayer1 <= 30
-                                    ? "red"
-                                    : hpPlayer1 <= 65
-                                    ? "rgb(225, 235, 39)"
-                                    : "rgb(43, 194, 83)",
-                              }}
-                            >
-                              <span></span>
-                            </span>
-                          </div>
-                          <h1 className="detail-name" style={{fontWeight: 500, color: "#fff"}}>{player1.name}</h1>
-                          <div className="">
+                </button>
+              </Col>
+              <Col span={5}>
+                <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
+                  <img
+                    style={{ width: 40, height: 40, cursor: "pointer" }}
+                    src={team1[2].pokemon.sprites.other.home.front_default}
+                    alt=""
+                  />
+                </button>
+              </Col>
+            </Row>
+            <div className="detail-player">
+              <div>
+                <div>
+                  <div className="meter animate">
+                    <span
+                      style={{
+                        width: `${hpPlayer1}%`,
+                        borderRadius: 25,
+                        backgroundColor:
+                          hpPlayer1 <= 30
+                            ? "red"
+                            : hpPlayer1 <= 65
+                            ? "rgb(225, 235, 39)"
+                            : "rgb(43, 194, 83)",
+                      }}
+                    >
+                      <span></span>
+                    </span>
+                  </div>
+                  <h1
+                    className="detail-name"
+                    style={{ fontWeight: 500, color: "#fff" }}
+                  >
+                    {team1.name}
+                  </h1>
+                  <div className="" style={{background: "#F9F3FE"}}>
+                    <img
+                      src={team1[0].pokemon.sprites.front_default}
+                      // src={player1.sprites.other.home.front_default}
+                      // src={player1.sprites.other.home.front_shiny}
+                      alt="pokemon"
+                      className="detail-img"
+                      style={{ height: 150, width: 230 }}
+                    />
+                  </div>
+                  <Row style={{border: "2px solid #EAE61A",borderRadius: "0px 0px 12px 12px"}}>
+                      {team1[0].abilities.map((item: any) => (
+                        <>
+                        <Col span={1}></Col>
+                        <Col span={5}>
+                          <button
+                            style={{
+                              borderRadius: "100%",
+                              width: 50,
+                              height: 50,
+                            }}
+                          >
                             <img
-                              src={player1.sprites.front_default}
-                              // src={player1.sprites.other.home.front_default}
-                              // src={player1.sprites.other.home.front_shiny}
-                              alt="pokemon"
-                              className="detail-img"
-                              style={{ height: 150, width: 230 }}
-                            />
-                          </div>
-                        </div>
-                        {hpPlayer1 > 0 ? (
-                          <div style={{ margin: "auto" }}>
-                            <Button
-                              onClick={fightP1}
                               style={{
-                                borderRadius: "100%",
-                                height: 100,
-                                width: 100,
-                                marginRight: 20,
+                                width: 30,
+                                height: 30,
+                                cursor: "pointer",
                               }}
-                            >
-                              <img
-                                src="multimedia.png"
-                                className="fight-icon"
-                                alt=""
-                              />
-                            </Button>
-                          </div>
-                        ) : null}
-                      </div>
-                    </>
-                  )}
+                              src={item.image}
+                              alt=""
+                            />
+                          </button>
+                        </Col>
+                        </>
+                      ))}
+                    </Row>
                 </div>
-              </>
-            )}
+              </div>
+            </div>
           </section>
+
           {hpPlayer2 === 0 ? <NotificationPlayer2 /> : null}
 
           <section
             className="pokemon-player2"
-            style={{ backgroundColor: player2 ? "rgba(0,0,0,0)" : "#f4f1de" }}
+            style={{ backgroundColor: team2 ? "rgba(0,0,0,0)" : "#f4f1de" }}
           >
-            {!player2 ? (
-              <div className="detail-container">
-                <Link to="/choosePlayer2">
-                  <PlusCircleOutlined
-                    style={{ fontSize: 100, color: "gray" }}
+            <Row>
+              <Col span={5}>
+                <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
+                  <img
+                    style={{ width: 40, height: 40, cursor: "pointer" }}
+                    src={team2[1].pokemon.sprites.other.home.front_default}
+                    alt=""
                   />
-                </Link>
-              </div>
-            ) : (
-              <div className="detail-player">
-                {!player2 ? (
-                  <Link to="/choosePlayer2">
-                    <PlusCircleOutlined
-                      style={{ fontSize: 100, color: "gray" }}
+                </button>
+              </Col>
+              <Col span={5}>
+                <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
+                  <img
+                    style={{ width: 40, height: 40, cursor: "pointer" }}
+                    src={team2[2].pokemon.sprites.other.home.front_default}
+                    alt=""
+                  />
+                </button>
+              </Col>
+            </Row>
+            <div className="detail-player">
+              <div style={{ display: "flex" }}>
+                <div>
+                  <div className="meter animate">
+                    <span
+                      style={{
+                        width: `${hpPlayer2}%`,
+                        borderRadius: 25,
+                        backgroundColor:
+                          hpPlayer2 <= 30
+                            ? "red"
+                            : hpPlayer2 <= 65
+                            ? "rgb(225, 235, 39)"
+                            : "rgb(43, 194, 83)",
+                      }}
+                    >
+                      <span></span>
+                    </span>
+                  </div>
+                  <h1
+                    className="detail-name"
+                    style={{ fontWeight: 500, color: "#fff" }}
+                  >
+                    {team2.name}
+                  </h1>
+                  <div className="">
+                    <img
+                      src={team2[0].pokemon.sprites.back_default}
+                      alt="pokemon"
+                      className="detail-img"
+                      style={{ height: 210 }}
                     />
-                  </Link>
-                ) : (
-                  <>
-                    <div style={{ display: "flex" }}>
-                      {hpPlayer2 > 0 ? (
-                        <div style={{ margin: "auto" }}>
-                          <Button
-                            onClick={fightP2}
-                            style={{
-                              borderRadius: "100%",
-                              height: 100,
-                              width: 100,
-                              marginRight: 20,
-                            }}
-                          >
-                            <img
-                              src="multimedia.png"
-                              className="fight-icon"
-                              alt=""
-                            />
-                          </Button>
-                        </div>
-                      ) : null}
-                      <div>
-                        <div className="meter animate">
-                          <span
-                            style={{
-                              width: `${hpPlayer2}%`,
-                              borderRadius: 25,
-                              backgroundColor:
-                                hpPlayer2 <= 30
-                                  ? "red"
-                                  : hpPlayer2 <= 65
-                                  ? "rgb(225, 235, 39)"
-                                  : "rgb(43, 194, 83)",
-                            }}
-                          >
-                            <span></span>
-                          </span>
-                        </div>
-                        <h1 className="detail-name" style={{fontWeight: 500, color: "#fff"}}>{player2.name}</h1>
-                        <div className="">
-                          <img
-                            src={player2.sprites.back_default}
-                            alt="pokemon"
-                            className="detail-img"
-                            style={{ height: 210 }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
+                    
+                  </div>
+                </div>
               </div>
-            )}
+            </div>
           </section>
           {hpPlayer1 === 0 ? <NotificationPlayer1 /> : null}
         </div>

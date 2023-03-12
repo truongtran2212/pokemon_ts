@@ -21,7 +21,6 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  
 }
 
 .collection-container-active {
@@ -42,7 +41,6 @@
   align-items: center;
   margin-top: 30%;
 }
-
 
 .detail-player {
   flex-direction: column;
@@ -90,7 +88,7 @@
   position: absolute;
   text-align: center;
   width: 270px;
-  height: 300px;
+  height: 281px;
   top: 5%;
   left: 70%;
   border-radius: 12px;
@@ -229,7 +227,29 @@ button:hover {
 
 .fight-icon {
   width: 45px;
-   height: 45px;
+  height: 45px;
 }
 
-
+#custom-back {
+  background: linear-gradient(
+      45deg,
+      #efefef 25%,
+      transparent 25%,
+      transparent 75%,
+      #efefef 75%,
+      #efefef
+    ),
+    linear-gradient(
+      45deg,
+      #efefef 25%,
+      transparent 25%,
+      transparent 75%,
+      #efefef 75%,
+      #efefef
+    );
+    box-shadow: 0 1px 3px rgba(0,0,30,.3);
+    background-position: 0 0,10px 10px;
+    background-color: #0a88d3;
+    background-size: 21px 21px;
+    display: block;
+}

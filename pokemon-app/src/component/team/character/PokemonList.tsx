@@ -196,39 +196,47 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
     {
       name: "Hút mana",
       image: "https://cdn-icons-png.flaticon.com/512/5966/5966507.png",
+      damage: Math.floor(Math.random() * 20) + 10,
     },
     {
       name: "Hút máu",
       image:
         "https://rpgmaker.net/media/content/games/4468/screenshots/hp_potion.png",
+      damage: Math.floor(Math.random() * 20) + 10,
     },
     {
       name: "Đóng băng",
       image:
         "https://lh5.googleusercontent.com/-Dz4-xQmywtCjYDy6rzC7ybz3A16YcV852Vprt8dbCGdx4ECkcSXTtY7GgSMe9G2xJA40DH6O5BJuNMt9sTq34TBoLhmHdU1mJDZ0fru3MyAMjem3KMPrX9sTdrTUTkLbdPf4TCP",
+      damage: Math.floor(Math.random() * 20) + 10,
     },
     {
       name: "Sấm sét",
       image:
         "https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/lightning-icon.png",
+      damage: Math.floor(Math.random() * 20) + 10,
     },
     {
       name: "Nước",
       image:
         "https://freepngimg.com/save/25324-tsunami-transparent-image/1615x1238",
+      damage: Math.floor(Math.random() * 20) + 10,
     },
     {
       name: "Lửa",
       image:
         "https://freepngimg.com/save/96182-lohri-orange-fire-flame-for-happy-lyrics/600x876",
+      damage: Math.floor(Math.random() * 20) + 10,
     },
     {
       name: "Động đất",
       image: "https://cdn-icons-png.flaticon.com/512/3426/3426189.png",
+      damage: Math.floor(Math.random() * 20) + 10,
     },
     {
       name: "Gió",
       image: "https://cdn2.iconfinder.com/data/icons/game-1-2/512/wind-512.png",
+      damage: Math.floor(Math.random() * 20) + 10,
     },
   ]);
 
