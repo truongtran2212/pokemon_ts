@@ -5,8 +5,6 @@ import "./location.css";
 import { Button, Col, Row } from "antd";
 
 function Location() {
-  const [hpPlayer1, setHpPlayer1] = useState<number>(100);
-  const [hpPlayer2, setHpPlayer2] = useState<number>(100);
   var team1: any = localStorage.getItem("team1")
     ? JSON.parse(localStorage.team1)
     : null;
@@ -14,58 +12,154 @@ function Location() {
     ? JSON.parse(localStorage.team2)
     : null;
 
-  const fightP2 = () => {
-    setHpPlayer1(hpPlayer1 - (Math.floor(Math.random() * 20) + 10));
-  };
-  const fightP1 = () => {
-    setHpPlayer2(hpPlayer2 - (Math.floor(Math.random() * 20) + 10));
-  };
+  const [listTeam1, setListTeam1] = useState<any>(team1);
+  const [listTeam2, setListTeam2] = useState<any>(team2);
+
+  const [hpTeam1, setHpTeam1] = useState<number>(team1[0].hp);
+  const [hpTeam2, setHpTeam2] = useState<number>(team2[0].hp);
 
   useEffect(() => {
-    if (hpPlayer1 <= 0) {
-      setHpPlayer1(0);
-      localStorage.removeItem("player1");
+    if (hpTeam2 <= 0) {
+      setHpTeam2(0);
+      listTeam2.shift();
+      setListTeam2(listTeam2);
+      setHpTeam2(100);
     }
-  }, [hpPlayer1]);
+    console.log(listTeam2);
+  }, [hpTeam2]);
 
   useEffect(() => {
-    if (hpPlayer2 <= 0) {
-      setHpPlayer2(0);
-      localStorage.removeItem("player2");
+    if (hpTeam1 <= 0) {
+      setHpTeam1(0);
+      listTeam1.shift();
+      setListTeam1(listTeam1);
+      setHpTeam1(100);
     }
-  }, [hpPlayer2]);
+    console.log(listTeam1);
+  }, [hpTeam1]);
 
   useEffect(() => {
     console.log(team1);
   }, []);
 
+  const fight1 = (item: any) => {
+    setHpTeam2(hpTeam2 - item.damage);
+    setTeam1();
+    console.log(item);
+  };
+
+  const fight2 = (item: any) => {
+    setHpTeam1(hpTeam1 - item.damage);
+  };
+
+  const [luckyNumber, setLuckyNumber] = useState<number>(0);
+  useEffect(() => {
+    if (luckyNumber == 1) {
+      setTimeout(setTeam1, 2000);
+    }
+    if (luckyNumber == 2) {
+      setTimeout(setTeam2, 2000);
+    }
+  }, [luckyNumber]);
+
+  const setTeam1 = () => {
+    console.log("Team 1 đánh trước");
+    console.log(listTeam1[0].abilities[Math.floor(Math.random()* 4)].damage);
+    setHpTeam2(hpTeam2 - listTeam1[0].abilities[Math.floor(Math.random()* 4)].damage)
+    setLuckyNumber(2);
+  };
+  const setTeam2 = () => {
+    console.log("Team 2 đánh trước");
+    setHpTeam1(hpTeam1 - listTeam2[0].abilities[Math.floor(Math.random()* 4)].damage)
+    setLuckyNumber(1);
+  };
+
+  const start = () => {
+    setLuckyNumber(Math.floor(Math.random() * 2) + 1);
+  };
+  
+
   return (
     <>
       <div className="custom-background">
         <div className="container1">
-          <section
-            id="custom-back"
-            className="pokemon-player1"
-            style={{  border: "4px solid #EAE61A", opacity: 0.9}}
+          <button
+            type="button"
+            onClick={start}
+            style={{ height: 50, width: 100, cursor: "pointer" }}
           >
-            <Row style={{border: "2px solid #EAE61A", borderRadius: "12px 12px 0px 0px" }}>
+            Bắt đầu
+          </button>
+
+          <section
+            // id="custom-back"
+            className="pokemon-player1"
+            style={{ border: "4px solid #EAE61A", opacity: 0.9 }}
+          >
+            <Row
+              style={{
+                border: "2px solid #EAE61A",
+                borderRadius: "12px 12px 0px 0px",
+              }}
+            >
               <Col span={5}>
-                <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
-                  <img
-                    style={{ width: 40, height: 40, cursor: "pointer" }}
-                    src={team1[1].pokemon.sprites.other.home.front_default}
-                    alt=""
-                  />
-                </button>
+                {listTeam1[1] ? (
+                  <button
+                    style={{
+                      borderRadius: "100%",
+                      width: 50,
+                      height: 45,
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img
+                      style={{ width: 40, height: 40 }}
+                      src={
+                        listTeam1[1].pokemon.sprites.other.home.front_default
+                      }
+                      alt=""
+                    />
+                  </button>
+                ) : (
+                  <button
+                    style={{
+                      borderRadius: "100%",
+                      width: 50,
+                      height: 45,
+                      cursor: "pointer",
+                    }}
+                  ></button>
+                )}
               </Col>
+
               <Col span={5}>
-                <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
-                  <img
-                    style={{ width: 40, height: 40, cursor: "pointer" }}
-                    src={team1[2].pokemon.sprites.other.home.front_default}
-                    alt=""
-                  />
-                </button>
+                {listTeam1[2] ? (
+                  <button
+                    style={{
+                      borderRadius: "100%",
+                      width: 50,
+                      height: 45,
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img
+                      style={{ width: 40, height: 40 }}
+                      src={
+                        listTeam1[2].pokemon.sprites.other.home.front_default
+                      }
+                      alt=""
+                    />
+                  </button>
+                ) : (
+                  <button
+                    style={{
+                      borderRadius: "100%",
+                      width: 50,
+                      height: 45,
+                      cursor: "pointer",
+                    }}
+                  ></button>
+                )}
               </Col>
             </Row>
             <div className="detail-player">
@@ -74,12 +168,12 @@ function Location() {
                   <div className="meter animate">
                     <span
                       style={{
-                        width: `${hpPlayer1}%`,
+                        width: `${hpTeam1}%`,
                         borderRadius: 25,
                         backgroundColor:
-                          hpPlayer1 <= 30
+                          hpTeam1 <= 30
                             ? "red"
-                            : hpPlayer1 <= 65
+                            : hpTeam1 <= 65
                             ? "rgb(225, 235, 39)"
                             : "rgb(43, 194, 83)",
                       }}
@@ -93,85 +187,121 @@ function Location() {
                   >
                     {team1.name}
                   </h1>
-                  <div className="" style={{background: "#F9F3FE"}}>
-                    <img
-                      src={team1[0].pokemon.sprites.front_default}
-                      // src={player1.sprites.other.home.front_default}
-                      // src={player1.sprites.other.home.front_shiny}
-                      alt="pokemon"
-                      className="detail-img"
-                      style={{ height: 150, width: 230 }}
-                    />
-                  </div>
-                  <Row style={{border: "2px solid #EAE61A",borderRadius: "0px 0px 12px 12px"}}>
-                      {team1[0].abilities.map((item: any) => (
+                  {listTeam1[0] ? (
+                    <div className="">
+                      <img
+                        src={listTeam1[0].pokemon.sprites.front_default}
+                        // src={player1.sprites.other.home.front_default}
+                        // src={player1.sprites.other.home.front_shiny}
+                        alt="pokemon"
+                        className="detail-img"
+                        style={{ height: 150, width: 230 }}
+                      />
+                    </div>
+                  ) : null}
+
+                  {listTeam1[0] ? (
+                    <Row
+                      style={{
+                        border: "2px solid #EAE61A",
+                        borderRadius: "0px 0px 12px 12px",
+                      }}
+                    >
+                      {listTeam1[0].abilities.map((item: any) => (
                         <>
-                        <Col span={1}></Col>
-                        <Col span={5}>
-                          <button
-                            style={{
-                              borderRadius: "100%",
-                              width: 50,
-                              height: 50,
-                            }}
-                          >
-                            <img
+                          <Col span={1}></Col>
+                          <Col span={5}>
+                            <button
+                              id="auto-click"
                               style={{
-                                width: 30,
-                                height: 30,
+                                borderRadius: "100%",
+                                width: 50,
+                                height: 50,
                                 cursor: "pointer",
                               }}
-                              src={item.image}
-                              alt=""
-                            />
-                          </button>
-                        </Col>
+                              onClick={(e) => fight1(item)}
+                            >
+                              <img
+                                style={{
+                                  width: 30,
+                                  height: 30,
+                                }}
+                                src={item.image}
+                                alt=""
+                              />
+                            </button>
+                          </Col>
                         </>
                       ))}
                     </Row>
+                  ) : null}
                 </div>
               </div>
             </div>
           </section>
 
-          {hpPlayer2 === 0 ? <NotificationPlayer2 /> : null}
+          {hpTeam2 === 0 ? <NotificationPlayer2 /> : null}
 
           <section
             className="pokemon-player2"
-            style={{ backgroundColor: team2 ? "rgba(0,0,0,0)" : "#f4f1de" }}
+            style={{ border: "4px solid #EAE61A", opacity: 0.9 }}
           >
-            <Row>
+            <Row
+              style={{
+                border: "2px solid #EAE61A",
+                borderRadius: "12px 12px 0px 0px",
+              }}
+            >
               <Col span={5}>
-                <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
-                  <img
-                    style={{ width: 40, height: 40, cursor: "pointer" }}
-                    src={team2[1].pokemon.sprites.other.home.front_default}
-                    alt=""
-                  />
-                </button>
+                {listTeam2[1] ? (
+                  <button
+                    style={{ borderRadius: "100%", width: 50, height: 45 }}
+                  >
+                    <img
+                      style={{ width: 40, height: 40, cursor: "pointer" }}
+                      src={
+                        listTeam2[1].pokemon.sprites.other.home.front_default
+                      }
+                    />
+                  </button>
+                ) : (
+                  <button
+                    style={{ borderRadius: "100%", width: 50, height: 45 }}
+                  ></button>
+                )}
               </Col>
+
               <Col span={5}>
-                <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
-                  <img
-                    style={{ width: 40, height: 40, cursor: "pointer" }}
-                    src={team2[2].pokemon.sprites.other.home.front_default}
-                    alt=""
-                  />
-                </button>
+                {listTeam2[2] ? (
+                  <button
+                    style={{ borderRadius: "100%", width: 50, height: 45 }}
+                  >
+                    <img
+                      style={{ width: 40, height: 40, cursor: "pointer" }}
+                      src={
+                        listTeam2[2].pokemon.sprites.other.home.front_default
+                      }
+                    />
+                  </button>
+                ) : (
+                  <button
+                    style={{ borderRadius: "100%", width: 50, height: 45 }}
+                  ></button>
+                )}
               </Col>
             </Row>
             <div className="detail-player">
-              <div style={{ display: "flex" }}>
+              <div>
                 <div>
                   <div className="meter animate">
                     <span
                       style={{
-                        width: `${hpPlayer2}%`,
+                        width: `${hpTeam2}%`,
                         borderRadius: 25,
                         backgroundColor:
-                          hpPlayer2 <= 30
+                          hpTeam2 <= 30
                             ? "red"
-                            : hpPlayer2 <= 65
+                            : hpTeam2 <= 65
                             ? "rgb(225, 235, 39)"
                             : "rgb(43, 194, 83)",
                       }}
@@ -185,20 +315,56 @@ function Location() {
                   >
                     {team2.name}
                   </h1>
-                  <div className="">
-                    <img
-                      src={team2[0].pokemon.sprites.back_default}
-                      alt="pokemon"
-                      className="detail-img"
-                      style={{ height: 210 }}
-                    />
-                    
-                  </div>
+                  {listTeam2[0] ? (
+                    <div>
+                      <img
+                        src={listTeam2[0].pokemon.sprites.back_default}
+                        alt="pokemon"
+                        className="detail-img"
+                        style={{ height: 150, width: 230 }}
+                      />
+                    </div>
+                  ) : null}
+                  {listTeam2[0] ? (
+                    <Row
+                      style={{
+                        border: "2px solid #EAE61A",
+                        borderRadius: "0px 0px 12px 12px",
+                        marginTop: 20,
+                      }}
+                    >
+                      {listTeam2[0].abilities.map((item: any) => (
+                        <>
+                          <Col span={1}></Col>
+                          <Col span={5}>
+                            <button
+                              style={{
+                                borderRadius: "100%",
+                                width: 50,
+                                height: 50,
+                                cursor: "pointer",
+                              }}
+                              onClick={(e) => fight2(item)}
+                            >
+                              <img
+                                style={{
+                                  width: 30,
+                                  height: 30,
+                                }}
+                                src={item.image}
+                                alt=""
+                              />
+                            </button>
+                          </Col>
+                        </>
+                      ))}
+                    </Row>
+                  ) : null}
                 </div>
               </div>
             </div>
           </section>
-          {hpPlayer1 === 0 ? <NotificationPlayer1 /> : null}
+          {hpTeam1 === 0 ? <NotificationPlayer1 /> : null}
         </div>
       </div>
     </>

@@ -153,8 +153,18 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
         onCancel={handleCancel}
         footer={false}
       >
-        <Button onClick={chooseTeam1}>Team 1</Button>
-        <Button onClick={chooseTeam2}>Team 2</Button>
+        <Row>
+          <Col span={6}></Col>
+          <Col span={5}>
+            <Button style={{height: 35, width: 80}} onClick={chooseTeam1}>Team 1</Button>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={5}>
+            <Button style={{height: 35, width: 80}} onClick={chooseTeam2}>Team 2</Button>
+          </Col>
+          <Col span={6}></Col>
+        </Row>
+
         {/* <Row>
           {listAbility.map((item) => (
             <Col span={3}>
