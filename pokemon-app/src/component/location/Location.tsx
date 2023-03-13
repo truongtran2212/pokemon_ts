@@ -17,6 +17,8 @@ function Location() {
 
   const [hpTeam1, setHpTeam1] = useState<number>(team1[0].hp);
   const [hpTeam2, setHpTeam2] = useState<number>(team2[0].hp);
+  const [reduceBloodTeam1, setReduceBloodTeam1] = useState<number>(0);
+  const [reduceBloodTeam2, setReduceBloodTeam2] = useState<number>(0);
 
   useEffect(() => {
     if (hpTeam2 <= 0) {
@@ -26,8 +28,8 @@ function Location() {
       if (listTeam2.length > 0) {
         setHpTeam2(100);
       }
+      setReduceBloodTeam2(0);
     }
-    console.log(listTeam2);
   }, [hpTeam2]);
 
   useEffect(() => {
@@ -38,8 +40,8 @@ function Location() {
       if (listTeam1.length > 0) {
         setHpTeam1(100);
       }
+      setReduceBloodTeam1(0);
     }
-    console.log(listTeam1);
   }, [hpTeam1]);
 
   useEffect(() => {
@@ -59,26 +61,27 @@ function Location() {
   const [luckyNumber, setLuckyNumber] = useState<number>(0);
   useEffect(() => {
     if (luckyNumber == 1) {
-      setTimeout(setTeam1, 1000);
+      setTimeout(setTeam1, 3000);
     }
     if (luckyNumber == 2) {
-      setTimeout(setTeam2, 1000);
+      setTimeout(setTeam2, 3000);
     }
   }, [luckyNumber]);
 
   const setTeam1 = () => {
-    console.log("Team 1 đánh trước");
-    console.log(listTeam1[0].abilities[Math.floor(Math.random() * 4)].damage);
-    setHpTeam2(
-      hpTeam2 - listTeam1[0].abilities[Math.floor(Math.random() * 4)].damage
-    );
+    var hp2 = listTeam1[0].abilities[Math.floor(Math.random() * 4)].damage;
+
+    setHpTeam2(hpTeam2 - hp2);
+    setReduceBloodTeam2(hp2);
+
     setLuckyNumber(2);
   };
   const setTeam2 = () => {
     console.log("Team 2 đánh trước");
-    setHpTeam1(
-      hpTeam1 - listTeam2[0].abilities[Math.floor(Math.random() * 4)].damage
-    );
+    var hp1 = listTeam2[0].abilities[Math.floor(Math.random() * 4)].damage;
+    setHpTeam1(hpTeam1 - hp1);
+    setReduceBloodTeam1(hp1);
+
     setLuckyNumber(1);
   };
 
@@ -206,6 +209,7 @@ function Location() {
                     </h1>
                     {listTeam1[0] ? (
                       <div className="">
+                        <p className="custom-hp">{reduceBloodTeam1}</p>
                         <img
                           src={listTeam1[0].pokemon.sprites.front_default}
                           // src={player1.sprites.other.home.front_default}
@@ -334,6 +338,8 @@ function Location() {
                     </h1>
                     {listTeam2[0] ? (
                       <div>
+                        <p className="custom-hp">{reduceBloodTeam2}</p>
+
                         <img
                           src={listTeam2[0].pokemon.sprites.back_default}
                           alt="pokemon"

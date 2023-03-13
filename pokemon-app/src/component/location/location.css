@@ -31,7 +31,6 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-
 }
 
 .collection-container-active {
@@ -104,6 +103,10 @@
   left: 70%;
   border-radius: 12px;
   margin: auto;
+}
+
+.custom-hp {
+  animation: hp 1.5s linear;
 }
 
 .pokemon-player2 {
@@ -258,9 +261,15 @@ button:hover {
       #efefef 75%,
       #efefef
     );
-    box-shadow: 0 1px 3px rgba(0,0,30,.3);
-    background-position: 0 0,10px 10px;
-    background-color: #0a88d3;
-    background-size: 21px 21px;
-    display: block;
+  box-shadow: 0 1px 3px rgba(0, 0, 30, 0.3);
+  background-position: 0 0, 10px 10px;
+  background-color: #0a88d3;
+  background-size: 21px 21px;
+  display: block;
+}
+
+@keyframes hp {
+  to {
+    transform: translateY(-30%);
+  }
 }
