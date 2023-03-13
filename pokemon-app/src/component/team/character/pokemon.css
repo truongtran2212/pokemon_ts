@@ -121,7 +121,7 @@
   justify-content: space-around;
 }
 
-button {
+/* button {
   cursor: pointer;
   background-color: #fff;
   color: #3d405b;
@@ -141,4 +141,11 @@ button:hover {
   border: none;
   width: 135px;
   height: 45px;
-}
+} */
+
+/* :where(.css-dev-only-do-not-override-1me4733).ant-btn {
+  font-size: 14px;
+  height: 32px;
+  padding: 0 0 0 0;
+  border-radius: 6px;
+} */

@@ -20,3 +20,9 @@ export interface Detail {
   isOpened: boolean;
 }
 
+export interface Abilities {
+    name: string;
+    image: string;
+    damage?: number
+}
+
