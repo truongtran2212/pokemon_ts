@@ -41,10 +41,6 @@ function Location() {
     <>
       <div className="custom-background">
         <div className="container1">
-          <Link to="/" style={{ color: "white" }}>
-            Back to PokemonList
-          </Link>
-
           <section
             className="pokemon-player1"
             style={{ backgroundColor: player1 ? "rgba(0,0,0,0)" : "#f4f1de" }}

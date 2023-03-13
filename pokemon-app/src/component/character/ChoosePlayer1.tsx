@@ -102,7 +102,7 @@ const ChoosePlayer1: React.FC = () => {
           {detail.isOpened === false ? (
             <>
               <header className="pokemon-header"> Pokemon</header>
-              <Link to="/location" style={{ color: "white" }}>
+              <Link to="/" style={{ color: "white" }}>
                 To Location
               </Link>
               <PokemonCollection
