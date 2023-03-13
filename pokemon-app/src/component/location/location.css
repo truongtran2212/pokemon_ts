@@ -13,6 +13,16 @@
   flex-direction: column;
   align-items: center;
   display: flex;
+  /* filter: blur(8px);
+  -webkit-filter: blur(8px); */
+}
+.container1-custom {
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
 }
 
 .custom-background {
@@ -21,6 +31,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+
 }
 
 .collection-container-active {
