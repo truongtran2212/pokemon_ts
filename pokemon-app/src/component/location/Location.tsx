@@ -12,14 +12,22 @@ function Location() {
     ? JSON.parse(localStorage.team2)
     : null;
 
-  const [listTeam1, setListTeam1] = useState<any>(team1);
-  const [listTeam2, setListTeam2] = useState<any>(team2);
+  const [listTeam1, setListTeam1] = useState<any>(team1 !== null ? team1 : []);
+  const [listTeam2, setListTeam2] = useState<any>(team2 !== null ? team2 : []);
 
-  const [hpTeam1, setHpTeam1] = useState<number>(team1[0].hp);
-  const [hpTeam2, setHpTeam2] = useState<number>(team2[0].hp);
+  const [hpTeam1, setHpTeam1] = useState<number>(team1 !== null ? team1[0].hp : 0);
+  const [hpTeam2, setHpTeam2] = useState<number>(team2 !== null ? team2[0].hp : 0);
   const [reduceBloodTeam1, setReduceBloodTeam1] = useState<number>(0);
   const [reduceBloodTeam2, setReduceBloodTeam2] = useState<number>(0);
 
+  const [luckyNumber, setLuckyNumber] = useState<number>(0);
+
+  const [statusTeam1, setStatusTeam1] = useState<string>("Bình thường");
+  const [statusTeam2, setStatusTeam2] = useState<string>("Bình thường");
+
+  const [isCloseStart, setIsCloseStart] = useState<boolean>(false);
+
+  // Team2 bị đánh
   useEffect(() => {
     if (hpTeam2 <= 0) {
       setHpTeam2(0);
@@ -27,11 +35,13 @@ function Location() {
       setListTeam2(listTeam2);
       if (listTeam2.length > 0) {
         setHpTeam2(100);
+        setStatusTeam2("Bình thường");
       }
       setReduceBloodTeam2(0);
     }
   }, [hpTeam2]);
 
+  // Team1 bị đánh
   useEffect(() => {
     if (hpTeam1 <= 0) {
       setHpTeam1(0);
@@ -39,54 +49,92 @@ function Location() {
       setListTeam1(listTeam1);
       if (listTeam1.length > 0) {
         setHpTeam1(100);
+        setStatusTeam1("Bình thường");
       }
       setReduceBloodTeam1(0);
     }
   }, [hpTeam1]);
 
-  useEffect(() => {
-    console.log(team1);
-  }, []);
-
-  const fight1 = (item: any) => {
-    setHpTeam2(hpTeam2 - item.damage);
-    setTeam1();
-    console.log(item);
-  };
-
-  const fight2 = (item: any) => {
-    setHpTeam1(hpTeam1 - item.damage);
-  };
-
-  const [luckyNumber, setLuckyNumber] = useState<number>(0);
+  // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber == 1) {
-      setTimeout(setTeam1, 3000);
+      setTimeout(team1Fight, 1500);
     }
+
     if (luckyNumber == 2) {
-      setTimeout(setTeam2, 3000);
+      setTimeout(team2Fight, 1500);
+    }
+
+    if (luckyNumber == 3) {
+      setLuckyNumber(1);
+    }
+
+    if (luckyNumber == 4) {
+      setLuckyNumber(2);
     }
   }, [luckyNumber]);
 
-  const setTeam1 = () => {
-    var hp2 = listTeam1[0].abilities[Math.floor(Math.random() * 4)].damage;
+  // Team 1 bắt đầu đánh
+  const team1Fight = () => {
+    let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
+    let hp2 = skillRandom.damage;
+    var skillName = skillRandom.name;
+    if (skillName === "Đóng băng") {
+      setHpTeam2(hpTeam2 - hp2);
+      setReduceBloodTeam2(hp2);
+      setLuckyNumber(3);
+      console.log(skillRandom);
+      setStatusTeam2("Choáng");
+    }
 
-    setHpTeam2(hpTeam2 - hp2);
-    setReduceBloodTeam2(hp2);
-
-    setLuckyNumber(2);
+    if (skillName !== "Đóng băng") {
+      setHpTeam2(hpTeam2 - hp2);
+      setReduceBloodTeam2(hp2);
+      setLuckyNumber(2);
+      setStatusTeam2("Bình thường");
+    }
   };
-  const setTeam2 = () => {
-    console.log("Team 2 đánh trước");
-    var hp1 = listTeam2[0].abilities[Math.floor(Math.random() * 4)].damage;
-    setHpTeam1(hpTeam1 - hp1);
-    setReduceBloodTeam1(hp1);
 
-    setLuckyNumber(1);
+  // Team 2 bắt đầu đánh
+  const team2Fight = () => {
+    let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
+    let hp1 = skillRandom.damage;
+    var skillName = skillRandom.name;
+    if (skillName === "Đóng băng") {
+      setHpTeam1(hpTeam1 - hp1);
+      setReduceBloodTeam1(hp1);
+      setLuckyNumber(4);
+      setStatusTeam1("Choáng");
+      console.log(skillRandom);
+    }
+    if (skillName !== "Đóng băng") {
+      setHpTeam1(hpTeam1 - hp1);
+      setReduceBloodTeam1(hp1);
+      setLuckyNumber(1);
+      setStatusTeam1("Bình thường");
+    }
   };
 
+  const [number, setNumber] = useState<number>(4);
+  useEffect(() => {
+    if (number < 4 && number > -1) {
+      start();
+    }
+  }, [number]);
+
+  // Random số để chọn bên bắt đầu
   const start = () => {
-    setLuckyNumber(Math.floor(Math.random() * 2) + 1);
+    setIsCloseStart(true);
+    setTimeout(start2, 1300);
+    console.log(number);
+    if (number == 0) {
+      setLuckyNumber(Math.floor(Math.random() * 2) + 1);
+    }
+  };
+
+  const start2 = () => {
+    setNumber(number - 1);
+    // setLuckyNumber(Math.floor(Math.random() * 2) + 1);
   };
 
   return (
@@ -95,22 +143,20 @@ function Location() {
         <div>
           {listTeam1.length === 0 ? <GameOver /> : null}
           {listTeam2.length === 0 ? <GameOver /> : null}
+          {number > 1 && number < 4 ? <CountDown /> : null}
+          {number === 0 ? <Fight /> : null}
         </div>
+        {/* <button onClick={test}>123</button> */}
         <div className="custom-background">
           <div
             className={
-              listTeam1.length === 0 || listTeam2.length === 0
+              listTeam1.length === 0 ||
+              listTeam2.length === 0 ||
+              (number < 4 && number > -1)
                 ? "container1-custom"
                 : "container1"
             }
           >
-            <button
-              type="button"
-              onClick={start}
-              style={{ height: 50, width: 100, cursor: "pointer" }}
-            >
-              Bắt đầu
-            </button>
             <section
               // id="custom-back"
               className="pokemon-player1"
@@ -205,19 +251,35 @@ function Location() {
                       className="detail-name"
                       style={{ fontWeight: 500, color: "#fff" }}
                     >
-                      {team1.name}
+                      {/* {team1.name} */}
                     </h1>
                     {listTeam1[0] ? (
                       <div className="">
                         <p className="custom-hp">{reduceBloodTeam1}</p>
-                        <img
-                          src={listTeam1[0].pokemon.sprites.front_default}
-                          // src={player1.sprites.other.home.front_default}
-                          // src={player1.sprites.other.home.front_shiny}
-                          alt="pokemon"
-                          className="detail-img"
-                          style={{ height: 150, width: 230 }}
-                        />
+                        {statusTeam1 === "Choáng" ? (
+                          <div className="box">
+                            <img
+                              src="https://elwiki.net/wiki/images/1/1f/Status_Stunned.gif"
+                              alt=""
+                              width={50}
+                              height={50}
+                              style={{
+                                marginTop: 10,
+                                marginLeft: "180%",
+                              }}
+                            />
+                          </div>
+                        ) : null}
+                        <div className="box">
+                          <img
+                            src={listTeam1[0].pokemon.sprites.front_default}
+                            // src={player1.sprites.other.home.front_default}
+                            // src={player1.sprites.other.home.front_shiny}
+                            alt="pokemon"
+                            className="detail-img box avatar"
+                            style={{ height: 150, width: 230 }}
+                          />
+                        </div>
                       </div>
                     ) : null}
 
@@ -226,6 +288,7 @@ function Location() {
                         style={{
                           border: "2px solid #EAE61A",
                           borderRadius: "0px 0px 12px 12px",
+                          marginTop: 130,
                         }}
                       >
                         {listTeam1[0].abilities.map((item: any) => (
@@ -240,7 +303,6 @@ function Location() {
                                   height: 50,
                                   cursor: "pointer",
                                 }}
-                                onClick={(e) => fight1(item)}
                               >
                                 <img
                                   style={{
@@ -261,7 +323,18 @@ function Location() {
               </div>
             </section>
 
-            {/* {hpTeam2 === 0 ? <NotificationPlayer2 /> : null} */}
+            {isCloseStart === false ? (
+              <img
+                style={{
+                  cursor: "pointer",
+                  marginTop: "20%",
+                  marginLeft: "4%",
+                }}
+                onClick={start}
+                src="https://webusstatic.yo-star.com/mahjongsoul_us_web/mainsite/prod/assets/start_game_m.146ba275.png"
+                alt=""
+              />
+            ) : null}
 
             <section
               className="pokemon-player2"
@@ -334,18 +407,34 @@ function Location() {
                       className="detail-name"
                       style={{ fontWeight: 500, color: "#fff" }}
                     >
-                      {team2.name}
+                      {/* {team2.name} */}
                     </h1>
                     {listTeam2[0] ? (
                       <div>
                         <p className="custom-hp">{reduceBloodTeam2}</p>
-
-                        <img
-                          src={listTeam2[0].pokemon.sprites.back_default}
-                          alt="pokemon"
-                          className="detail-img"
-                          style={{ height: 150, width: 230 }}
-                        />
+                        {/* <p className="custom-hp">{statusTeam2}</p> */}
+                        {statusTeam2 === "Choáng" ? (
+                          <div className="box">
+                            <img
+                              src="https://elwiki.net/wiki/images/1/1f/Status_Stunned.gif"
+                              alt=""
+                              width={50}
+                              height={50}
+                              style={{
+                                marginTop: 10,
+                                marginLeft: "180%",
+                              }}
+                            />
+                          </div>
+                        ) : null}
+                        <div className="box">
+                          <img
+                            src={listTeam2[0].pokemon.sprites.back_default}
+                            alt="pokemon"
+                            className="detail-img"
+                            style={{ height: 150, width: 230 }}
+                          />
+                        </div>
                       </div>
                     ) : null}
                     {listTeam2[0] ? (
@@ -353,7 +442,7 @@ function Location() {
                         style={{
                           border: "2px solid #EAE61A",
                           borderRadius: "0px 0px 12px 12px",
-                          marginTop: 20,
+                          marginTop: 150,
                         }}
                       >
                         {listTeam2[0].abilities.map((item: any) => (
@@ -367,7 +456,6 @@ function Location() {
                                   height: 50,
                                   cursor: "pointer",
                                 }}
-                                onClick={(e) => fight2(item)}
                               >
                                 <img
                                   style={{
@@ -442,6 +530,7 @@ const NotificationPlayer2 = () => {
     </>
   );
 };
+
 const GameOver = () => {
   return (
     <>
@@ -461,6 +550,58 @@ const GameOver = () => {
       >
         <img
           src="https://cdn.staticcrate.com/stock-hd/effects/footagecrate-ko-style1@3X.png"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+const Fight = () => {
+  return (
+    <>
+      <div
+        style={{
+          // height: 400,
+          // width: 800,
+          backgroundColor: "rgb (0,0,0,0)",
+          zIndex: 999,
+          // marginTop: "20%",
+          top: "50%",
+
+          marginLeft: "50%",
+          position: "absolute",
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        <img
+          src="https://cdn.staticcrate.com/stock-hd/effects/FootageCrate-3_2_1_FIGHT_Style_1-prev-full.png"
+          alt=""
+          width={1400}
+        />
+      </div>
+    </>
+  );
+};
+const CountDown = () => {
+  return (
+    <>
+      <div
+        style={{
+          height: 400,
+          width: 800,
+          backgroundColor: "rgb (0,0,0,0)",
+          zIndex: 999,
+          // marginTop: "20%",
+          top: "25%",
+
+          marginLeft: "55%",
+          position: "absolute",
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        <img
+          style={{ height: 800, width: 600 }}
+          src="https://www.business2community.com/wp-content/uploads/2020/08/countdown.gif"
           alt=""
         />
       </div>

@@ -107,6 +107,7 @@
 
 .custom-hp {
   animation: hp 1.5s linear;
+  color: #fff
 }
 
 .pokemon-player2 {
@@ -272,4 +273,8 @@ button:hover {
   to {
     transform: translateY(-30%);
   }
+}
+
+.box {
+  position: absolute;
 }

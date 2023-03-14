@@ -28,45 +28,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
     setSkillPoke,
     skillPoke,
   } = props;
-  // const [listAbility, setListAbilities] = useState<Abilities[]>([
-  //   {
-  //     name: "Hút mana",
-  //     image: "https://cdn-icons-png.flaticon.com/512/5966/5966507.png",
-  //   },
-  //   {
-  //     name: "Hút máu",
-  //     image:
-  //       "https://rpgmaker.net/media/content/games/4468/screenshots/hp_potion.png",
-  //   },
-  //   {
-  //     name: "Đóng băng",
-  //     image:
-  //       "https://lh5.googleusercontent.com/-Dz4-xQmywtCjYDy6rzC7ybz3A16YcV852Vprt8dbCGdx4ECkcSXTtY7GgSMe9G2xJA40DH6O5BJuNMt9sTq34TBoLhmHdU1mJDZ0fru3MyAMjem3KMPrX9sTdrTUTkLbdPf4TCP",
-  //   },
-  //   {
-  //     name: "Sấm sét",
-  //     image:
-  //       "https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/lightning-icon.png",
-  //   },
-  //   {
-  //     name: "Nước",
-  //     image:
-  //       "https://freepngimg.com/save/25324-tsunami-transparent-image/1615x1238",
-  //   },
-  //   {
-  //     name: "Lửa",
-  //     image:
-  //       "https://freepngimg.com/save/96182-lohri-orange-fire-flame-for-happy-lyrics/600x876",
-  //   },
-  //   {
-  //     name: "Động đất",
-  //     image: "https://cdn-icons-png.flaticon.com/512/3426/3426189.png",
-  //   },
-  //   {
-  //     name: "Gió",
-  //     image: "https://cdn2.iconfinder.com/data/icons/game-1-2/512/wind-512.png",
-  //   },
-  // ]);
+
   const handleCancel = () => {
     setIsOpenModalChooseTeam(false);
     setSkillPoke([]);
@@ -137,14 +99,6 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
       });
   };
 
-  // const addSkill = (item: any) => {
-  //   setSkillPoke([...skillPoke, item]);
-  //   console.log(skillPoke);
-  //   if (skillPoke.length === 4) {
-  //     handleCancel();
-  //   }
-  // };
-
   return (
     <>
       <Modal
@@ -156,11 +110,15 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
         <Row>
           <Col span={6}></Col>
           <Col span={5}>
-            <Button style={{height: 35, width: 80}} onClick={chooseTeam1}>Team 1</Button>
+            <Button style={{ height: 35, width: 80 }} onClick={chooseTeam1}>
+              Team 1
+            </Button>
           </Col>
           <Col span={2}></Col>
           <Col span={5}>
-            <Button style={{height: 35, width: 80}} onClick={chooseTeam2}>Team 2</Button>
+            <Button style={{ height: 35, width: 80 }} onClick={chooseTeam2}>
+              Team 2
+            </Button>
           </Col>
           <Col span={6}></Col>
         </Row>
@@ -202,7 +160,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
       description: "Đã đủ skill.",
     });
   };
-  const [listAbility, setListAbilities] = useState<Abilities[]>([
+  let listAbilities: Abilities[] = [
     {
       name: "Hút mana",
       image: "https://cdn-icons-png.flaticon.com/512/5966/5966507.png",
@@ -248,20 +206,33 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
       image: "https://cdn2.iconfinder.com/data/icons/game-1-2/512/wind-512.png",
       damage: Math.floor(Math.random() * 20) + 10,
     },
-  ]);
+  ];
+
+  const [listAbility, setListAbility] = useState<Abilities[]>(listAbilities);
+
+  useEffect(() => {
+    // if(listAbility) {}
+    localStorage.setItem("abilities", JSON.stringify(listAbility));
+  }, [isOpenModalChooseSkill]);
 
   const handleOk = () => {
     setIsOpenModalChooseSkill(false);
+    setListAbility(listAbilities);
     setIsOpenChooseTeam(true);
   };
   const handleCancel = () => {
+    setListAbility(listAbilities);
+    setSkillPoke([]);
     setIsOpenModalChooseSkill(false);
   };
 
   const [skillPoke, setSkillPoke] = useState<any>([]);
-  const addSkill = (item: any) => {
+
+  const addSkill = (item: any, index: any) => {
     if (skillPoke.length < 4) {
       setSkillPoke([...skillPoke, item]);
+      listAbility.splice(index, 1);
+      setListAbility(listAbility);
     }
     if (skillPoke.length === 4) {
       openNotification();
@@ -276,14 +247,21 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
         onOk={handleOk}
       >
         <Row>
-          {listAbility.map((item) => (
+          {listAbility.map((item, index) => (
             <Col span={3}>
               <button
-                onClick={() => addSkill(item)}
-                style={{ borderRadius: "100%", width: 50, height: 50 }}
+                onClick={() => {
+                  addSkill(item, index);
+                }}
+                style={{
+                  borderRadius: "100%",
+                  width: 50,
+                  height: 50,
+                  cursor: "pointer",
+                }}
               >
                 <img
-                  style={{ width: 30, height: 30, cursor: "pointer" }}
+                  style={{ width: 30, height: 30 }}
                   src={item.image}
                   alt=""
                 />
@@ -331,10 +309,8 @@ const PokemonCollection: React.FC<Props> = (props) => {
 
   const selectPokemon = async (id: number) => {
     const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-
     localStorage.setItem("player2", JSON.stringify(res.data));
     window.location.assign("http://localhost:3000");
-    console.log("player2");
   };
 
   return (
@@ -426,14 +402,29 @@ const PokemonList: React.FC = () => {
   return (
     <>
       <div className="App">
+        <Row style={{ display: "flex" }}>
+          <Col span={8} style={{ float: "left" }}>
+            <Link to="/location" style={{ color: "white" }}>
+              <img src="https://preview.redd.it/o8a7u5vl6hb41.png?auto=webp&s=96532f959833339937e105d6358746602c0ab467" alt="" height={90} width={180}/>
+            </Link>
+          </Col>
+          <Col span={8}>
+            <header className="pokemon-header"> Pokemon</header>
+          </Col>
+          <Col span={8}>
+            <img
+              src="https://fc03.deviantart.net/fs70/f/2013/019/b/6/pokeball_by_zel_duh-d5s04qj.gif"
+              alt=""
+              height={100}
+              width={100}
+              style={{ float: "right", cursor: "pointer" }}
+              onClick={showListTeam}
+            />
+          </Col>
+        </Row>
         <div className="container">
           {detail.isOpened === false ? (
             <>
-              <header className="pokemon-header"> Pokemon</header>
-              <Link to="/location" style={{ color: "white" }}>
-                To Location
-              </Link>
-              <Button onClick={showListTeam}>Xem danh sách</Button>
               <Drawer
                 title="Danh sách Team"
                 placement="right"

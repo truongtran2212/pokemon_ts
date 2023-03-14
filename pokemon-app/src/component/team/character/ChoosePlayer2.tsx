@@ -18,7 +18,6 @@ const PokemonCollection: React.FC<Props> = (props) => {
 
     localStorage.setItem("player2", JSON.stringify(res.data));
     window.location.assign("http://localhost:3000");
-    console.log("player2");
   };
   
 
