@@ -16,7 +16,7 @@ interface ChooseTeam {
   isOpenModalChooseTeam: boolean;
   setIsOpenModalChooseTeam: React.Dispatch<React.SetStateAction<boolean>>;
   idPokemon: number;
-  setSkillPoke: React.Dispatch<any>;
+  setSkillPoke: React.Dispatch<React.SetStateAction<Abilities[]>>;
   skillPoke: any;
 }
 
@@ -226,9 +226,9 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
     setIsOpenModalChooseSkill(false);
   };
 
-  const [skillPoke, setSkillPoke] = useState<any>([]);
+  const [skillPoke, setSkillPoke] = useState<Abilities[]>([]);
 
-  const addSkill = (item: any, index: any) => {
+  const addSkill = (item: any, index: number) => {
     if (skillPoke.length < 4) {
       setSkillPoke([...skillPoke, item]);
       listAbility.splice(index, 1);

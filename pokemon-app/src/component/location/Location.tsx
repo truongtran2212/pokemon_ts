@@ -15,8 +15,12 @@ function Location() {
   const [listTeam1, setListTeam1] = useState<any>(team1 !== null ? team1 : []);
   const [listTeam2, setListTeam2] = useState<any>(team2 !== null ? team2 : []);
 
-  const [hpTeam1, setHpTeam1] = useState<number>(team1 !== null ? team1[0].hp : 0);
-  const [hpTeam2, setHpTeam2] = useState<number>(team2 !== null ? team2[0].hp : 0);
+  const [hpTeam1, setHpTeam1] = useState<number>(
+    team1 !== null ? team1[0].hp : 0
+  );
+  const [hpTeam2, setHpTeam2] = useState<number>(
+    team2 !== null ? team2[0].hp : 0
+  );
   const [reduceBloodTeam1, setReduceBloodTeam1] = useState<number>(0);
   const [reduceBloodTeam2, setReduceBloodTeam2] = useState<number>(0);
 
@@ -254,8 +258,12 @@ function Location() {
                       {/* {team1.name} */}
                     </h1>
                     {listTeam1[0] ? (
-                      <div className="">
-                        <p className="custom-hp">{reduceBloodTeam1}</p>
+                      <div className="box2">
+                        <div className="box">
+                          {isCloseStart === true ? (
+                            <p className="custom-hp">- {reduceBloodTeam1}</p>
+                          ) : null}
+                        </div>
                         {statusTeam1 === "Choáng" ? (
                           <div className="box">
                             <img
@@ -288,7 +296,7 @@ function Location() {
                         style={{
                           border: "2px solid #EAE61A",
                           borderRadius: "0px 0px 12px 12px",
-                          marginTop: 130,
+                          marginTop: 160,
                         }}
                       >
                         {listTeam1[0].abilities.map((item: any) => (
