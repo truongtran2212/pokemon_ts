@@ -136,7 +136,7 @@
 
 .meter {
   box-sizing: content-box;
-  height: 12px; /* Can be anything */
+  height: 8px; /* Can be anything */
   position: relative;
   background: #555;
   border-radius: 25px;
@@ -208,6 +208,10 @@
 
 .red > span {
   background-image: linear-gradient(#f0a3a3, #f42323);
+}
+
+.blue > span {
+  background-image: linear-gradient(#75a8db, blue);
 }
 
 .nostripes > span > span,

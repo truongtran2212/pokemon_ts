@@ -21,6 +21,11 @@ function Location() {
   const [hpTeam2, setHpTeam2] = useState<number>(
     team2 !== null ? team2[0].hp : 0
   );
+
+  const [manaTeam1, setManaTeam1] = useState<number>(
+    team1 !== null ? team1[0].mana : 0
+  );
+
   const [reduceBloodTeam1, setReduceBloodTeam1] = useState<number>(0);
   const [reduceBloodTeam2, setReduceBloodTeam2] = useState<number>(0);
 
@@ -47,26 +52,32 @@ function Location() {
 
   // Team1 bị đánh
   useEffect(() => {
-    if (hpTeam1 <= 0) {
-      setHpTeam1(0);
-      listTeam1.shift();
-      setListTeam1(listTeam1);
-      if (listTeam1.length > 0) {
-        setHpTeam1(100);
-        setStatusTeam1("Bình thường");
+    const checkTeam1 = async () => {
+      if (hpTeam1 <= 0) {
+         setHpTeam1(0);
+        listTeam1.shift();
+         setListTeam1(listTeam1);
+         setReduceBloodTeam1(0);
+        if (listTeam1.length > 0) {
+           setHpTeam1(100);
+           setManaTeam1(100);
+        }
       }
-      setReduceBloodTeam1(0);
-    }
+    };
+    checkTeam1();
   }, [hpTeam1]);
 
   // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber == 1) {
-      setTimeout(team1Fight, 1500);
+      if(hpTeam1 === 100) {
+        setManaTeam1(100);
+      }
+      setTimeout(team1Fight, 2000);
     }
 
     if (luckyNumber == 2) {
-      setTimeout(team2Fight, 1500);
+      setTimeout(team2Fight, 2000);
     }
 
     if (luckyNumber == 3) {
@@ -79,39 +90,57 @@ function Location() {
   }, [luckyNumber]);
 
   // Team 1 bắt đầu đánh
-  const team1Fight = () => {
+
+  const team1Fight =  () => {
+    if(hpTeam1 === 100) {
+      setManaTeam1(100);
+    }
     let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
     let hp2 = skillRandom.damage;
-    var skillName = skillRandom.name;
-    if (skillName === "Đóng băng") {
-      setHpTeam2(hpTeam2 - hp2);
-      setReduceBloodTeam2(hp2);
-      setLuckyNumber(3);
-      console.log(skillRandom);
-      setStatusTeam2("Choáng");
+    let mana1 = skillRandom.mana;
+    let name = skillRandom.name;
+
+    // Sử dụng useState sẽ bị delay
+    // setSkillNameTeam1(skillRandom.name);
+
+    if (manaTeam1 >= mana1) {
+      if (name === "Đóng băng") {
+        setHpTeam2(hpTeam2 - hp2);
+        setManaTeam1(manaTeam1 - mana1);
+        setReduceBloodTeam2(hp2);
+        setLuckyNumber(3);
+      }
+
+      if (name !== "Đóng băng") {
+        setHpTeam2(hpTeam2 - hp2);
+        setManaTeam1(manaTeam1 - mana1);
+        setReduceBloodTeam2(hp2);
+        setLuckyNumber(2);
+      }
     }
 
-    if (skillName !== "Đóng băng") {
-      setHpTeam2(hpTeam2 - hp2);
-      setReduceBloodTeam2(hp2);
+    if (manaTeam1 < mana1) {
+      setHpTeam2(hpTeam2 - 10);
+      setManaTeam1(manaTeam1 + (Math.floor(Math.random() * 10) + 5));
+      setReduceBloodTeam2(10);
       setLuckyNumber(2);
-      setStatusTeam2("Bình thường");
     }
   };
 
   // Team 2 bắt đầu đánh
+
   const team2Fight = () => {
     let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
     let hp1 = skillRandom.damage;
-    var skillName = skillRandom.name;
-    if (skillName === "Đóng băng") {
+    let name = skillRandom.name;
+    if (name === "Đóng băng") {
       setHpTeam1(hpTeam1 - hp1);
       setReduceBloodTeam1(hp1);
       setLuckyNumber(4);
       setStatusTeam1("Choáng");
       console.log(skillRandom);
     }
-    if (skillName !== "Đóng băng") {
+    if (name !== "Đóng băng") {
       setHpTeam1(hpTeam1 - hp1);
       setReduceBloodTeam1(hp1);
       setLuckyNumber(1);
@@ -130,7 +159,6 @@ function Location() {
   const start = () => {
     setIsCloseStart(true);
     setTimeout(start2, 1300);
-    console.log(number);
     if (number == 0) {
       setLuckyNumber(Math.floor(Math.random() * 2) + 1);
     }
@@ -234,102 +262,121 @@ function Location() {
               </Row>
               <div className="detail-player">
                 <div>
-                  <div>
-                    <div className="meter animate">
-                      <span
-                        style={{
-                          width: `${hpTeam1}%`,
-                          borderRadius: 25,
-                          backgroundColor:
-                            hpTeam1 <= 30
-                              ? "red"
-                              : hpTeam1 <= 65
-                              ? "rgb(225, 235, 39)"
-                              : "rgb(43, 194, 83)",
-                        }}
-                      >
-                        <span></span>
-                      </span>
-                    </div>
-                    <h1
-                      className="detail-name"
-                      style={{ fontWeight: 500, color: "#fff" }}
+                  <div className="meter animate">
+                    <span
+                      style={{
+                        width: `${hpTeam1}%`,
+                        borderRadius: 25,
+                        backgroundColor:
+                          hpTeam1 <= 30
+                            ? "red"
+                            : hpTeam1 <= 65
+                            ? "rgb(225, 235, 39)"
+                            : "rgb(43, 194, 83)",
+                      }}
                     >
-                      {/* {team1.name} */}
-                    </h1>
-                    {listTeam1[0] ? (
-                      <div className="box2">
-                        <div className="box">
-                          {isCloseStart === true ? (
-                            <p className="custom-hp">- {reduceBloodTeam1}</p>
-                          ) : null}
-                        </div>
-                        {statusTeam1 === "Choáng" ? (
-                          <div className="box">
-                            <img
-                              src="https://elwiki.net/wiki/images/1/1f/Status_Stunned.gif"
-                              alt=""
-                              width={50}
-                              height={50}
-                              style={{
-                                marginTop: 10,
-                                marginLeft: "180%",
-                              }}
-                            />
-                          </div>
-                        ) : null}
-                        <div className="box">
-                          <img
-                            src={listTeam1[0].pokemon.sprites.front_default}
-                            // src={player1.sprites.other.home.front_default}
-                            // src={player1.sprites.other.home.front_shiny}
-                            alt="pokemon"
-                            className="detail-img box avatar"
-                            style={{ height: 150, width: 230 }}
-                          />
-                        </div>
+                      <span></span>
+                    </span>
+                  </div>
+                  <hr />
+                  <hr />
+                  <div className="meter animate blue">
+                    <span
+                      style={{
+                        width: `${manaTeam1}%`,
+                        borderRadius: 25,
+                        // backgroundColor:
+                        //   mnaa <= 30
+                        //     ? "red"
+                        //     : hpTeam1 <= 65
+                        //     ? "rgb(225, 235, 39)"
+                        //     : "rgb(43, 194, 83)",
+                      }}
+                    >
+                      <span></span>
+                    </span>
+                  </div>
+                  <hr />
+                </div>
+                <h1
+                  className="detail-name"
+                  style={{ fontWeight: 500, color: "#fff" }}
+                >
+                  {/* {team1.name} */}
+                </h1>
+                {listTeam1[0] ? (
+                  <div className="box2">
+                    <div className="box">
+                      {isCloseStart === true ? (
+                        <p className="custom-hp">- {reduceBloodTeam1}</p>
+                      ) : null}
+                    </div>
+                    {statusTeam1 === "Choáng" ? (
+                      <div className="box">
+                        <img
+                          src="https://elwiki.net/wiki/images/1/1f/Status_Stunned.gif"
+                          alt=""
+                          width={50}
+                          height={50}
+                          style={{
+                            marginTop: 10,
+                            marginLeft: "180%",
+                          }}
+                        />
                       </div>
                     ) : null}
-
-                    {listTeam1[0] ? (
-                      <Row
-                        style={{
-                          border: "2px solid #EAE61A",
-                          borderRadius: "0px 0px 12px 12px",
-                          marginTop: 160,
-                        }}
-                      >
-                        {listTeam1[0].abilities.map((item: any) => (
-                          <>
-                            <Col span={1}></Col>
-                            <Col span={5}>
-                              <button
-                                id="auto-click"
-                                style={{
-                                  borderRadius: "100%",
-                                  width: 50,
-                                  height: 50,
-                                  cursor: "pointer",
-                                }}
-                              >
-                                <img
-                                  style={{
-                                    width: 30,
-                                    height: 30,
-                                  }}
-                                  src={item.image}
-                                  alt=""
-                                />
-                              </button>
-                            </Col>
-                          </>
-                        ))}
-                      </Row>
-                    ) : null}
+                    <div className="box">
+                      <img
+                        src={listTeam1[0].pokemon.sprites.front_default}
+                        // src={listTeam1[0].pokemon.sprites.versions.generation}
+                        // src={player1.sprites.other.home.front_default}
+                        // src={player1.sprites.other.home.front_shiny}
+                        alt="pokemon"
+                        className="detail-img box avatar"
+                        style={{ height: 150, width: 230 }}
+                      />
+                    </div>
                   </div>
-                </div>
+                ) : null}
+
+                {/* {listTeam1[0] ? (
+                  <Row
+                    style={{
+                      border: "2px solid #EAE61A",
+                      borderRadius: "0px 0px 12px 12px",
+                      marginTop: 160,
+                    }}
+                  >
+                    {listTeam1[0].abilities.map((item: any) => (
+                      <>
+                        <Col span={1}></Col>
+                        <Col span={5}>
+                          <button
+                            id="auto-click"
+                            style={{
+                              borderRadius: "100%",
+                              width: 50,
+                              height: 50,
+                              cursor: "pointer",
+                            }}
+                          >
+                            <img
+                              style={{
+                                width: 30,
+                                height: 30,
+                              }}
+                              src={item.image}
+                              alt=""
+                            />
+                          </button>
+                        </Col>
+                      </>
+                    ))}
+                  </Row>
+                ) : null} */}
               </div>
             </section>
+            {/* <NotificationPlayer2 skillNameTeam1={skillNameTeam1} /> */}
 
             {isCloseStart === false ? (
               <img
@@ -393,97 +440,95 @@ function Location() {
                 </Col>
               </Row>
               <div className="detail-player">
-                <div>
+                <div className="meter animate">
+                  <span
+                    style={{
+                      width: `${hpTeam2}%`,
+                      borderRadius: 25,
+                      backgroundColor:
+                        hpTeam2 <= 30
+                          ? "red"
+                          : hpTeam2 <= 65
+                          ? "rgb(225, 235, 39)"
+                          : "rgb(43, 194, 83)",
+                    }}
+                  >
+                    <span></span>
+                  </span>
+                </div>
+                <h1
+                  className="detail-name"
+                  style={{ fontWeight: 500, color: "#fff" }}
+                >
+                  {/* {team2.name} */}
+                </h1>
+                {listTeam2[0] ? (
                   <div>
-                    <div className="meter animate">
-                      <span
-                        style={{
-                          width: `${hpTeam2}%`,
-                          borderRadius: 25,
-                          backgroundColor:
-                            hpTeam2 <= 30
-                              ? "red"
-                              : hpTeam2 <= 65
-                              ? "rgb(225, 235, 39)"
-                              : "rgb(43, 194, 83)",
-                        }}
-                      >
-                        <span></span>
-                      </span>
-                    </div>
-                    <h1
-                      className="detail-name"
-                      style={{ fontWeight: 500, color: "#fff" }}
-                    >
-                      {/* {team2.name} */}
-                    </h1>
-                    {listTeam2[0] ? (
-                      <div>
-                        <p className="custom-hp">{reduceBloodTeam2}</p>
-                        {/* <p className="custom-hp">{statusTeam2}</p> */}
-                        {statusTeam2 === "Choáng" ? (
-                          <div className="box">
-                            <img
-                              src="https://elwiki.net/wiki/images/1/1f/Status_Stunned.gif"
-                              alt=""
-                              width={50}
-                              height={50}
-                              style={{
-                                marginTop: 10,
-                                marginLeft: "180%",
-                              }}
-                            />
-                          </div>
-                        ) : null}
-                        <div className="box">
-                          <img
-                            src={listTeam2[0].pokemon.sprites.back_default}
-                            alt="pokemon"
-                            className="detail-img"
-                            style={{ height: 150, width: 230 }}
-                          />
-                        </div>
+                    <p className="custom-hp">{reduceBloodTeam2}</p>
+                    {/* <p className="custom-hp">{statusTeam2}</p> */}
+                    {statusTeam2 === "Choáng" ? (
+                      <div className="box">
+                        <img
+                          src="https://elwiki.net/wiki/images/1/1f/Status_Stunned.gif"
+                          alt=""
+                          width={50}
+                          height={50}
+                          style={{
+                            marginTop: 10,
+                            marginLeft: "180%",
+                          }}
+                        />
                       </div>
                     ) : null}
-                    {listTeam2[0] ? (
-                      <Row
-                        style={{
-                          border: "2px solid #EAE61A",
-                          borderRadius: "0px 0px 12px 12px",
-                          marginTop: 150,
-                        }}
-                      >
-                        {listTeam2[0].abilities.map((item: any) => (
-                          <>
-                            <Col span={1}></Col>
-                            <Col span={5}>
-                              <button
-                                style={{
-                                  borderRadius: "100%",
-                                  width: 50,
-                                  height: 50,
-                                  cursor: "pointer",
-                                }}
-                              >
-                                <img
-                                  style={{
-                                    width: 30,
-                                    height: 30,
-                                  }}
-                                  src={item.image}
-                                  alt=""
-                                />
-                              </button>
-                            </Col>
-                          </>
-                        ))}
-                      </Row>
-                    ) : null}
+                    <div className="box">
+                      <img
+                        src={listTeam2[0].pokemon.sprites.back_default}
+                        alt="pokemon"
+                        className="detail-img"
+                        style={{ height: 150, width: 230 }}
+                      />
+                    </div>
                   </div>
-                </div>
+                ) : null}
+
+                {/* {listTeam2[0] ? (
+                  <Row
+                    style={{
+                      border: "2px solid #EAE61A",
+                      borderRadius: "0px 0px 12px 12px",
+                      marginTop: 150,
+                    }}
+                  >
+                    {listTeam2[0].abilities.map((item: any) => (
+                      <>
+                        <Col span={1}></Col>
+                        <Col span={5}>
+                          <button
+                            style={{
+                              borderRadius: "100%",
+                              width: 50,
+                              height: 50,
+                              cursor: "pointer",
+                            }}
+                          >
+                            <img
+                              style={{
+                                width: 30,
+                                height: 30,
+                              }}
+                              src={item.image}
+                              alt=""
+                            />
+                          </button>
+                        </Col>
+                      </>
+                    ))}
+                  </Row>
+                ) : null} */}
               </div>
             </section>
             {/* {hpTeam1 === 0 ? <NotificationPlayer1 /> : null} */}
+            {/* <NotificationPlayer1 /> */}
           </div>
         </div>
       </div>
@@ -515,7 +560,12 @@ const NotificationPlayer1 = () => {
   );
 };
 
-const NotificationPlayer2 = () => {
+interface NameSkill {
+  skillNameTeam1: string;
+}
+
+const NotificationPlayer2: React.FC<NameSkill> = (props) => {
+  const { skillNameTeam1 } = props;
   return (
     <>
       <div
@@ -533,7 +583,7 @@ const NotificationPlayer2 = () => {
           boxShadow: "5px 5px 5px #888",
         }}
       >
-        <h3 style={{ margin: "auto" }}>Đ** ĐỦ TUỔI</h3>
+        <h3 style={{ margin: "auto" }}>{skillNameTeam1}</h3>
       </div>
     </>
   );

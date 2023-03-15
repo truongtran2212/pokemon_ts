@@ -23,6 +23,7 @@ export interface Detail {
 export interface Abilities {
     name: string;
     image: string;
-    damage?: number
+    damage?: number;
+    mana?: number;
 }
 

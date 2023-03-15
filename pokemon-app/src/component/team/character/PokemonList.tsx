@@ -64,7 +64,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
           : [];
         let pokemon = res.data;
         if (listTeam1.length < 3) {
-          listTeam1.push({ pokemon, hp: 100, abilities: skillPoke });
+          listTeam1.push({ pokemon, hp: 100, mana: 100, abilities: skillPoke });
           localStorage.setItem("team1", JSON.stringify(listTeam1));
           openNotificationSuccessTeam1();
         } else {
@@ -86,7 +86,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
           : [];
         let pokemon = res.data;
         if (listTeam2.length < 3) {
-          listTeam2.push({ pokemon, hp: 100, abilities: skillPoke });
+          listTeam2.push({ pokemon, hp: 100, mana: 100, abilities: skillPoke });
           localStorage.setItem("team2", JSON.stringify(listTeam2));
           openNotificationSuccessTeam2();
         } else {
@@ -164,47 +164,55 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
     {
       name: "Hút mana",
       image: "https://cdn-icons-png.flaticon.com/512/5966/5966507.png",
-      damage: Math.floor(Math.random() * 20) + 10,
+      damage: Math.floor(Math.random() * 20) + 10, // 10 => 29
+      mana: Math.floor(Math.random() * 9) + 17, // 17 => 25
     },
     {
       name: "Hút máu",
       image:
         "https://rpgmaker.net/media/content/games/4468/screenshots/hp_potion.png",
       damage: Math.floor(Math.random() * 20) + 10,
+      mana: Math.floor(Math.random() * 9) + 17,
     },
     {
       name: "Đóng băng",
       image:
         "https://lh5.googleusercontent.com/-Dz4-xQmywtCjYDy6rzC7ybz3A16YcV852Vprt8dbCGdx4ECkcSXTtY7GgSMe9G2xJA40DH6O5BJuNMt9sTq34TBoLhmHdU1mJDZ0fru3MyAMjem3KMPrX9sTdrTUTkLbdPf4TCP",
       damage: Math.floor(Math.random() * 20) + 10,
+      mana: Math.floor(Math.random() * 9) + 17,
     },
     {
       name: "Sấm sét",
       image:
         "https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/lightning-icon.png",
       damage: Math.floor(Math.random() * 20) + 10,
+      mana: Math.floor(Math.random() * 9) + 17,
     },
     {
       name: "Nước",
       image:
         "https://freepngimg.com/save/25324-tsunami-transparent-image/1615x1238",
       damage: Math.floor(Math.random() * 20) + 10,
+      mana: Math.floor(Math.random() * 9) + 17,
     },
     {
       name: "Lửa",
       image:
         "https://freepngimg.com/save/96182-lohri-orange-fire-flame-for-happy-lyrics/600x876",
       damage: Math.floor(Math.random() * 20) + 10,
+      mana: Math.floor(Math.random() * 9) + 17,
     },
     {
       name: "Động đất",
       image: "https://cdn-icons-png.flaticon.com/512/3426/3426189.png",
       damage: Math.floor(Math.random() * 20) + 10,
+      mana: Math.floor(Math.random() * 9) + 17,
     },
     {
       name: "Gió",
       image: "https://cdn2.iconfinder.com/data/icons/game-1-2/512/wind-512.png",
       damage: Math.floor(Math.random() * 20) + 10,
+      mana: Math.floor(Math.random() * 9) + 17,
     },
   ];
 
@@ -352,6 +360,7 @@ interface Pokemons {
   name: string;
   url: string;
   hp?: number;
+  mana?: number;
 }
 
 const PokemonList: React.FC = () => {
@@ -405,7 +414,12 @@ const PokemonList: React.FC = () => {
         <Row style={{ display: "flex" }}>
           <Col span={8} style={{ float: "left" }}>
             <Link to="/location" style={{ color: "white" }}>
-              <img src="https://preview.redd.it/o8a7u5vl6hb41.png?auto=webp&s=96532f959833339937e105d6358746602c0ab467" alt="" height={90} width={180}/>
+              <img
+                src="https://preview.redd.it/o8a7u5vl6hb41.png?auto=webp&s=96532f959833339937e105d6358746602c0ab467"
+                alt=""
+                height={90}
+                width={180}
+              />
             </Link>
           </Col>
           <Col span={8}>
