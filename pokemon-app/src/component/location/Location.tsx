@@ -52,27 +52,27 @@ function Location() {
 
   // Team1 bị đánh
   useEffect(() => {
-    const checkTeam1 = async () => {
+    const checkTeam1 = async () => {      
       if (hpTeam1 <= 0) {
-         setHpTeam1(0);
+        setHpTeam1(0);
         listTeam1.shift();
-         setListTeam1(listTeam1);
-         setReduceBloodTeam1(0);
-        if (listTeam1.length > 0) {
-           setHpTeam1(100);
-           setManaTeam1(100);
+        setListTeam1(listTeam1);
+        setReduceBloodTeam1(0);
+        if (listTeam1.length > 0) {          
+          setHpTeam1(100);
+          setManaTeam1(100)
+          console.log("Set Mana");
+          setStatusTeam2("Bình thường");
         }
       }
     };
     checkTeam1();
   }, [hpTeam1]);
+  
 
   // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber == 1) {
-      if(hpTeam1 === 100) {
-        setManaTeam1(100);
-      }
       setTimeout(team1Fight, 2000);
     }
 
@@ -91,10 +91,15 @@ function Location() {
 
   // Team 1 bắt đầu đánh
 
-  const team1Fight =  () => {
-    if(hpTeam1 === 100) {
-      setManaTeam1(100);
+  const team1Fight = () => {
+    console.log("Team 1 Fight");
+    console.log("Máu Team 1 " + hpTeam1);
+    console.log(manaTeam1);
+
+    if(hpTeam1 <= 0) {
+      setManaTeam1(100)
     }
+    
     let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
     let hp2 = skillRandom.damage;
     let mana1 = skillRandom.mana;
@@ -109,6 +114,8 @@ function Location() {
         setManaTeam1(manaTeam1 - mana1);
         setReduceBloodTeam2(hp2);
         setLuckyNumber(3);
+        setStatusTeam2("Choáng");
+
       }
 
       if (name !== "Đóng băng") {
@@ -116,6 +123,7 @@ function Location() {
         setManaTeam1(manaTeam1 - mana1);
         setReduceBloodTeam2(hp2);
         setLuckyNumber(2);
+        setStatusTeam2("Bình thường");
       }
     }
 
@@ -124,6 +132,8 @@ function Location() {
       setManaTeam1(manaTeam1 + (Math.floor(Math.random() * 10) + 5));
       setReduceBloodTeam2(10);
       setLuckyNumber(2);
+      setStatusTeam2("Bình thường");
+
     }
   };
 
@@ -133,13 +143,15 @@ function Location() {
     let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
     let hp1 = skillRandom.damage;
     let name = skillRandom.name;
+    console.log("team2");
+
     if (name === "Đóng băng") {
       setHpTeam1(hpTeam1 - hp1);
       setReduceBloodTeam1(hp1);
       setLuckyNumber(4);
       setStatusTeam1("Choáng");
-      console.log(skillRandom);
     }
+
     if (name !== "Đóng băng") {
       setHpTeam1(hpTeam1 - hp1);
       setReduceBloodTeam1(hp1);
@@ -171,6 +183,8 @@ function Location() {
 
   return (
     <>
+    {console.log(listTeam1)
+    }
       <div>
         <div>
           {listTeam1.length === 0 ? <GameOver /> : null}
@@ -314,13 +328,14 @@ function Location() {
                     {statusTeam1 === "Choáng" ? (
                       <div className="box">
                         <img
-                          src="https://elwiki.net/wiki/images/1/1f/Status_Stunned.gif"
+                          src="https://i.pinimg.com/originals/03/a1/31/03a131545e7c893dcb2c13da1ffe728a.gif"
                           alt=""
-                          width={50}
-                          height={50}
+                          width={70}
+                          height={70}
                           style={{
                             marginTop: 10,
-                            marginLeft: "180%",
+                            marginLeft: "50%",
+                            zIndex: 10,
                           }}
                         />
                       </div>
@@ -333,7 +348,7 @@ function Location() {
                         // src={player1.sprites.other.home.front_shiny}
                         alt="pokemon"
                         className="detail-img box avatar"
-                        style={{ height: 150, width: 230 }}
+                        style={{ height: 150, width: 230, marginTop: 20 }}
                       />
                     </div>
                   </div>
@@ -377,7 +392,6 @@ function Location() {
               </div>
             </section>
             {/* <NotificationPlayer2 skillNameTeam1={skillNameTeam1} /> */}
-
             {isCloseStart === false ? (
               <img
                 style={{
@@ -392,6 +406,7 @@ function Location() {
             ) : null}
 
             <section
+              // id="custom-back"
               className="pokemon-player2"
               style={{ border: "4px solid #EAE61A", opacity: 0.9 }}
             >
@@ -404,18 +419,29 @@ function Location() {
                 <Col span={5}>
                   {listTeam2[1] ? (
                     <button
-                      style={{ borderRadius: "100%", width: 50, height: 45 }}
+                      style={{
+                        borderRadius: "100%",
+                        width: 50,
+                        height: 45,
+                        cursor: "pointer",
+                      }}
                     >
                       <img
-                        style={{ width: 40, height: 40, cursor: "pointer" }}
+                        style={{ width: 40, height: 40 }}
                         src={
                           listTeam2[1].pokemon.sprites.other.home.front_default
                         }
+                        alt=""
                       />
                     </button>
                   ) : (
                     <button
-                      style={{ borderRadius: "100%", width: 50, height: 45 }}
+                      style={{
+                        borderRadius: "100%",
+                        width: 50,
+                        height: 45,
+                        cursor: "pointer",
+                      }}
                     ></button>
                   )}
                 </Col>
@@ -423,59 +449,94 @@ function Location() {
                 <Col span={5}>
                   {listTeam2[2] ? (
                     <button
-                      style={{ borderRadius: "100%", width: 50, height: 45 }}
+                      style={{
+                        borderRadius: "100%",
+                        width: 50,
+                        height: 45,
+                        cursor: "pointer",
+                      }}
                     >
                       <img
-                        style={{ width: 40, height: 40, cursor: "pointer" }}
+                        style={{ width: 40, height: 40 }}
                         src={
                           listTeam2[2].pokemon.sprites.other.home.front_default
                         }
+                        alt=""
                       />
                     </button>
                   ) : (
                     <button
-                      style={{ borderRadius: "100%", width: 50, height: 45 }}
+                      style={{
+                        borderRadius: "100%",
+                        width: 50,
+                        height: 45,
+                        cursor: "pointer",
+                      }}
                     ></button>
                   )}
                 </Col>
               </Row>
               <div className="detail-player">
-                <div className="meter animate">
-                  <span
-                    style={{
-                      width: `${hpTeam2}%`,
-                      borderRadius: 25,
-                      backgroundColor:
-                        hpTeam2 <= 30
-                          ? "red"
-                          : hpTeam2 <= 65
-                          ? "rgb(225, 235, 39)"
-                          : "rgb(43, 194, 83)",
-                    }}
-                  >
-                    <span></span>
-                  </span>
+                <div>
+                  <div className="meter animate">
+                    <span
+                      style={{
+                        width: `${hpTeam2}%`,
+                        borderRadius: 25,
+                        backgroundColor:
+                          hpTeam2 <= 30
+                            ? "red"
+                            : hpTeam2 <= 65
+                            ? "rgb(225, 235, 39)"
+                            : "rgb(43, 194, 83)",
+                      }}
+                    >
+                      <span></span>
+                    </span>
+                  </div>
+                  <hr />
+                  <hr />
+                  <div className="meter animate blue">
+                    {/* <span
+                      style={{
+                        width: `${manaTeam1}%`,
+                        borderRadius: 25,
+                        // backgroundColor:
+                        //   mnaa <= 30
+                        //     ? "red"
+                        //     : hpTeam1 <= 65
+                        //     ? "rgb(225, 235, 39)"
+                        //     : "rgb(43, 194, 83)",
+                      }}
+                    >
+                      <span></span>
+                    </span> */}
+                  </div>
+                  <hr />
                 </div>
                 <h1
                   className="detail-name"
                   style={{ fontWeight: 500, color: "#fff" }}
                 >
-                  {/* {team2.name} */}
+                  {/* {team1.name} */}
                 </h1>
                 {listTeam2[0] ? (
-                  <div>
-                    <p className="custom-hp">{reduceBloodTeam2}</p>
-                    {/* <p className="custom-hp">{statusTeam2}</p> */}
+                  <div className="box2">
+                    <div className="box">
+                      {isCloseStart === true ? (
+                        <p className="custom-hp">- {reduceBloodTeam2}</p>
+                      ) : null}
+                    </div>
                     {statusTeam2 === "Choáng" ? (
                       <div className="box">
                         <img
-                          src="https://elwiki.net/wiki/images/1/1f/Status_Stunned.gif"
+                          src="https://i.pinimg.com/originals/03/a1/31/03a131545e7c893dcb2c13da1ffe728a.gif"
                           alt=""
-                          width={50}
-                          height={50}
+                          width={70}
+                          height={70}
                           style={{
                             marginTop: 10,
-                            marginLeft: "180%",
+                            marginLeft: "100%",
                           }}
                         />
                       </div>
@@ -483,27 +544,31 @@ function Location() {
                     <div className="box">
                       <img
                         src={listTeam2[0].pokemon.sprites.back_default}
+                        // src={listTeam1[0].pokemon.sprites.versions.generation}
+                        // src={player1.sprites.other.home.front_default}
+                        // src={player1.sprites.other.home.front_shiny}
                         alt="pokemon"
-                        className="detail-img"
-                        style={{ height: 150, width: 230 }}
+                        className="detail-img box avatar"
+                        style={{ height: 150, width: 230, marginTop: 20 }}
                       />
                     </div>
                   </div>
                 ) : null}
 
-                {/* {listTeam2[0] ? (
+                {/* {listTeam1[0] ? (
                   <Row
                     style={{
                       border: "2px solid #EAE61A",
                       borderRadius: "0px 0px 12px 12px",
-                      marginTop: 150,
+                      marginTop: 160,
                     }}
                   >
-                    {listTeam2[0].abilities.map((item: any) => (
+                    {listTeam1[0].abilities.map((item: any) => (
                       <>
                         <Col span={1}></Col>
                         <Col span={5}>
                           <button
+                            id="auto-click"
                             style={{
                               borderRadius: "100%",
                               width: 50,
