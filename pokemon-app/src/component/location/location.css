@@ -283,27 +283,67 @@ button:hover {
 }
 
 .team1 {
-    height: 100;
-    width: 100;
-    background-color: rgb(0,0,0,0);
-    z-index: 999;
-    top: 25%;
-    margin-left: 62%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    animation: punch 1s linear infinite;
+  height: 100;
+  width: 100;
+  background-color: rgb(0, 0, 0, 0);
+  z-index: 999;
+  top: 25%;
+  margin-left: 62%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  animation: punch 2s ;
 }
 
+.team2 {
+  height: 100;
+  width: 100;
+  background-color: rgb(0, 0, 0, 0);
+  z-index: 999;
+  top: 70%;
+  margin-left: 40%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  animation: punchTeam2 2s ;
+}
+
+.team1-1 {
+  height: 500;
+  width: 100;
+  background-color: rgb(0, 0, 0, 0);
+  z-index: 999;
+  top: 45%;
+  margin-left: 55%;
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(60deg);
+  /* animation: punch 1s linear infinite; */
+}
+.team2-1 {
+  height: 500;
+  width: 100;
+  background-color: rgb(0, 0, 0, 0);
+  z-index: 999;
+  top: 55%;
+  margin-left: 55%;
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(240deg);
+  /* animation: punch 1s linear infinite; */
+}
 
 @keyframes hp {
   to {
-    transform: translateY(-200%) ;
+    transform: translateY(-200%);
   }
 }
 
 @keyframes punch {
   to {
-    transform: translateY(150%) translateX(-400%) ;
+    transform: translateY(150%) translateX(-400%);
+  }
+}
+
+@keyframes punchTeam2 {
+  to {
+    transform: translateY(-240%) translateX(500%);
   }
 }
 

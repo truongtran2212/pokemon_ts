@@ -16,12 +16,10 @@ const Location: React.FC = () => {
   const [listTeam2, setListTeam2] = useState<any>(team2 !== null ? team2 : []);
 
   const [manaTeam1, setManaTeam1] = useState<number>(
-    // team1 !== null ? team1[0].mana : 0
-    70
+    team1 !== null ? team1[0].mana : 0
   );
   const [manaTeam2, setManaTeam2] = useState<number>(
-    // team2 !== null ? team2[0].mana : 0
-    70
+    team2 !== null ? team2[0].mana : 0
   );
 
   const [hpTeam1, setHpTeam1] = useState<number>(
@@ -85,14 +83,17 @@ const Location: React.FC = () => {
   }, [luckyNumber]);
 
   // Team 1 bắt đầu đánh
+  const [nameSkillTeam1, setNameSkillTeam1] = useState<string>("");
 
   const team1Fight = () => {
+    setNameSkillTeam2("");
     let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
     let hp2 = skillRandom.damage;
     let manaSkill = skillRandom.mana;
     let name = skillRandom.name;
 
     if (manaTeam1 >= manaSkill) {
+      setNameSkillTeam1(name);
       if (name === "Đóng băng") {
         setHpTeam2(hpTeam2 - hp2);
         setManaTeam1(manaTeam1 - manaSkill);
@@ -116,6 +117,7 @@ const Location: React.FC = () => {
     }
 
     if (manaTeam1 < manaSkill) {
+      setNameSkillTeam1("");
       setHpTeam2(hpTeam2 - 9);
       setManaTeam1(manaTeam1 + (Math.floor(Math.random() * 10) + 5));
       setReduceBloodTeam2(9);
@@ -131,13 +133,18 @@ const Location: React.FC = () => {
 
   // Team 2 bắt đầu đánh
 
+  const [nameSkillTeam2, setNameSkillTeam2] = useState<string>("");
+
   const team2Fight = () => {
+    setNameSkillTeam1("");
     let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
     let hp1 = skillRandom.damage;
     let name = skillRandom.name;
     let manaSkill = skillRandom.mana;
 
     if (manaTeam2 >= manaSkill) {
+      setNameSkillTeam2(name);
+
       if (name === "Đóng băng") {
         setHpTeam1(hpTeam1 - hp1);
         setManaTeam2(manaTeam2 - manaSkill);
@@ -160,6 +167,8 @@ const Location: React.FC = () => {
     }
 
     if (manaTeam2 < manaSkill) {
+      setNameSkillTeam2("");
+
       setHpTeam1(hpTeam1 - 9);
       setManaTeam2(manaTeam2 + (Math.floor(Math.random() * 10) + 5));
       setReduceBloodTeam1(9);
@@ -195,15 +204,24 @@ const Location: React.FC = () => {
 
   return (
     <>
+      {console.log(nameSkillTeam1)}
       <div>
         <div>
           {listTeam1.length === 0 ? <GameOver /> : null}
           {listTeam2.length === 0 ? <GameOver /> : null}
           {number > 1 && number < 4 ? <CountDown /> : null}
           {number === 0 ? <Fight /> : null}
-          {<Wind />}
-          {/* {<Fire />} */}
-          {<Tsunami />}
+
+          {nameSkillTeam1 === "Gió" ? <WindTeam1 /> : null}
+          {nameSkillTeam1 === "Lửa" ? <FireTeam1 /> : null}
+          {nameSkillTeam1 === "Đóng băng" ? <IceTeam1 /> : null}
+          {nameSkillTeam1 === "Nước" ? <TsunamiTeam1 /> : null}
+          {<ThunderTeam1 />}
+
+          {nameSkillTeam2 === "Gió" ? <WindTeam2 /> : null}
+          {nameSkillTeam2 === "Lửa" ? <FireTeam2 /> : null}
+          {nameSkillTeam2 === "Đóng băng" ? <IceTeam2 /> : null}
+          {nameSkillTeam2 === "Nước" ? <TsunamiTeam2 /> : null}
         </div>
         <div className="custom-background">
           <div
@@ -334,7 +352,7 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {/* {isCloseStart === true ? ( */}
-                        <p className="custom-hp">- {reduceBloodTeam1}</p>
+                      <p className="custom-hp">- {reduceBloodTeam1}</p>
                       {/* ) : null} */}
                     </div>
                     {statusTeam1 === "Choáng" ? (
@@ -360,7 +378,7 @@ const Location: React.FC = () => {
                         // src={player1.sprites.other.home.front_shiny}
                         alt="pokemon"
                         className="detail-img box avatar"
-                        style={{ height: 200, width: 263}}
+                        style={{ height: 200, width: 263 }}
                       />
                     </div>
                   </div>
@@ -561,7 +579,7 @@ const Location: React.FC = () => {
                         // src={player1.sprites.other.home.front_shiny}
                         alt="pokemon"
                         className="detail-img box avatar"
-                        style={{ height: 200, width: 263}}
+                        style={{ height: 200, width: 263 }}
                       />
                     </div>
                   </div>
@@ -743,14 +761,12 @@ const CountDown = () => {
     </>
   );
 };
-const Wind = () => {
+const WindTeam2 = () => {
   return (
     <>
-      <div className="team1"
-        
-      >
+      <div className={"team2"}>
         <img
-          style={{ height: 200, width: 200 }}
+          style={{ height: 150, width: 100 }}
           src="https://images.jifo.co/132225151_1664164887618.gif"
           alt=""
         />
@@ -758,14 +774,13 @@ const Wind = () => {
     </>
   );
 };
-const Fire = () => {
+const FireTeam2 = () => {
   return (
     <>
-      <div className="team1"
-        
-      >
+      <div className={"team2"}>
         <img
-          style={{ height: 200, width: 200 }}
+          // style={{ height: 150, width: 100, transform: "rotate(-45deg)" }}
+          style={{ height: 150, width: 100, transform: "rotate(135deg)" }}
           src="https://orangemushroom.files.wordpress.com/2016/07/blazing-orbital-flame-effect.gif"
           alt=""
         />
@@ -773,15 +788,96 @@ const Fire = () => {
     </>
   );
 };
-const Tsunami = () => {
+
+const TsunamiTeam2 = () => {
   return (
     <>
-      <div className="team1"
-        
-      >
+      <div className="team2">
         <img
-          style={{ height: 200, width: 200 }}
+          style={{ height: 150, width: 100 }}
           src="https://png.pngtree.com/png-clipart/20230207/original/pngtree-big-wave-of-tsunami-sea-and-summer-png-image_8946949.png"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+const IceTeam2 = () => {
+  return (
+    <>
+      <div className="team2-1">
+        <img
+          style={{ height: 700, width: 150 }}
+          src="https://spadow.files.wordpress.com/2010/07/newcoldbeam-hit0.gif?w=584"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+const WindTeam1 = () => {
+  return (
+    <>
+      <div className={"team1"}>
+        <img
+          style={{ height: 150, width: 100 }}
+          src="https://images.jifo.co/132225151_1664164887618.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+const FireTeam1 = () => {
+  return (
+    <>
+      <div className={"team1"}>
+        <img
+          style={{ height: 150, width: 100, transform: "rotate(-45deg)" }}
+          // style={{ height: 150, width: 100, transform: "rotate(135deg)" }}
+          src="https://orangemushroom.files.wordpress.com/2016/07/blazing-orbital-flame-effect.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+
+const TsunamiTeam1 = () => {
+  return (
+    <>
+      <div className="team1">
+        <img
+          style={{ height: 150, width: 100 }}
+          src="https://png.pngtree.com/png-clipart/20230207/original/pngtree-big-wave-of-tsunami-sea-and-summer-png-image_8946949.png"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+
+const ThunderTeam1 = () => {
+  return (
+    <>
+      <div className="team1">
+        <img
+          style={{ height: 150, width: 100 }}
+          src="https://www.animatedimages.org/data/media/41/animated-lightning-and-thunderbolt-image-0001.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+
+const IceTeam1 = () => {
+  return (
+    <>
+      <div className="team1-1">
+        <img
+          style={{ height: 700, width: 150 }}
+          src="https://spadow.files.wordpress.com/2010/07/newcoldbeam-hit0.gif?w=584"
           alt=""
         />
       </div>
