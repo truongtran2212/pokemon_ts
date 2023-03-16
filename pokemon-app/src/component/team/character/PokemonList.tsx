@@ -491,9 +491,9 @@ const PokemonList: React.FC = () => {
               />
               {!detail.isOpened && (
                 <div className="btn">
-                  <button onClick={nextPage}>
-                    {loading ? "Loading..." : "Load more"}
-                  </button>
+                  <Button onClick={nextPage}>
+                    {loading ? "LOADING..." : "LOAD MORE"}
+                  </Button>
                 </div>
               )}
             </>

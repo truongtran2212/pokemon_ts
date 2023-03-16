@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -112,9 +113,9 @@ const ChoosePlayer1: React.FC = () => {
               />
               {!detail.isOpened && (
                 <div className="btn">
-                  <button onClick={nextPage}>
+                  <Button onClick={nextPage}>
                     {loading ? "Loading..." : "Load more"}
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

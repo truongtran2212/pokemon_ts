@@ -14,7 +14,15 @@ const Location: React.FC = () => {
 
   const [listTeam1, setListTeam1] = useState<any>(team1 !== null ? team1 : []);
   const [listTeam2, setListTeam2] = useState<any>(team2 !== null ? team2 : []);
-  const [manaTeam1, setManaTeam1] = useState<number>(100);
+
+  const [manaTeam1, setManaTeam1] = useState<number>(
+    // team1 !== null ? team1[0].mana : 0
+    70
+  );
+  const [manaTeam2, setManaTeam2] = useState<number>(
+    // team2 !== null ? team2[0].mana : 0
+    70
+  );
 
   const [hpTeam1, setHpTeam1] = useState<number>(
     team1 !== null ? team1[0].hp : 0
@@ -41,43 +49,26 @@ const Location: React.FC = () => {
       setListTeam2(listTeam2);
       if (listTeam2.length > 0) {
         setHpTeam2(100);
-        setStatusTeam2("Bình thường");
       }
-      setReduceBloodTeam2(0);
     }
   }, [hpTeam2]);
 
   // Team1 bị đánh
   useEffect(() => {
-    const checkTeam1 =  () => {
-      console.log("manaTeam1");
-      console.log(manaTeam1);
-      if (hpTeam1 <= 0) {
-
-      
-        // setManaTeam1(100)
-        // setHpTeam1(0);
-        listTeam1.shift();
-        setListTeam1(listTeam1);
-        setReduceBloodTeam1(0);
-        if (listTeam1.length > 0) {
-          setHpTeam1(100);
-          setManaTeam1(100)
-          setStatusTeam2("Bình thường");
-        }
+    if (hpTeam1 <= 0) {
+      listTeam1.shift();
+      setListTeam1(listTeam1);
+      setReduceBloodTeam1(0);
+      if (listTeam1.length > 0) {
+        setHpTeam1(100);
       }
-    };
-    checkTeam1();
-    // setManaTeam1(100)
-  }, [hpTeam1,manaTeam1]);
+    }
+  }, [hpTeam1]);
 
   // Bắt đầu trận đấu
   useEffect(() => {
-    console.log(manaTeam1);
-    console.log(hpTeam1);
-
     if (luckyNumber == 1) {
-      setTimeout(function () { team1Fight(manaTeam1) }, 2000);
+      setTimeout(team1Fight, 2000);
     }
 
     if (luckyNumber == 2) {
@@ -94,20 +85,13 @@ const Location: React.FC = () => {
   }, [luckyNumber]);
 
   // Team 1 bắt đầu đánh
-  // useEffect(() => {
-  //   if(hpTeam1 === 100){
-  //     setManaTeam1(100)
-  //   }
-  // }, [manaTeam1])
-  
 
-  const team1Fight = (manaTeam1: number) => {
+  const team1Fight = () => {
     let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
     let hp2 = skillRandom.damage;
     let manaSkill = skillRandom.mana;
     let name = skillRandom.name;
-    console.log(manaTeam1);
-    console.log(manaSkill);
+
     if (manaTeam1 >= manaSkill) {
       if (name === "Đóng băng") {
         setHpTeam2(hpTeam2 - hp2);
@@ -119,22 +103,29 @@ const Location: React.FC = () => {
 
       if (name !== "Đóng băng") {
         setHpTeam2(hpTeam2 - hp2);
-        // console.log("manaTeam1 = " +  manaTeam1);
-        // console.log("manaSkill = " +  manaSkill);
-
         setManaTeam1(manaTeam1 - manaSkill);
         setReduceBloodTeam2(hp2);
         setLuckyNumber(2);
         setStatusTeam2("Bình thường");
       }
+      if (hpTeam2 - hp2 <= 0) {
+        setManaTeam2(100);
+        setStatusTeam2("Bình thường");
+        console.log(hpTeam2);
+      }
     }
 
     if (manaTeam1 < manaSkill) {
-      setHpTeam2(hpTeam2 - 10);
+      setHpTeam2(hpTeam2 - 9);
       setManaTeam1(manaTeam1 + (Math.floor(Math.random() * 10) + 5));
-      setReduceBloodTeam2(10);
+      setReduceBloodTeam2(9);
       setLuckyNumber(2);
       setStatusTeam2("Bình thường");
+      if (hpTeam2 - 9 <= 0) {
+        setManaTeam2(100);
+        setStatusTeam2("Bình thường");
+        console.log(hpTeam2);
+      }
     }
   };
 
@@ -144,19 +135,40 @@ const Location: React.FC = () => {
     let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
     let hp1 = skillRandom.damage;
     let name = skillRandom.name;
+    let manaSkill = skillRandom.mana;
 
-    if (name === "Đóng băng") {
-      setHpTeam1(hpTeam1 - hp1);
-      setReduceBloodTeam1(hp1);
-      setLuckyNumber(4);
-      setStatusTeam1("Choáng");
+    if (manaTeam2 >= manaSkill) {
+      if (name === "Đóng băng") {
+        setHpTeam1(hpTeam1 - hp1);
+        setManaTeam2(manaTeam2 - manaSkill);
+        setReduceBloodTeam1(hp1);
+        setLuckyNumber(4);
+        setStatusTeam1("Choáng");
+      }
+
+      if (name !== "Đóng băng") {
+        setHpTeam1(hpTeam1 - hp1);
+        setManaTeam2(manaTeam2 - manaSkill);
+        setReduceBloodTeam1(hp1);
+        setLuckyNumber(1);
+        setStatusTeam1("Bình thường");
+      }
+      if (hpTeam1 - hp1 <= 0) {
+        setManaTeam1(100);
+        setStatusTeam1("Bình thường");
+      }
     }
 
-    if (name !== "Đóng băng") {
-      setHpTeam1(hpTeam1 - hp1);
-      setReduceBloodTeam1(hp1);
+    if (manaTeam2 < manaSkill) {
+      setHpTeam1(hpTeam1 - 9);
+      setManaTeam2(manaTeam2 + (Math.floor(Math.random() * 10) + 5));
+      setReduceBloodTeam1(9);
       setLuckyNumber(1);
       setStatusTeam1("Bình thường");
+      if (hpTeam1 - 9 <= 0) {
+        setManaTeam1(100);
+        setStatusTeam1("Bình thường");
+      }
     }
   };
 
@@ -189,8 +201,10 @@ const Location: React.FC = () => {
           {listTeam2.length === 0 ? <GameOver /> : null}
           {number > 1 && number < 4 ? <CountDown /> : null}
           {number === 0 ? <Fight /> : null}
+          {<Wind />}
+          {/* {<Fire />} */}
+          {<Tsunami />}
         </div>
-        {/* <button onClick={test}>123</button> */}
         <div className="custom-background">
           <div
             className={
@@ -319,9 +333,9 @@ const Location: React.FC = () => {
                 {listTeam1[0] ? (
                   <div className="box2">
                     <div className="box">
-                      {isCloseStart === true ? (
+                      {/* {isCloseStart === true ? ( */}
                         <p className="custom-hp">- {reduceBloodTeam1}</p>
-                      ) : null}
+                      {/* ) : null} */}
                     </div>
                     {statusTeam1 === "Choáng" ? (
                       <div className="box">
@@ -346,7 +360,7 @@ const Location: React.FC = () => {
                         // src={player1.sprites.other.home.front_shiny}
                         alt="pokemon"
                         className="detail-img box avatar"
-                        style={{ height: 150, width: 230, marginTop: 20 }}
+                        style={{ height: 200, width: 263}}
                       />
                     </div>
                   </div>
@@ -495,9 +509,9 @@ const Location: React.FC = () => {
                   <hr />
                   <hr />
                   <div className="meter animate blue">
-                    {/* <span
+                    <span
                       style={{
-                        width: `${manaTeam1}%`,
+                        width: `${manaTeam2}%`,
                         borderRadius: 25,
                         // backgroundColor:
                         //   mnaa <= 30
@@ -508,7 +522,7 @@ const Location: React.FC = () => {
                       }}
                     >
                       <span></span>
-                    </span> */}
+                    </span>
                   </div>
                   <hr />
                 </div>
@@ -534,7 +548,7 @@ const Location: React.FC = () => {
                           height={70}
                           style={{
                             marginTop: 10,
-                            marginLeft: "100%",
+                            marginLeft: "170%",
                           }}
                         />
                       </div>
@@ -547,7 +561,7 @@ const Location: React.FC = () => {
                         // src={player1.sprites.other.home.front_shiny}
                         alt="pokemon"
                         className="detail-img box avatar"
-                        style={{ height: 150, width: 230, marginTop: 20 }}
+                        style={{ height: 200, width: 263}}
                       />
                     </div>
                   </div>
@@ -597,7 +611,7 @@ const Location: React.FC = () => {
       </div>
     </>
   );
-}
+};
 
 const NotificationPlayer1 = () => {
   return (
@@ -723,6 +737,51 @@ const CountDown = () => {
         <img
           style={{ height: 500, width: 400 }}
           src="https://www.business2community.com/wp-content/uploads/2020/08/countdown.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+const Wind = () => {
+  return (
+    <>
+      <div className="team1"
+        
+      >
+        <img
+          style={{ height: 200, width: 200 }}
+          src="https://images.jifo.co/132225151_1664164887618.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+const Fire = () => {
+  return (
+    <>
+      <div className="team1"
+        
+      >
+        <img
+          style={{ height: 200, width: 200 }}
+          src="https://orangemushroom.files.wordpress.com/2016/07/blazing-orbital-flame-effect.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+const Tsunami = () => {
+  return (
+    <>
+      <div className="team1"
+        
+      >
+        <img
+          style={{ height: 200, width: 200 }}
+          src="https://png.pngtree.com/png-clipart/20230207/original/pngtree-big-wave-of-tsunami-sea-and-summer-png-image_8946949.png"
           alt=""
         />
       </div>
