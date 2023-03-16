@@ -106,7 +106,7 @@
 }
 
 .custom-hp {
-  animation: hp 1.5s linear infinite;
+  animation: hp 3s linear infinite;
   color: rgb(190, 182, 182);
   text-shadow: 2px 2px 4px #000000;
   margin: 50px 0px 0px 110px;
