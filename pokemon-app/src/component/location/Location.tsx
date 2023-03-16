@@ -70,9 +70,6 @@ function Location() {
   // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber == 1) {
-      if(hpTeam1 === 100) {
-        setManaTeam1(100);
-      }
       setTimeout(team1Fight, 2000);
     }
 
@@ -92,9 +89,6 @@ function Location() {
   // Team 1 bắt đầu đánh
 
   const team1Fight =  () => {
-    if(hpTeam1 === 100) {
-      setManaTeam1(100);
-    }
     let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
     let hp2 = skillRandom.damage;
     let mana1 = skillRandom.mana;
