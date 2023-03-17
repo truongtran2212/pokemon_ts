@@ -17,7 +17,7 @@ interface ChooseTeam {
   setIsOpenModalChooseTeam: React.Dispatch<React.SetStateAction<boolean>>;
   idPokemon: number;
   setSkillPoke: React.Dispatch<React.SetStateAction<Abilities[]>>;
-  skillPoke: any;
+  skillPoke: Abilities[];
 }
 
 const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
@@ -52,8 +52,6 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
       description: "Đã đủ team.",
     });
   };
-
-  // const [skillPoke, setSkillPoke] = useState<any>([]);
 
   const chooseTeam1 = async () => {
     await axios
@@ -219,7 +217,6 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
   const [listAbility, setListAbility] = useState<Abilities[]>(listAbilities);
 
   useEffect(() => {
-    // if(listAbility) {}
     localStorage.setItem("abilities", JSON.stringify(listAbility));
   }, [isOpenModalChooseSkill]);
 
@@ -415,7 +412,8 @@ const PokemonList: React.FC = () => {
           <Col span={8} style={{ float: "left" }}>
             <Link to="/location" style={{ color: "white" }}>
               <img
-                src="https://preview.redd.it/o8a7u5vl6hb41.png?auto=webp&s=96532f959833339937e105d6358746602c0ab467"
+                // src="https://preview.redd.it/o8a7u5vl6hb41.png?auto=webp&s=96532f959833339937e105d6358746602c0ab467"
+                src="https://i0.wp.com/thegamehaus.com/wp-content/uploads/2019/07/NXGif1.gif?resize=486%2C274&ssl=1"
                 alt=""
                 height={90}
                 width={180}

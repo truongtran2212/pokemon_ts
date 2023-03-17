@@ -117,7 +117,7 @@ const Location: React.FC = () => {
     }
 
     if (manaTeam1 < manaSkill) {
-      setNameSkillTeam1("");
+      setNameSkillTeam1("Đánh thường");
       setHpTeam2(hpTeam2 - 9);
       setManaTeam1(manaTeam1 + (Math.floor(Math.random() * 10) + 5));
       setReduceBloodTeam2(9);
@@ -167,7 +167,7 @@ const Location: React.FC = () => {
     }
 
     if (manaTeam2 < manaSkill) {
-      setNameSkillTeam2("");
+      setNameSkillTeam2("Đánh thường");
 
       setHpTeam1(hpTeam1 - 9);
       setManaTeam2(manaTeam2 + (Math.floor(Math.random() * 10) + 5));
@@ -199,29 +199,40 @@ const Location: React.FC = () => {
 
   const start2 = () => {
     setNumber(number - 1);
-    // setLuckyNumber(Math.floor(Math.random() * 2) + 1);
   };
 
   return (
     <>
-      {console.log(nameSkillTeam1)}
       <div>
         <div>
-          {listTeam1.length === 0 ? <GameOver /> : null}
-          {listTeam2.length === 0 ? <GameOver /> : null}
+          {/* {(listTeam1.length === 0 || listTeam1.length === 0) ? <GameOver /> : null} */}
+          {listTeam1.length === 0 &&
+          listTeam2.length === 0 ? null : listTeam1.length === 0 ||
+            listTeam2.length === 0 ? (
+            <GameOver />
+          ) : null}
+          {/* {listTeam2.length === 0 ? <GameOver /> : null} */}
           {number > 1 && number < 4 ? <CountDown /> : null}
-          {number === 0 ? <Fight /> : null}
+          {/* {number === 0 && luckyNumber === 1 ? <Fight /> : null} */}
 
+          {number === 0 && luckyNumber === 1 ? <Team1 /> : null}
+          {number === 0 && luckyNumber === 2 ? <Team2 /> : null}
+
+          {/* animation skill team1 */}
           {nameSkillTeam1 === "Gió" ? <WindTeam1 /> : null}
           {nameSkillTeam1 === "Lửa" ? <FireTeam1 /> : null}
           {nameSkillTeam1 === "Đóng băng" ? <IceTeam1 /> : null}
           {nameSkillTeam1 === "Nước" ? <TsunamiTeam1 /> : null}
-          {<ThunderTeam1 />}
+          {nameSkillTeam1 === "Đánh thường" ? <AttackTeam1 /> : null}
 
+          {/* animation skill team2 */}
           {nameSkillTeam2 === "Gió" ? <WindTeam2 /> : null}
           {nameSkillTeam2 === "Lửa" ? <FireTeam2 /> : null}
           {nameSkillTeam2 === "Đóng băng" ? <IceTeam2 /> : null}
           {nameSkillTeam2 === "Nước" ? <TsunamiTeam2 /> : null}
+          {nameSkillTeam2 === "Đánh thường" ? <AttackTeam2 /> : null}
+
+
         </div>
         <div className="custom-background">
           <div
@@ -234,7 +245,6 @@ const Location: React.FC = () => {
             }
           >
             <section
-              // id="custom-back"
               className="pokemon-player1"
               style={{ border: "4px solid #EAE61A", opacity: 0.9 }}
             >
@@ -351,9 +361,9 @@ const Location: React.FC = () => {
                 {listTeam1[0] ? (
                   <div className="box2">
                     <div className="box">
-                      {/* {isCloseStart === true ? ( */}
-                      <p className="custom-hp">- {reduceBloodTeam1}</p>
-                      {/* ) : null} */}
+                      {isCloseStart === true && reduceBloodTeam1 !== 0 ? (
+                        <p className="custom-hp">- {reduceBloodTeam1}</p>
+                      ) : null}
                     </div>
                     {statusTeam1 === "Choáng" ? (
                       <div className="box">
@@ -553,7 +563,7 @@ const Location: React.FC = () => {
                 {listTeam2[0] ? (
                   <div className="box2">
                     <div className="box">
-                      {isCloseStart === true ? (
+                      {isCloseStart === true && reduceBloodTeam2 !== 0 ? (
                         <p className="custom-hp">- {reduceBloodTeam2}</p>
                       ) : null}
                     </div>
@@ -693,7 +703,6 @@ const GameOver = () => {
           width: 800,
           backgroundColor: "rgb (0,0,0,0)",
           zIndex: 999,
-          // marginTop: "20%",
           top: "50%",
 
           marginLeft: "55%",
@@ -735,6 +744,50 @@ const Fight = () => {
     </>
   );
 };
+const Team1 = () => {
+  return (
+    <>
+      <div
+        style={{
+          backgroundColor: "rgb (0,0,0,0)",
+          zIndex: 999,
+          top: "47%",
+          marginLeft: "53%",
+          position: "absolute",
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        <img
+          src="https://www.digitalscrapbook.com/sites/default/files/styles/456_scale/public/s3fs-user-content/graphic-image/user-2/node-62674/player-1-template-video-game-valentine-stamp-graphic-element-computer-pixels-games-teen-boy-love.png"
+          alt=""
+          width={700}
+        />
+      </div>
+    </>
+  );
+};
+const Team2 = () => {
+  return (
+    <>
+      <div
+        style={{
+          backgroundColor: "rgb (0,0,0,0)",
+          zIndex: 999,
+          top: "47%",
+          marginLeft: "53%",
+          position: "absolute",
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        <img
+          src="https://www.digitalscrapbook.com/sites/default/files/styles/456_scale/public/s3fs-user-content/graphic-image/user-2/node-62675/player-2-template-video-game-valentine-stamp-graphic-element-computer-pixels-games-teen-boy-love.png"
+          alt=""
+          width={700}
+        />
+      </div>
+    </>
+  );
+};
 const CountDown = () => {
   return (
     <>
@@ -744,7 +797,6 @@ const CountDown = () => {
           width: 800,
           backgroundColor: "rgb (0,0,0,0)",
           zIndex: 999,
-          // marginTop: "20%",
           top: "35%",
 
           marginLeft: "62%",
@@ -779,7 +831,6 @@ const FireTeam2 = () => {
     <>
       <div className={"team2"}>
         <img
-          // style={{ height: 150, width: 100, transform: "rotate(-45deg)" }}
           style={{ height: 150, width: 100, transform: "rotate(135deg)" }}
           src="https://orangemushroom.files.wordpress.com/2016/07/blazing-orbital-flame-effect.gif"
           alt=""
@@ -815,6 +866,7 @@ const IceTeam2 = () => {
     </>
   );
 };
+
 const WindTeam1 = () => {
   return (
     <>
@@ -828,13 +880,41 @@ const WindTeam1 = () => {
     </>
   );
 };
+
+const AttackTeam2 = () => {
+  return (
+    <>
+      <div className={"team1-attack"}>
+        <img
+          style={{ height: 200, width: 200, marginLeft: 500 }}
+          src="https://s3-eu-west-1.amazonaws.com/inspire.education.uploads/assets/media/scene/uploads/custom/1599320562_Chocolate_custom.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+
+const AttackTeam1 = () => {
+  return (
+    <>
+      <div className={"team2-attack"}>
+        <img
+          style={{ height: 200, width: 200 }}
+          src="https://s3-eu-west-1.amazonaws.com/inspire.education.uploads/assets/media/scene/uploads/custom/1599320562_Chocolate_custom.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+
 const FireTeam1 = () => {
   return (
     <>
       <div className={"team1"}>
         <img
           style={{ height: 150, width: 100, transform: "rotate(-45deg)" }}
-          // style={{ height: 150, width: 100, transform: "rotate(135deg)" }}
           src="https://orangemushroom.files.wordpress.com/2016/07/blazing-orbital-flame-effect.gif"
           alt=""
         />
