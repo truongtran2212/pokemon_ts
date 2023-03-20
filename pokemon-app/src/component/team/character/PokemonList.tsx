@@ -320,6 +320,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
 
   return (
     <>
+      <h1 style={{ color: "#fff" }}>POKEMON LIST</h1>
       {detail.isOpened === false ? (
         <section className="collection-container">
           {pokemons.map((pokemon) => {
@@ -405,99 +406,185 @@ const PokemonList: React.FC = () => {
     setOpen(false);
   };
 
+  let team1 = localStorage.getItem("team1") ? JSON.parse(localStorage.team1) : null
+  
+  let team2 = localStorage.getItem("team2") ? JSON.parse(localStorage.team2) : null
+
   return (
     <>
-      <div className="App">
-        <Row style={{ display: "flex" }}>
-          <Col span={8} style={{ float: "left" }}>
-            <Link to="/location" style={{ color: "white" }}>
-              <img
-                // src="https://preview.redd.it/o8a7u5vl6hb41.png?auto=webp&s=96532f959833339937e105d6358746602c0ab467"
-                src="https://i0.wp.com/thegamehaus.com/wp-content/uploads/2019/07/NXGif1.gif?resize=486%2C274&ssl=1"
-                alt=""
-                height={90}
-                width={180}
-              />
-            </Link>
-          </Col>
-          <Col span={8}>
-            <header className="pokemon-header"> Pokemon</header>
-          </Col>
-          <Col span={8}>
-            <img
-              src="https://fc03.deviantart.net/fs70/f/2013/019/b/6/pokeball_by_zel_duh-d5s04qj.gif"
-              alt=""
-              height={100}
-              width={100}
-              style={{ float: "right", cursor: "pointer" }}
-              onClick={showListTeam}
-            />
-          </Col>
-        </Row>
-        <div className="container">
-          {detail.isOpened === false ? (
-            <>
-              <Drawer
-                title="Danh sách Team"
-                placement="right"
-                closable={false}
-                onClose={onClose}
-                open={open}
-                key={placement}
-                width={700}
-              >
-                <h1>TEAM 1</h1>
-                <Row>
-                  {localStorage.getItem("team1")
-                    ? JSON.parse(localStorage.team1).map((item: any) => (
-                        <>
-                          <Col span={1}></Col>
-                          <Col span={7}>
-                            <p>{item.pokemon.name}</p>
-                            <img
-                              src={item.pokemon.sprites.front_default}
-                              alt=""
-                            />
-                          </Col>
-                        </>
-                      ))
-                    : null}
-                </Row>
-                <h1>TEAM 2</h1>
+      <Row>
+        <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
+          <Row style={{ display: "flex" }}>
+            {/* <Col span={8}>
+              <header className="pokemon-header"> Pokemon</header>
+            </Col> */}
+          </Row>
+          <div className="container">
+            {detail.isOpened === false ? (
+              <>
+                <Drawer
+                  title="Danh sách Team"
+                  placement="right"
+                  closable={false}
+                  onClose={onClose}
+                  open={open}
+                  key={placement}
+                  width={700}
+                >
+                  <h1>TEAM 1</h1>
+                  <Row>
+                    {localStorage.getItem("team1")
+                      ? JSON.parse(localStorage.team1).map((item: any) => (
+                          <>
+                            <Col span={1}></Col>
+                            <Col span={7}>
+                              <p>{item.pokemon.name}</p>
+                              <img
+                                src={item.pokemon.sprites.front_default}
+                                alt=""
+                              />
+                            </Col>
+                          </>
+                        ))
+                      : null}
+                  </Row>
+                  <h1>TEAM 2</h1>
 
-                <Row>
-                  {localStorage.getItem("team2")
-                    ? JSON.parse(localStorage.team2).map((item: any) => (
-                        <>
-                          <Col span={1}></Col>
-                          <Col span={7}>
-                            <p>{item.pokemon.name}</p>
+                  <Row>
+                    {localStorage.getItem("team2")
+                      ? JSON.parse(localStorage.team2).map((item: any) => (
+                          <>
+                            <Col span={1}></Col>
+                            <Col span={7}>
+                              <p>{item.pokemon.name}</p>
+                              <img
+                                src={item.pokemon.sprites.front_default}
+                                alt=""
+                              />
+                            </Col>
+                          </>
+                        ))
+                      : null}
+                  </Row>
+                </Drawer>
+                <PokemonCollection
+                  pokemons={pokemons}
+                  detail={detail}
+                  setDetail={setDetail}
+                />
+                {!detail.isOpened && (
+                  <div className="btn">
+                    <Button onClick={nextPage}>
+                      {loading ? "LOADING..." : "LOAD MORE"}
+                    </Button>
+                  </div>
+                )}
+              </>
+            ) : null}
+          </div>
+        </Col>
+        <Col span={10} style={{ backgroundColor: "#E8E9EB", borderRadius: 15 }}>
+          <Row
+            style={{
+              height: "46%",
+            }}
+          >
+            <Col span={1}></Col>
+            <Col
+              span={22}
+              style={{
+                border: "1px solid black",
+                borderRadius: 10,
+                marginTop: 10,
+              }}
+            >
+              <h1>Team 1</h1>
+              <Row>
+                {team1 ? team1.map((item: any) => (
+                  <>
+                    <Col span={6} className="pokemon-list-team">
+                      <strong style={{ color: "#3d405b" }}>
+                        {item.pokemon.name}
+                      </strong>
+                      <img src={item.pokemon.sprites.front_default} alt="" />
+                      <Row>
+                        {item.abilities.map((item: any) => (
+                          <Col
+                            span={5}
+                            style={{
+                              display: "flex",
+                              backgroundColor: "#3d405b",
+                              margin: "2px",
+                              borderRadius: "100%",
+                            }}
+                          >
                             <img
-                              src={item.pokemon.sprites.front_default}
+                              style={{ margin: "auto" }}
+                              src={item.image}
                               alt=""
+                              width={25}
+                              height={25}
                             />
                           </Col>
-                        </>
-                      ))
-                    : null}
-                </Row>
-              </Drawer>
-              <PokemonCollection
-                pokemons={pokemons}
-                detail={detail}
-                setDetail={setDetail}
+                        ))}
+                      </Row>
+                    </Col>
+                  </>
+                )): null}
+              </Row>
+              <Row>
+                {localStorage.getItem("abilities")
+                  ? JSON.parse(localStorage.abilities).map((item: any) => (
+                      <>
+                        <Col span={2} className="pokemon-list-abilities">
+                          <img src={item.image} alt="" width={40} height={40} />
+                        </Col>
+                      </>
+                    ))
+                  : null}
+              </Row>
+            </Col>
+            <Col span={1}></Col>
+          </Row>
+
+          <Row
+            style={{
+              height: "8%",
+            }}
+          >
+            <Col span={8}></Col>
+            <Col span={8} style={{ display: "flex" }}>
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Battle_icon_gladii.svg/2048px-Battle_icon_gladii.svg.png"
+                alt=""
+                width={50}
+                height={50}
+                style={{ margin: "auto" }}
               />
-              {!detail.isOpened && (
-                <div className="btn">
-                  <Button onClick={nextPage}>
-                    {loading ? "LOADING..." : "LOAD MORE"}
-                  </Button>
-                </div>
-              )}
-            </>
-          ) : null}
-        </div>
-      </div>
+            </Col>
+            <Col span={8}></Col>
+          </Row>
+
+          <Row
+            style={{
+              height: "46%",
+            }}
+          >
+            <Col span={1}></Col>
+            <Col
+              span={22}
+              style={{
+                border: "1px solid black",
+                borderRadius: 10,
+                marginBottom: 10,
+              }}
+            >
+              <h1>Team 2</h1>
+            </Col>
+            <Col span={1}></Col>
+          </Row>
+        </Col>
+      </Row>
     </>
   );
 };

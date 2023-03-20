@@ -10,8 +10,8 @@ body {
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
-  overflow-y:visible;
-  overflow-x: hidden;
+  /* overflow-y:visible;
+  overflow-x: hidden; */
   font-size: 1.15rem;
   font-family: "Montserrat", sans-serif;
   background-color: #3d405b;
