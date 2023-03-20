@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Modal, notification, Row } from "antd";
+import { Button, Col, Drawer, Modal, notification, Row, Input } from "antd";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -6,10 +6,13 @@ import { Link } from "react-router-dom";
 import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
 import "./pokemon.css";
 
+const { Search } = Input;
+
 interface Props {
   pokemons: IPokemonDetail[];
   detail: Detail;
   setDetail: React.Dispatch<React.SetStateAction<Detail>>;
+  search: any;
 }
 
 interface ChooseTeam {
@@ -304,7 +307,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
 };
 
 const PokemonCollection: React.FC<Props> = (props) => {
-  const { pokemons, detail, setDetail } = props;
+  const { pokemons, detail, setDetail, search } = props;
   const [isOpenModalChooseSkill, setIsOpenModalChooseSkill] =
     useState<boolean>(false);
   const [idPokemon, setIdPokemon] = useState<number>(0);
@@ -318,27 +321,57 @@ const PokemonCollection: React.FC<Props> = (props) => {
     window.location.assign("http://localhost:3000");
   };
 
+  const [searchPoke, setSearchPoke] = useState(
+    localStorage.getItem("search") ? JSON.parse(localStorage.search) : []
+  );
+
+  useEffect(() => {
+    const changeSearchPoke = () => {
+      setSearchPoke(
+        localStorage.getItem("search") ? JSON.parse(localStorage.search) : []
+      );
+    };
+    changeSearchPoke();
+  }, [searchPoke]);
+
   return (
     <>
-      <h1 style={{ color: "#fff" }}>POKEMON LIST</h1>
+    <h1 style={{color: "#fff"}}>POKEMON LIST</h1>
       {detail.isOpened === false ? (
         <section className="collection-container">
-          {pokemons.map((pokemon) => {
-            return (
-              <>
-                <section
-                  className="pokemon-list-container"
-                  onClick={() => {
-                    setIdPokemon(pokemon.id);
-                    showModalChooseSkill();
-                  }}
-                >
-                  <p className="pokemon-name"> {pokemon.name} </p>
-                  <img src={pokemon.sprites.front_default} alt="pokemon" />
-                </section>
-              </>
-            );
-          })}
+          {searchPoke.length === 0
+            ? pokemons.map((pokemon: any) => {
+                return (
+                  <>
+                    <section
+                      className="pokemon-list-container"
+                      onClick={() => {
+                        setIdPokemon(pokemon.id);
+                        showModalChooseSkill();
+                      }}
+                    >
+                      <p className="pokemon-name"> {pokemon.name} </p>
+                      <img src={pokemon.sprites.front_default} alt="pokemon" />
+                    </section>
+                  </>
+                );
+              })
+            : searchPoke.map((pokemon: any) => {
+                return (
+                  <>
+                    <section
+                      className="pokemon-list-container"
+                      onClick={() => {
+                        setIdPokemon(pokemon.id);
+                        showModalChooseSkill();
+                      }}
+                    >
+                      <p className="pokemon-name"> {pokemon.name} </p>
+                      <img src={pokemon.sprites.front_default} alt="pokemon" />
+                    </section>
+                  </>
+                );
+              })}
           <ModalChooseSkill
             isOpenModalChooseSkill={isOpenModalChooseSkill}
             setIsOpenModalChooseSkill={setIsOpenModalChooseSkill}
@@ -370,7 +403,7 @@ const PokemonList: React.FC = () => {
   useEffect(() => {
     const getPokemon = async () => {
       const res = await axios.get(
-        "https://pokeapi.co/api/v2/pokemon?limit=20&offset=20"
+        "https://pokeapi.co/api/v2/pokemon?limit=2000"
       );
       setNextUrl(res.data.next);
       res.data.results.forEach(async (pokemon: Pokemons) => {
@@ -380,22 +413,23 @@ const PokemonList: React.FC = () => {
         setPokemons((p) => [...p, poke.data]);
         setLoading(false);
       });
+      localStorage.setItem("pokemons", JSON.stringify(res.data.results));
     };
     getPokemon();
   }, []);
 
-  const nextPage = async () => {
-    setLoading(true);
-    let res = await axios.get(nextUrl);
-    setNextUrl(res.data.next);
-    res.data.results.forEach(async (pokemon: Pokemons) => {
-      const poke = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
-      );
-      setPokemons((p) => [...p, poke.data]);
-      setLoading(false);
-    });
-  };
+  // const nextPage = async () => {
+  //   setLoading(true);
+  //   let res = await axios.get(nextUrl);
+  //   setNextUrl(res.data.next);
+  //   res.data.results.forEach(async (pokemon: Pokemons) => {
+  //     const poke = await axios.get(
+  //       `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
+  //     );
+  //     setPokemons((p) => [...p, poke.data]);
+  //     setLoading(false);
+  //   });
+  // };
 
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState("left");
@@ -406,9 +440,45 @@ const PokemonList: React.FC = () => {
     setOpen(false);
   };
 
-  let team1 = localStorage.getItem("team1") ? JSON.parse(localStorage.team1) : null
-  
-  let team2 = localStorage.getItem("team2") ? JSON.parse(localStorage.team2) : null
+  let team1 = localStorage.getItem("team1")
+    ? JSON.parse(localStorage.team1)
+    : null;
+
+  let team2 = localStorage.getItem("team2")
+    ? JSON.parse(localStorage.team2)
+    : null;
+  const [search, setSearch] = useState<any[]>([]);
+
+  const onSearch = (value: any) => {
+    setSearch([]);
+    if (value === "") {
+      console.log(pokemons);
+      console.log(value);
+      localStorage.removeItem("search");
+      localStorage.setItem("search", JSON.stringify(pokemons));
+    }
+    if (value !== "") {
+      pokemons.map((item: any) => {
+        let found = item.name.match(value);
+        if (found !== null) {
+          axios
+            .get(`https://pokeapi.co/api/v2/pokemon/${item.name}`)
+            .then((res) => {
+              setSearch((p: any) => [...p, res.data]);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (search.length > 0) {
+      localStorage.setItem("search", JSON.stringify(search));
+    }
+  }, [search]);
 
   return (
     <>
@@ -418,6 +488,14 @@ const PokemonList: React.FC = () => {
             {/* <Col span={8}>
               <header className="pokemon-header"> Pokemon</header>
             </Col> */}
+            <Search
+              placeholder="input search text"
+              allowClear
+              onSearch={onSearch}
+              style={{
+                width: 200,
+              }}
+            />
           </Row>
           <div className="container">
             {detail.isOpened === false ? (
@@ -471,12 +549,13 @@ const PokemonList: React.FC = () => {
                   pokemons={pokemons}
                   detail={detail}
                   setDetail={setDetail}
+                  search={search}
                 />
                 {!detail.isOpened && (
                   <div className="btn">
-                    <Button onClick={nextPage}>
+                    {/* <Button onClick={nextPage}>
                       {loading ? "LOADING..." : "LOAD MORE"}
-                    </Button>
+                    </Button> */}
                   </div>
                 )}
               </>
@@ -500,37 +579,42 @@ const PokemonList: React.FC = () => {
             >
               <h1>Team 1</h1>
               <Row>
-                {team1 ? team1.map((item: any) => (
-                  <>
-                    <Col span={6} className="pokemon-list-team">
-                      <strong style={{ color: "#3d405b" }}>
-                        {item.pokemon.name}
-                      </strong>
-                      <img src={item.pokemon.sprites.front_default} alt="" />
-                      <Row>
-                        {item.abilities.map((item: any) => (
-                          <Col
-                            span={5}
-                            style={{
-                              display: "flex",
-                              backgroundColor: "#3d405b",
-                              margin: "2px",
-                              borderRadius: "100%",
-                            }}
-                          >
-                            <img
-                              style={{ margin: "auto" }}
-                              src={item.image}
-                              alt=""
-                              width={25}
-                              height={25}
-                            />
-                          </Col>
-                        ))}
-                      </Row>
-                    </Col>
-                  </>
-                )): null}
+                {team1
+                  ? team1.map((item: any) => (
+                      <>
+                        <Col span={6} className="pokemon-list-team">
+                          <strong style={{ color: "#3d405b" }}>
+                            {item.pokemon.name}
+                          </strong>
+                          <img
+                            src={item.pokemon.sprites.front_default}
+                            alt=""
+                          />
+                          <Row>
+                            {item.abilities.map((item: any) => (
+                              <Col
+                                span={5}
+                                style={{
+                                  display: "flex",
+                                  backgroundColor: "#3d405b",
+                                  margin: "2px",
+                                  borderRadius: "100%",
+                                }}
+                              >
+                                <img
+                                  style={{ margin: "auto" }}
+                                  src={item.image}
+                                  alt=""
+                                  width={25}
+                                  height={25}
+                                />
+                              </Col>
+                            ))}
+                          </Row>
+                        </Col>
+                      </>
+                    ))
+                  : null}
               </Row>
               <Row>
                 {localStorage.getItem("abilities")
