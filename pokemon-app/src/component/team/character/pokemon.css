@@ -83,22 +83,8 @@
   display: flex;
   cursor: pointer;
   flex-direction: column;
-  background-color: #f4f1de;
-  margin: 1rem;
-  padding: 0 1rem;
-  border-radius: 12px;
-  justify-content: center;
-  /* align-items: center; */
-  margin-left: 27px;
-  height: 210px;
-}
-
-.pokemon-list-team-null {
-  display: flex;
-  cursor: pointer;
-  flex-direction: column;
   /* background-color: #f4f1de; */
-  background-image: url("https://lbmslab.org/lab/wp-content/uploads/2017/02/822be1519b67a0f657dbfeae47eba30b-1.png");
+  background-image: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b3c54c95-8c44-4e5b-93ae-389fe559bcbf/dcl7zd5-ce796bfd-5c5c-4ba8-8c17-a39ff1266906.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2IzYzU0Yzk1LThjNDQtNGU1Yi05M2FlLTM4OWZlNTU5YmNiZlwvZGNsN3pkNS1jZTc5NmJmZC01YzVjLTRiYTgtOGMxNy1hMzlmZjEyNjY5MDYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.DV14BqMG0FNMiOtl4UjUv3yg5LRHE8agBzBQDTudwt8");
   background-size: cover;
   margin: 1rem;
   padding: 0 1rem;
@@ -106,8 +92,23 @@
   justify-content: center;
   /* align-items: center; */
   margin-left: 27px;
-  width: 500px;
-  height: 210px;
+  height: 250px;
+}
+
+.pokemon-list-team-null {
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  /* background-color: #f4f1de; */
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvvzINB4GSBiF5BKE_DDhu5ne5MbXO2Gf1MBDX_DfnMPbZSIjwJblOL9pJ6jry3e2hXu0&usqp=CAU");
+  background-size: cover;
+  margin: 1rem;
+  padding: 0 1rem;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
+  
 }
 
 .pokemon-list-abilities {
@@ -177,14 +178,21 @@
   box-shadow: inset 0 0 5px gray; 
   border-radius: 10px;
 } */
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: gray; 
+  background: gray;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(183, 180, 180); 
+  background: rgb(183, 180, 180);
+}
+
+.background-list {
+  /* background-color: #e8e9eb; */
+  background-image: url("https://cdn.pixabay.com/photo/2020/10/05/11/16/space-5629007_960_720.jpg");
+  background-size: cover;
+  border-radius: 15;
 }

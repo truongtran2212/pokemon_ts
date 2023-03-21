@@ -495,7 +495,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
             </section>
           </div>
         </Col>
-        <Col span={10} style={{ backgroundColor: "#E8E9EB", borderRadius: 15 }}>
+        <Col span={10} className="background-list" style={{  borderRadius: 15}}>
           <ListTeam isOpenChooseTeam={isOpenChooseTeam} />
         </Col>
       </Row>
@@ -747,13 +747,9 @@ const ListTeam: React.FC<ListTeam> = (props) => {
             </Row>
           ) : (
             <>
-              <Col span={6} className="pokemon-list-team-null">
-                
-              </Col>
-              <Col span={6} className="pokemon-list-team-null">
-              </Col>
-              <Col span={6} className="pokemon-list-team-null">
-              </Col>
+              <Col span={6} className="pokemon-list-team-null"></Col>
+              <Col span={6} className="pokemon-list-team-null"></Col>
+              <Col span={6} className="pokemon-list-team-null"></Col>
             </>
           )}
           {/* <Row>
@@ -950,13 +946,9 @@ const ListTeam: React.FC<ListTeam> = (props) => {
             </Row>
           ) : (
             <>
-              <Col span={6} className="pokemon-list-team-null">
-                
-              </Col>
-              <Col span={6} className="pokemon-list-team-null">
-              </Col>
-              <Col span={6} className="pokemon-list-team-null">
-              </Col>
+              <Col span={6} className="pokemon-list-team-null"></Col>
+              <Col span={6} className="pokemon-list-team-null"></Col>
+              <Col span={6} className="pokemon-list-team-null"></Col>
             </>
           )}
           {/* <Row>
