@@ -12,7 +12,6 @@ interface Props {
   pokemons: IPokemonDetail[];
   detail: Detail;
   setDetail: React.Dispatch<React.SetStateAction<Detail>>;
-  search: any;
 }
 
 interface ChooseTeam {
@@ -149,12 +148,13 @@ interface ChooseSkill {
   isOpenModalChooseSkill: boolean;
   setIsOpenModalChooseSkill: React.Dispatch<React.SetStateAction<boolean>>;
   idPokemon: number;
+  isOpenChooseTeam: boolean;
+  setIsOpenChooseTeam: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
-  const { isOpenModalChooseSkill, setIsOpenModalChooseSkill, idPokemon } =
+  const { isOpenModalChooseSkill, setIsOpenModalChooseSkill, idPokemon,isOpenChooseTeam,setIsOpenChooseTeam } =
     props;
-  const [isOpenChooseTeam, setIsOpenChooseTeam] = useState(false);
   const openNotification = () => {
     notification.open({
       message: "Thông báo",
@@ -191,8 +191,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
     },
     {
       name: "Nước",
-      image:
-        "https://freepngimg.com/save/25324-tsunami-transparent-image/1615x1238",
+      image: "https://cdn-icons-png.flaticon.com/512/616/616711.png",
       damage: Math.floor(Math.random() * 20) + 10,
       mana: Math.floor(Math.random() * 9) + 17,
     },
@@ -254,7 +253,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
         onCancel={handleCancel}
         onOk={handleOk}
       >
-        <Row>
+        <Row  key={10}>
           {listAbility.map((item, index) => (
             <Col span={3}>
               <button
@@ -280,7 +279,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
         <Row>
           <h3>Các skill được chọn</h3>
         </Row>
-        <Row>
+        <Row  key={1}>
           {skillPoke.map((item: any) => (
             <Col span={3}>
               <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
@@ -307,9 +306,11 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
 };
 
 const PokemonCollection: React.FC<Props> = (props) => {
-  const { pokemons, detail, setDetail, search } = props;
+  const { pokemons, detail, setDetail } = props;
   const [isOpenModalChooseSkill, setIsOpenModalChooseSkill] =
     useState<boolean>(false);
+    const [isOpenChooseTeam, setIsOpenChooseTeam] = useState(false);
+
   const [idPokemon, setIdPokemon] = useState<number>(0);
   const showModalChooseSkill = () => {
     setIsOpenModalChooseSkill(true);
@@ -321,68 +322,106 @@ const PokemonCollection: React.FC<Props> = (props) => {
     window.location.assign("http://localhost:3000");
   };
 
-  const [searchPoke, setSearchPoke] = useState(
-    localStorage.getItem("search") ? JSON.parse(localStorage.search) : []
-  );
+  const [searchPoke, setSearchPoke] = useState<any[]>([]);
+
+  const onSearch = (value: any) => {
+    setSearch([]);
+    if (value === "") {
+      localStorage.removeItem("search");
+    }
+    if (value !== "") {
+      pokemons.map((item: any) => {
+        let found = item.name.match(value);
+        if (found !== null) {
+          axios
+            .get(`https://pokeapi.co/api/v2/pokemon/${item.name}`)
+            .then((res) => {
+              setSearch((p: any) => [...p, res.data]);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
+    }
+  };
+
+  const [search, setSearch] = useState<any[]>([]);
 
   useEffect(() => {
-    const changeSearchPoke = () => {
-      setSearchPoke(
-        localStorage.getItem("search") ? JSON.parse(localStorage.search) : []
-      );
-    };
-    changeSearchPoke();
-  }, [searchPoke]);
-
+    if (search.length > 0) {
+      localStorage.setItem("search", JSON.stringify(search));
+    }
+    setSearchPoke(search);
+  }, [search]);
   return (
     <>
-    <h1 style={{color: "#fff"}}>POKEMON LIST</h1>
-      {detail.isOpened === false ? (
-        <section className="collection-container">
-          {searchPoke.length === 0
-            ? pokemons.map((pokemon: any) => {
-                return (
-                  <>
-                    <section
-                      className="pokemon-list-container"
-                      onClick={() => {
-                        setIdPokemon(pokemon.id);
-                        showModalChooseSkill();
-                      }}
-                    >
-                      <p className="pokemon-name"> {pokemon.name} </p>
-                      <img src={pokemon.sprites.front_default} alt="pokemon" />
-                    </section>
-                  </>
-                );
-              })
-            : searchPoke.map((pokemon: any) => {
-                return (
-                  <>
-                    <section
-                      className="pokemon-list-container"
-                      onClick={() => {
-                        setIdPokemon(pokemon.id);
-                        showModalChooseSkill();
-                      }}
-                    >
-                      <p className="pokemon-name"> {pokemon.name} </p>
-                      <img src={pokemon.sprites.front_default} alt="pokemon" />
-                    </section>
-                  </>
-                );
-              })}
-          <ModalChooseSkill
-            isOpenModalChooseSkill={isOpenModalChooseSkill}
-            setIsOpenModalChooseSkill={setIsOpenModalChooseSkill}
-            idPokemon={idPokemon}
-          />
-        </section>
-      ) : (
-        <div className="overlay custom-background">
-          <Link to="/location"></Link>
-        </div>
-      )}
+      <Row>
+        <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
+          <div className="container" >
+            <h1 style={{ color: "#fff" }}>POKEMON LIST</h1>
+            <Search
+              placeholder="input search text"
+              allowClear
+              onSearch={onSearch}
+              style={{
+                width: 200,
+              }}
+            />
+            <section className="collection-container">
+              {searchPoke.length === 0
+                ? pokemons.map((pokemon: any) => {
+                    return (
+                      <>
+                        <section
+                          className="pokemon-list-container"
+                          onClick={() => {
+                            setIdPokemon(pokemon.id);
+                            showModalChooseSkill();
+                          }}
+                        >
+                          <p className="pokemon-name"> {pokemon.name} </p>
+                          <img
+                            src={pokemon.sprites.front_default}
+                            alt="pokemon"
+                          />
+                        </section>
+                      </>
+                    );
+                  })
+                : searchPoke.map((pokemon: any) => {
+                    return (
+                      <>
+                        <section
+                          className="pokemon-list-container"
+                          onClick={() => {
+                            setIdPokemon(pokemon.id);
+                            showModalChooseSkill();
+                          }}
+                        >
+                          <p className="pokemon-name"> {pokemon.name} </p>
+                          <img
+                            src={pokemon.sprites.front_default}
+                            alt="pokemon"
+                          />
+                        </section>
+                      </>
+                    );
+                  })}
+              <ModalChooseSkill
+                isOpenModalChooseSkill={isOpenModalChooseSkill}
+                setIsOpenModalChooseSkill={setIsOpenModalChooseSkill}
+                idPokemon={idPokemon}
+                isOpenChooseTeam={isOpenChooseTeam}
+                setIsOpenChooseTeam={setIsOpenChooseTeam}
+              />
+            </section>
+          </div>
+        </Col>
+        <Col span={10} style={{ backgroundColor: "#E8E9EB", borderRadius: 15 }}>
+          <ListTeam isOpenChooseTeam={isOpenChooseTeam} />
+        </Col>
+      </Row>
     </>
   );
 };
@@ -416,6 +455,9 @@ const PokemonList: React.FC = () => {
       localStorage.setItem("pokemons", JSON.stringify(res.data.results));
     };
     getPokemon();
+    if (localStorage.getItem("search") !== undefined) {
+      localStorage.removeItem("search");
+    }
   }, []);
 
   // const nextPage = async () => {
@@ -440,183 +482,90 @@ const PokemonList: React.FC = () => {
     setOpen(false);
   };
 
-  let team1 = localStorage.getItem("team1")
+  return (
+    <>
+      <PokemonCollection
+        pokemons={pokemons}
+        detail={detail}
+        setDetail={setDetail}
+      />
+    </>
+  );
+};
+
+interface ListTeam {
+  isOpenChooseTeam: boolean;
+}
+
+const ListTeam: React.FC<ListTeam> = (props) => {
+  const { isOpenChooseTeam } = props;
+  const [team1, setTeam1] = useState([]);
+
+  let teamP1 = localStorage.getItem("team1")
     ? JSON.parse(localStorage.team1)
-    : null;
+    : [];
+
+  useEffect(() => {
+    console.log(123);
+    localStorage.setItem("team1", JSON.stringify(teamP1));
+  }, [isOpenChooseTeam]);
 
   let team2 = localStorage.getItem("team2")
     ? JSON.parse(localStorage.team2)
     : null;
-  const [search, setSearch] = useState<any[]>([]);
-
-  const onSearch = (value: any) => {
-    setSearch([]);
-    if (value === "") {
-      console.log(pokemons);
-      console.log(value);
-      localStorage.removeItem("search");
-      localStorage.setItem("search", JSON.stringify(pokemons));
-    }
-    if (value !== "") {
-      pokemons.map((item: any) => {
-        let found = item.name.match(value);
-        if (found !== null) {
-          axios
-            .get(`https://pokeapi.co/api/v2/pokemon/${item.name}`)
-            .then((res) => {
-              setSearch((p: any) => [...p, res.data]);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (search.length > 0) {
-      localStorage.setItem("search", JSON.stringify(search));
-    }
-  }, [search]);
-
   return (
     <>
-      <Row>
-        <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
-          <Row style={{ display: "flex" }}>
-            {/* <Col span={8}>
-              <header className="pokemon-header"> Pokemon</header>
-            </Col> */}
-            <Search
-              placeholder="input search text"
-              allowClear
-              onSearch={onSearch}
-              style={{
-                width: 200,
-              }}
-            />
+      <Row
+        style={{
+          height: "46%",
+        }}
+      >
+        <Col span={1}></Col>
+        <Col
+          span={22}
+          style={{
+            border: "1px solid black",
+            borderRadius: 10,
+            marginTop: 10,
+          }}
+        >
+          <h1>Team 1</h1>
+          <Row style={{ marginLeft: 35 }}>
+            {localStorage.getItem("team1")
+              ? JSON.parse(localStorage.team1).map((item: any) => (
+                  <>
+                    <Col span={6} className="pokemon-list-team" key={5}>
+                      <strong style={{ color: "#3d405b", textAlign: "center" }}>
+                        {item.pokemon.name}
+                      </strong>
+                      <img src={item.pokemon.sprites.front_default} alt="" />
+                      <Row>
+                        {item.abilities.map((item: any) => (
+                          <Col
+                            span={5}
+                            style={{
+                              display: "flex",
+                              backgroundColor: "#3d405b",
+                              margin: "auto",
+                              borderRadius: "100%",
+                            }}
+                          >
+                            <img
+                              style={{ margin: "auto" }}
+                              src={item.image}
+                              alt=""
+                              width={25}
+                              height={25}
+                            />
+                          </Col>
+                        ))}
+                      </Row>
+                    </Col>
+                  </>
+                ))
+              : null}
           </Row>
-          <div className="container">
-            {detail.isOpened === false ? (
-              <>
-                <Drawer
-                  title="Danh sách Team"
-                  placement="right"
-                  closable={false}
-                  onClose={onClose}
-                  open={open}
-                  key={placement}
-                  width={700}
-                >
-                  <h1>TEAM 1</h1>
-                  <Row>
-                    {localStorage.getItem("team1")
-                      ? JSON.parse(localStorage.team1).map((item: any) => (
-                          <>
-                            <Col span={1}></Col>
-                            <Col span={7}>
-                              <p>{item.pokemon.name}</p>
-                              <img
-                                src={item.pokemon.sprites.front_default}
-                                alt=""
-                              />
-                            </Col>
-                          </>
-                        ))
-                      : null}
-                  </Row>
-                  <h1>TEAM 2</h1>
-
-                  <Row>
-                    {localStorage.getItem("team2")
-                      ? JSON.parse(localStorage.team2).map((item: any) => (
-                          <>
-                            <Col span={1}></Col>
-                            <Col span={7}>
-                              <p>{item.pokemon.name}</p>
-                              <img
-                                src={item.pokemon.sprites.front_default}
-                                alt=""
-                              />
-                            </Col>
-                          </>
-                        ))
-                      : null}
-                  </Row>
-                </Drawer>
-                <PokemonCollection
-                  pokemons={pokemons}
-                  detail={detail}
-                  setDetail={setDetail}
-                  search={search}
-                />
-                {!detail.isOpened && (
-                  <div className="btn">
-                    {/* <Button onClick={nextPage}>
-                      {loading ? "LOADING..." : "LOAD MORE"}
-                    </Button> */}
-                  </div>
-                )}
-              </>
-            ) : null}
-          </div>
-        </Col>
-        <Col span={10} style={{ backgroundColor: "#E8E9EB", borderRadius: 15 }}>
-          <Row
-            style={{
-              height: "46%",
-            }}
-          >
-            <Col span={1}></Col>
-            <Col
-              span={22}
-              style={{
-                border: "1px solid black",
-                borderRadius: 10,
-                marginTop: 10,
-              }}
-            >
-              <h1>Team 1</h1>
-              <Row>
-                {team1
-                  ? team1.map((item: any) => (
-                      <>
-                        <Col span={6} className="pokemon-list-team">
-                          <strong style={{ color: "#3d405b" }}>
-                            {item.pokemon.name}
-                          </strong>
-                          <img
-                            src={item.pokemon.sprites.front_default}
-                            alt=""
-                          />
-                          <Row>
-                            {item.abilities.map((item: any) => (
-                              <Col
-                                span={5}
-                                style={{
-                                  display: "flex",
-                                  backgroundColor: "#3d405b",
-                                  margin: "2px",
-                                  borderRadius: "100%",
-                                }}
-                              >
-                                <img
-                                  style={{ margin: "auto" }}
-                                  src={item.image}
-                                  alt=""
-                                  width={25}
-                                  height={25}
-                                />
-                              </Col>
-                            ))}
-                          </Row>
-                        </Col>
-                      </>
-                    ))
-                  : null}
-              </Row>
-              <Row>
+          {/* <Row>
                 {localStorage.getItem("abilities")
                   ? JSON.parse(localStorage.abilities).map((item: any) => (
                       <>
@@ -626,48 +575,46 @@ const PokemonList: React.FC = () => {
                       </>
                     ))
                   : null}
-              </Row>
-            </Col>
-            <Col span={1}></Col>
-          </Row>
-
-          <Row
-            style={{
-              height: "8%",
-            }}
-          >
-            <Col span={8}></Col>
-            <Col span={8} style={{ display: "flex" }}>
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Battle_icon_gladii.svg/2048px-Battle_icon_gladii.svg.png"
-                alt=""
-                width={50}
-                height={50}
-                style={{ margin: "auto" }}
-              />
-            </Col>
-            <Col span={8}></Col>
-          </Row>
-
-          <Row
-            style={{
-              height: "46%",
-            }}
-          >
-            <Col span={1}></Col>
-            <Col
-              span={22}
-              style={{
-                border: "1px solid black",
-                borderRadius: 10,
-                marginBottom: 10,
-              }}
-            >
-              <h1>Team 2</h1>
-            </Col>
-            <Col span={1}></Col>
-          </Row>
+              </Row> */}
         </Col>
+        <Col span={1}></Col>
+      </Row>
+
+      <Row
+        style={{
+          height: "8%",
+        }}
+      >
+        <Col span={8}></Col>
+        <Col span={8} style={{ display: "flex" }}>
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Battle_icon_gladii.svg/2048px-Battle_icon_gladii.svg.png"
+            alt=""
+            width={50}
+            height={50}
+            style={{ margin: "auto" }}
+          />
+        </Col>
+        <Col span={8}></Col>
+      </Row>
+
+      <Row
+        style={{
+          height: "46%",
+        }}
+      >
+        <Col span={1}></Col>
+        <Col
+          span={22}
+          style={{
+            border: "1px solid black",
+            borderRadius: 10,
+            marginBottom: 10,
+          }}
+        >
+          <h1>Team 2</h1>
+        </Col>
+        <Col span={1}></Col>
       </Row>
     </>
   );
