@@ -37,19 +37,31 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
   };
 
   const openNotificationSuccessTeam1 = () => {
-    notification.open({
+    notification.success({
       message: "Thông báo",
       description: "Thêm vào team 1 thành công.",
     });
   };
+  const openCheckNameTeam1 = () => {
+    notification.error({
+      message: "Thông báo",
+      description: "Pokemon này đã có trong team 1.",
+    });
+  };
+  const openCheckNameTeam2 = () => {
+    notification.error({
+      message: "Thông báo",
+      description: "Pokemon này đã có trong team 2.",
+    });
+  };
   const openNotificationSuccessTeam2 = () => {
-    notification.open({
+    notification.success({
       message: "Thông báo",
       description: "Thêm vào team 2 thành công.",
     });
   };
   const openNotificationError = () => {
-    notification.open({
+    notification.warning({
       message: "Thông báo",
       description: "Đã đủ team.",
     });
@@ -63,14 +75,44 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
           ? JSON.parse(localStorage.team1)
           : [];
         let pokemon = res.data;
-        if (listTeam1.length < 3) {
-          listTeam1.push({ pokemon, hp: 100, mana: 100, abilities: skillPoke });
+        let flag = false;
+        if (listTeam1.length === 0) {
+          listTeam1.push({
+            pokemon,
+            hp: 100,
+            mana: 100,
+            abilities: skillPoke,
+          });
           localStorage.setItem("team1", JSON.stringify(listTeam1));
           openNotificationSuccessTeam1();
+          handleCancel();
+        } else if (listTeam1.length < 3) {
+          for (let i = 0; i < listTeam1.length; i++) {
+            if (listTeam1[i].pokemon.name !== pokemon.name) {
+              flag = true;
+            }
+            if (listTeam1[i].pokemon.name === pokemon.name) {
+              flag = false;
+              break;
+            }
+          }
+          if (flag == true) {
+            listTeam1.push({
+              pokemon,
+              hp: 100,
+              mana: 100,
+              abilities: skillPoke,
+            });
+            localStorage.setItem("team1", JSON.stringify(listTeam1));
+            openNotificationSuccessTeam1();
+            handleCancel();
+          } else if (flag == false) {
+            openCheckNameTeam1();
+          }
         } else {
           openNotificationError();
         }
-        handleCancel();
+        console.log(listTeam1);
       })
       .catch((err) => {
         console.log("Đã xảy ra lỗi");
@@ -85,14 +127,43 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
           ? JSON.parse(localStorage.team2)
           : [];
         let pokemon = res.data;
-        if (listTeam2.length < 3) {
-          listTeam2.push({ pokemon, hp: 100, mana: 100, abilities: skillPoke });
+        let flag = false;
+        if (listTeam2.length === 0) {
+          listTeam2.push({
+            pokemon,
+            hp: 100,
+            mana: 100,
+            abilities: skillPoke,
+          });
           localStorage.setItem("team2", JSON.stringify(listTeam2));
           openNotificationSuccessTeam2();
+          handleCancel();
+        } else if (listTeam2.length < 3) {
+          for (let i = 0; i < listTeam2.length; i++) {
+            if (listTeam2[i].pokemon.name !== pokemon.name) {
+              flag = true;
+            }
+            if (listTeam2[i].pokemon.name === pokemon.name) {
+              flag = false;
+              break;
+            }
+          }
+          if (flag == true) {
+            listTeam2.push({
+              pokemon,
+              hp: 100,
+              mana: 100,
+              abilities: skillPoke,
+            });
+            localStorage.setItem("team2", JSON.stringify(listTeam2));
+            openNotificationSuccessTeam2();
+            handleCancel();
+          } else if (flag == false) {
+            openCheckNameTeam2();
+          }
         } else {
           openNotificationError();
         }
-        handleCancel();
       })
       .catch((err) => {
         console.log("Đã xảy ra lỗi");
@@ -153,8 +224,13 @@ interface ChooseSkill {
 }
 
 const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
-  const { isOpenModalChooseSkill, setIsOpenModalChooseSkill, idPokemon,isOpenChooseTeam,setIsOpenChooseTeam } =
-    props;
+  const {
+    isOpenModalChooseSkill,
+    setIsOpenModalChooseSkill,
+    idPokemon,
+    isOpenChooseTeam,
+    setIsOpenChooseTeam,
+  } = props;
   const openNotification = () => {
     notification.open({
       message: "Thông báo",
@@ -253,7 +329,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
         onCancel={handleCancel}
         onOk={handleOk}
       >
-        <Row  key={10}>
+        <Row key={10}>
           {listAbility.map((item, index) => (
             <Col span={3}>
               <button
@@ -279,7 +355,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
         <Row>
           <h3>Các skill được chọn</h3>
         </Row>
-        <Row  key={1}>
+        <Row key={1}>
           {skillPoke.map((item: any) => (
             <Col span={3}>
               <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
@@ -309,7 +385,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
   const { pokemons, detail, setDetail } = props;
   const [isOpenModalChooseSkill, setIsOpenModalChooseSkill] =
     useState<boolean>(false);
-    const [isOpenChooseTeam, setIsOpenChooseTeam] = useState(false);
+  const [isOpenChooseTeam, setIsOpenChooseTeam] = useState(false);
 
   const [idPokemon, setIdPokemon] = useState<number>(0);
   const showModalChooseSkill = () => {
@@ -331,7 +407,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
     }
     if (value !== "") {
       pokemons.map((item: any) => {
-        let found = item.name.match(value);
+        let found = item.name.match(value.toLowerCase());
         if (found !== null) {
           axios
             .get(`https://pokeapi.co/api/v2/pokemon/${item.name}`)
@@ -354,11 +430,12 @@ const PokemonCollection: React.FC<Props> = (props) => {
     }
     setSearchPoke(search);
   }, [search]);
+
   return (
     <>
       <Row>
         <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
-          <div className="container" >
+          <div className="container">
             <h1 style={{ color: "#fff" }}>POKEMON LIST</h1>
             <Search
               placeholder="input search text"
@@ -499,20 +576,23 @@ interface ListTeam {
 
 const ListTeam: React.FC<ListTeam> = (props) => {
   const { isOpenChooseTeam } = props;
-  const [team1, setTeam1] = useState([]);
 
-  let teamP1 = localStorage.getItem("team1")
+  let team1 = localStorage.getItem("team1")
     ? JSON.parse(localStorage.team1)
     : [];
 
-  useEffect(() => {
-    console.log(123);
-    localStorage.setItem("team1", JSON.stringify(teamP1));
-  }, [isOpenChooseTeam]);
-
   let team2 = localStorage.getItem("team2")
     ? JSON.parse(localStorage.team2)
-    : null;
+    : [];
+
+  useEffect(() => {
+    localStorage.setItem("team1", JSON.stringify(team1));
+  }, [isOpenChooseTeam]);
+
+  useEffect(() => {
+    localStorage.setItem("team2", JSON.stringify(team2));
+  }, [isOpenChooseTeam]);
+
   return (
     <>
       <Row
@@ -530,17 +610,25 @@ const ListTeam: React.FC<ListTeam> = (props) => {
           }}
         >
           <h1>Team 1</h1>
-          <Row style={{ marginLeft: 35 }}>
-            {localStorage.getItem("team1")
-              ? JSON.parse(localStorage.team1).map((item: any) => (
-                  <>
-                    <Col span={6} className="pokemon-list-team" key={5}>
-                      <strong style={{ color: "#3d405b", textAlign: "center" }}>
-                        {item.pokemon.name}
-                      </strong>
-                      <img src={item.pokemon.sprites.front_default} alt="" />
-                      <Row>
-                        {item.abilities.map((item: any) => (
+          {localStorage.getItem("team1") !== null ? (
+            <Row style={{ marginLeft: 35 }}>
+              {/* Ô 1 */}
+              {JSON.parse(localStorage.team1)[0] ? (
+                <>
+                  <Col span={6} className="pokemon-list-team" key={5}>
+                    <strong style={{ color: "#3d405b", textAlign: "center" }}>
+                      {JSON.parse(localStorage.team1)[0].pokemon.name}
+                    </strong>
+                    <img
+                      src={
+                        JSON.parse(localStorage.team1)[0].pokemon.sprites
+                          .front_default
+                      }
+                      alt=""
+                    />
+                    <Row>
+                      {JSON.parse(localStorage.team1)[0].abilities.map(
+                        (item: any) => (
                           <Col
                             span={5}
                             style={{
@@ -558,13 +646,116 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               height={25}
                             />
                           </Col>
-                        ))}
-                      </Row>
-                    </Col>
-                  </>
-                ))
-              : null}
-          </Row>
+                        )
+                      )}
+                    </Row>
+                  </Col>
+                </>
+              ) : (
+                <Col span={6} className="pokemon-list-team-null"></Col>
+              )}
+
+              {/* Ô 2 */}
+
+              {JSON.parse(localStorage.team1)[1] ? (
+                <>
+                  <Col span={6} className="pokemon-list-team">
+                    <strong style={{ color: "#3d405b", textAlign: "center" }}>
+                      {JSON.parse(localStorage.team1)[1].pokemon.name}
+                    </strong>
+                    <img
+                      src={
+                        JSON.parse(localStorage.team1)[1].pokemon.sprites
+                          .front_default
+                      }
+                      alt=""
+                    />
+                    <Row>
+                      {JSON.parse(localStorage.team1)[1].abilities.map(
+                        (item: any) => (
+                          <Col
+                            span={5}
+                            style={{
+                              display: "flex",
+                              backgroundColor: "#3d405b",
+                              margin: "auto",
+                              borderRadius: "100%",
+                            }}
+                          >
+                            <img
+                              style={{ margin: "auto" }}
+                              src={item.image}
+                              alt=""
+                              width={25}
+                              height={25}
+                            />
+                          </Col>
+                        )
+                      )}
+                    </Row>
+                  </Col>
+                </>
+              ) : (
+                <>
+                  <Col span={6} className="pokemon-list-team-null"></Col>
+                </>
+              )}
+
+              {/* Ô 3 */}
+
+              {JSON.parse(localStorage.team1)[2] ? (
+                <>
+                  <Col span={6} className="pokemon-list-team">
+                    <strong style={{ color: "#3d405b", textAlign: "center" }}>
+                      {JSON.parse(localStorage.team1)[2].pokemon.name}
+                    </strong>
+                    <img
+                      src={
+                        JSON.parse(localStorage.team1)[2].pokemon.sprites
+                          .front_default
+                      }
+                      alt=""
+                    />
+                    <Row>
+                      {JSON.parse(localStorage.team1)[2].abilities.map(
+                        (item: any) => (
+                          <Col
+                            span={5}
+                            style={{
+                              display: "flex",
+                              backgroundColor: "#3d405b",
+                              margin: "auto",
+                              borderRadius: "100%",
+                            }}
+                          >
+                            <img
+                              style={{ margin: "auto" }}
+                              src={item.image}
+                              alt=""
+                              width={25}
+                              height={25}
+                            />
+                          </Col>
+                        )
+                      )}
+                    </Row>
+                  </Col>
+                </>
+              ) : (
+                <Col span={6} className="pokemon-list-team-null"></Col>
+              )}
+            </Row>
+          ) : (
+            <>
+              <Col span={6} className="pokemon-list-team-null">
+                
+              </Col>
+              <Col span={6} className="pokemon-list-team-null">
+              </Col>
+              <Col span={6} className="pokemon-list-team-null">
+              </Col>
+            </>
+          )}
           {/* <Row>
                 {localStorage.getItem("abilities")
                   ? JSON.parse(localStorage.abilities).map((item: any) => (
@@ -587,13 +778,22 @@ const ListTeam: React.FC<ListTeam> = (props) => {
       >
         <Col span={8}></Col>
         <Col span={8} style={{ display: "flex" }}>
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Battle_icon_gladii.svg/2048px-Battle_icon_gladii.svg.png"
-            alt=""
-            width={50}
-            height={50}
-            style={{ margin: "auto" }}
-          />
+          <Col span={8}></Col>
+          <Col span={8}>
+            <a
+              style={{ display: "flex", marginTop: 12 }}
+              href="http://localhost:3000/location"
+            >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Battle_icon_gladii.svg/2048px-Battle_icon_gladii.svg.png"
+                alt=""
+                width={50}
+                height={50}
+                style={{ margin: "auto" }}
+              />
+            </a>
+          </Col>
+          <Col span={7}></Col>
         </Col>
         <Col span={8}></Col>
       </Row>
@@ -613,6 +813,163 @@ const ListTeam: React.FC<ListTeam> = (props) => {
           }}
         >
           <h1>Team 2</h1>
+          {localStorage.getItem("team2") !== null ? (
+            <Row style={{ marginLeft: 35 }}>
+              {/* Ô 1 */}
+              {JSON.parse(localStorage.team2)[0] ? (
+                <>
+                  <Col span={6} className="pokemon-list-team" key={5}>
+                    <strong style={{ color: "#3d405b", textAlign: "center" }}>
+                      {JSON.parse(localStorage.team2)[0].pokemon.name}
+                    </strong>
+                    <img
+                      src={
+                        JSON.parse(localStorage.team2)[0].pokemon.sprites
+                          .front_default
+                      }
+                      alt=""
+                    />
+                    <Row>
+                      {JSON.parse(localStorage.team2)[0].abilities.map(
+                        (item: any) => (
+                          <Col
+                            span={5}
+                            style={{
+                              display: "flex",
+                              backgroundColor: "#3d405b",
+                              margin: "auto",
+                              borderRadius: "100%",
+                            }}
+                          >
+                            <img
+                              style={{ margin: "auto" }}
+                              src={item.image}
+                              alt=""
+                              width={25}
+                              height={25}
+                            />
+                          </Col>
+                        )
+                      )}
+                    </Row>
+                  </Col>
+                </>
+              ) : (
+                <Col span={6} className="pokemon-list-team-null"></Col>
+              )}
+
+              {/* Ô 2 */}
+
+              {JSON.parse(localStorage.team2)[1] ? (
+                <>
+                  <Col span={6} className="pokemon-list-team">
+                    <strong style={{ color: "#3d405b", textAlign: "center" }}>
+                      {JSON.parse(localStorage.team2)[1].pokemon.name}
+                    </strong>
+                    <img
+                      src={
+                        JSON.parse(localStorage.team2)[1].pokemon.sprites
+                          .front_default
+                      }
+                      alt=""
+                    />
+                    <Row>
+                      {JSON.parse(localStorage.team2)[1].abilities.map(
+                        (item: any) => (
+                          <Col
+                            span={5}
+                            style={{
+                              display: "flex",
+                              backgroundColor: "#3d405b",
+                              margin: "auto",
+                              borderRadius: "100%",
+                            }}
+                          >
+                            <img
+                              style={{ margin: "auto" }}
+                              src={item.image}
+                              alt=""
+                              width={25}
+                              height={25}
+                            />
+                          </Col>
+                        )
+                      )}
+                    </Row>
+                  </Col>
+                </>
+              ) : (
+                <>
+                  <Col span={6} className="pokemon-list-team-null"></Col>
+                </>
+              )}
+
+              {/* Ô 3 */}
+
+              {JSON.parse(localStorage.team2)[2] ? (
+                <>
+                  <Col span={6} className="pokemon-list-team">
+                    <strong style={{ color: "#3d405b", textAlign: "center" }}>
+                      {JSON.parse(localStorage.team2)[2].pokemon.name}
+                    </strong>
+                    <img
+                      src={
+                        JSON.parse(localStorage.team2)[2].pokemon.sprites
+                          .front_default
+                      }
+                      alt=""
+                    />
+                    <Row>
+                      {JSON.parse(localStorage.team2)[2].abilities.map(
+                        (item: any) => (
+                          <Col
+                            span={5}
+                            style={{
+                              display: "flex",
+                              backgroundColor: "#3d405b",
+                              margin: "auto",
+                              borderRadius: "100%",
+                            }}
+                          >
+                            <img
+                              style={{ margin: "auto" }}
+                              src={item.image}
+                              alt=""
+                              width={25}
+                              height={25}
+                            />
+                          </Col>
+                        )
+                      )}
+                    </Row>
+                  </Col>
+                </>
+              ) : (
+                <Col span={6} className="pokemon-list-team-null"></Col>
+              )}
+            </Row>
+          ) : (
+            <>
+              <Col span={6} className="pokemon-list-team-null">
+                
+              </Col>
+              <Col span={6} className="pokemon-list-team-null">
+              </Col>
+              <Col span={6} className="pokemon-list-team-null">
+              </Col>
+            </>
+          )}
+          {/* <Row>
+                {localStorage.getItem("abilities")
+                  ? JSON.parse(localStorage.abilities).map((item: any) => (
+                      <>
+                        <Col span={2} className="pokemon-list-abilities">
+                          <img src={item.image} alt="" width={40} height={40} />
+                        </Col>
+                      </>
+                    ))
+                  : null}
+              </Row> */}
         </Col>
         <Col span={1}></Col>
       </Row>

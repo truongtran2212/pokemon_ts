@@ -90,6 +90,24 @@
   justify-content: center;
   /* align-items: center; */
   margin-left: 27px;
+  height: 210px;
+}
+
+.pokemon-list-team-null {
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  /* background-color: #f4f1de; */
+  background-image: url("https://lbmslab.org/lab/wp-content/uploads/2017/02/822be1519b67a0f657dbfeae47eba30b-1.png");
+  background-size: cover;
+  margin: 1rem;
+  padding: 0 1rem;
+  border-radius: 12px;
+  justify-content: center;
+  /* align-items: center; */
+  margin-left: 27px;
+  width: 500px;
+  height: 210px;
 }
 
 .pokemon-list-abilities {
