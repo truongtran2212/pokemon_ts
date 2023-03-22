@@ -400,13 +400,12 @@ const PokemonCollection: React.FC<Props> = (props) => {
   };
 
   // const [searchPoke, setSearchPoke] = useState<any[]>([]);
-  const [search, setSearch] = useState<any[]>([]);
+  const [search, setSearch] = useState<Pokemon[]>([]);
 
   const onSearch = async (value: any) => {
-    debugger;
-    setSearch([]);
+    setSearch([])
     if (value === "") {
-      localStorage.removeItem("search");
+      setSearch([])
     }
     if (value !== "") {
       // pokemons.map((item: any) => {
@@ -414,13 +413,14 @@ const PokemonCollection: React.FC<Props> = (props) => {
       // for (let i = 0; i < pokemons.length; i++) {
 
       // let found = pokemons[i].name.match(value.toLowerCase());
-      pokemons.forEach(async (pokemon: any) => {
+      pokemons.forEach(async (pokemon) => {
         let found = pokemon.name.includes(value.toLowerCase());
         if (found !== false) {
           await axios
             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             .then((res) => {
-              setSearch((p: any) => [...p, res.data]);
+              setSearch((p) => [...p, res.data]);
+              console.log(pokemon)
             })
             .catch((err) => {
               console.log("Lỗi ở Search");
@@ -435,15 +435,13 @@ const PokemonCollection: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    if (search.length > 0) {
-      localStorage.setItem("search", JSON.stringify(search));
-    }
-    console.log("Effect của collection");
-  }, [search]);
+
+  }, [search])
+  
 
   return (
     <>
-      {console.log(search)}
+      {console.log(pokemons)}
       <Row>
         <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
           <div className="container">
@@ -455,7 +453,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
                 onSearch={onSearch}
                 style={{
                   width: 300,
-                  marginLeft: "105%",
+                  marginLeft: "130%",
                 }}
                 // width={200}
               />
@@ -465,6 +463,8 @@ const PokemonCollection: React.FC<Props> = (props) => {
                 ? pokemons.map((pokemon: any) => {
                     return (
                       <>
+                      {console.log(pokemon)
+                      }
                         <section
                           className="pokemon-list-container"
                           onClick={() => {
@@ -549,15 +549,16 @@ const PokemonList: React.FC = () => {
         const poke = await axios.get(
           `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
         );
+        console.log(pokemon);
         setPokemons((p) => [...p, poke.data]);
         setLoading(false);
       });
       // localStorage.setItem("pokemons", JSON.stringify(res.data.results));
     };
     getPokemon();
-    if (localStorage.getItem("search") !== undefined) {
-      localStorage.removeItem("search");
-    }
+    // if (localStorage.getItem("search") !== undefined) {
+    //   localStorage.removeItem("search");
+    // }
     console.log("Effect lúc load list");
   }, []);
 
