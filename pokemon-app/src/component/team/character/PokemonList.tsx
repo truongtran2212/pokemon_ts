@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
 import "./pokemon.css";
+import { withErrorBoundary } from "react-error-boundary";
 
 const { Search } = Input;
 
@@ -398,49 +399,56 @@ const PokemonCollection: React.FC<Props> = (props) => {
     window.location.assign("http://localhost:3000");
   };
 
-  const [searchPoke, setSearchPoke] = useState<any[]>([]);
+  // const [searchPoke, setSearchPoke] = useState<any[]>([]);
+  const [search, setSearch] = useState<any[]>([]);
 
-  const onSearch = (value: any) => {
+  const onSearch = async (value: any) => {
+    debugger;
     setSearch([]);
     if (value === "") {
       localStorage.removeItem("search");
     }
     if (value !== "") {
-      pokemons.map((item: any) => {
-        let found = item.name.match(value.toLowerCase());
-        if (found !== null) {
-          axios
-            .get(`https://pokeapi.co/api/v2/pokemon/${item.name}`)
+      // pokemons.map((item: any) => {
+
+      // for (let i = 0; i < pokemons.length; i++) {
+
+      // let found = pokemons[i].name.match(value.toLowerCase());
+      pokemons.forEach(async (pokemon: any) => {
+        let found = pokemon.name.includes(value.toLowerCase());
+        if (found !== false) {
+          await axios
+            .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             .then((res) => {
               setSearch((p: any) => [...p, res.data]);
             })
             .catch((err) => {
-              console.log(err);
+              console.log("Lỗi ở Search");
             });
         }
       });
+
+      // }
+
+      // });
     }
   };
-
-  const [search, setSearch] = useState<any[]>([]);
 
   useEffect(() => {
     if (search.length > 0) {
       localStorage.setItem("search", JSON.stringify(search));
     }
-    setSearchPoke(search);
     console.log("Effect của collection");
   }, [search]);
 
   return (
     <>
+      {console.log(search)}
       <Row>
         <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
           <div className="container">
             <h1 style={{ color: "#fff" }}>POKEMON LIST</h1>
-            <div
-              className="custom-sticky"
-            >
+            <div className="custom-sticky">
               <Search
                 placeholder="input search text"
                 allowClear
@@ -453,7 +461,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
               />
             </div>
             <section className="collection-container">
-              {searchPoke.length === 0
+              {search.length === 0
                 ? pokemons.map((pokemon: any) => {
                     return (
                       <>
@@ -466,7 +474,9 @@ const PokemonCollection: React.FC<Props> = (props) => {
                         >
                           <p className="pokemon-name"> {pokemon.name} </p>
                           <img
-                            src={pokemon.sprites.other.dream_world.front_default}
+                            src={
+                              pokemon.sprites.other.dream_world.front_default
+                            }
                             alt="pokemon"
                             width={120}
                             height={120}
@@ -475,7 +485,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
                       </>
                     );
                   })
-                : searchPoke.map((pokemon: any) => {
+                : search.map((pokemon: any) => {
                     return (
                       <>
                         <section
@@ -487,7 +497,9 @@ const PokemonCollection: React.FC<Props> = (props) => {
                         >
                           <p className="pokemon-name"> {pokemon.name} </p>
                           <img
-                            src={pokemon.sprites.other.dream_world.front_default}
+                            src={
+                              pokemon.sprites.other.dream_world.front_default
+                            }
                             alt="pokemon"
                             width={120}
                             height={120}
@@ -540,7 +552,7 @@ const PokemonList: React.FC = () => {
         setPokemons((p) => [...p, poke.data]);
         setLoading(false);
       });
-      localStorage.setItem("pokemons", JSON.stringify(res.data.results));
+      // localStorage.setItem("pokemons", JSON.stringify(res.data.results));
     };
     getPokemon();
     if (localStorage.getItem("search") !== undefined) {
@@ -563,13 +575,6 @@ const PokemonList: React.FC = () => {
   // };
 
   const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState("left");
-  const showListTeam = () => {
-    setOpen(true);
-  };
-  const onClose = () => {
-    setOpen(false);
-  };
 
   return (
     <>
@@ -632,8 +637,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     </strong>
                     <img
                       src={
-                        JSON.parse(localStorage.team1)[0].pokemon.sprites
-                        .other.dream_world.front_default
+                        JSON.parse(localStorage.team1)[0].pokemon.sprites.other
+                          .dream_world.front_default
                       }
                       alt=""
                       width={140}
@@ -678,8 +683,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     </strong>
                     <img
                       src={
-                        JSON.parse(localStorage.team1)[1].pokemon.sprites
-                        .other.dream_world.front_default
+                        JSON.parse(localStorage.team1)[1].pokemon.sprites.other
+                          .dream_world.front_default
                       }
                       alt=""
                       width={140}
@@ -726,8 +731,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     </strong>
                     <img
                       src={
-                        JSON.parse(localStorage.team1)[2].pokemon.sprites
-                        .other.dream_world.front_default
+                        JSON.parse(localStorage.team1)[2].pokemon.sprites.other
+                          .dream_world.front_default
                       }
                       alt=""
                       width={140}
@@ -836,8 +841,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     </strong>
                     <img
                       src={
-                        JSON.parse(localStorage.team2)[0].pokemon.sprites
-                        .other.dream_world.front_default
+                        JSON.parse(localStorage.team2)[0].pokemon.sprites.other
+                          .dream_world.front_default
                       }
                       alt=""
                       width={140}
@@ -882,8 +887,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     </strong>
                     <img
                       src={
-                        JSON.parse(localStorage.team2)[1].pokemon.sprites
-                        .other.dream_world.front_default
+                        JSON.parse(localStorage.team2)[1].pokemon.sprites.other
+                          .dream_world.front_default
                       }
                       alt=""
                       width={140}
@@ -930,8 +935,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     </strong>
                     <img
                       src={
-                        JSON.parse(localStorage.team2)[2].pokemon.sprites
-                        .other.dream_world.front_default
+                        JSON.parse(localStorage.team2)[2].pokemon.sprites.other
+                          .dream_world.front_default
                       }
                       alt=""
                       width={140}
@@ -991,4 +996,15 @@ const ListTeam: React.FC<ListTeam> = (props) => {
   );
 };
 
-export default PokemonList;
+interface Error {
+  error: any;
+}
+
+const ErrorComponent: React.FC<Error> = (prorps) => {
+  const { error } = prorps;
+  return <div>{error.message}</div>;
+};
+
+export default withErrorBoundary(PokemonList, {
+  FallbackComponent: ErrorComponent,
+});
