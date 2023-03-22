@@ -429,6 +429,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
       localStorage.setItem("search", JSON.stringify(search));
     }
     setSearchPoke(search);
+    console.log("Effect của collection");
   }, [search]);
 
   return (
@@ -437,14 +438,20 @@ const PokemonCollection: React.FC<Props> = (props) => {
         <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
           <div className="container">
             <h1 style={{ color: "#fff" }}>POKEMON LIST</h1>
-            <Search
-              placeholder="input search text"
-              allowClear
-              onSearch={onSearch}
-              style={{
-                width: 200,
-              }}
-            />
+            <div
+              className="custom-sticky"
+            >
+              <Search
+                placeholder="input search text"
+                allowClear
+                onSearch={onSearch}
+                style={{
+                  width: 300,
+                  marginLeft: "105%",
+                }}
+                // width={200}
+              />
+            </div>
             <section className="collection-container">
               {searchPoke.length === 0
                 ? pokemons.map((pokemon: any) => {
@@ -459,8 +466,10 @@ const PokemonCollection: React.FC<Props> = (props) => {
                         >
                           <p className="pokemon-name"> {pokemon.name} </p>
                           <img
-                            src={pokemon.sprites.front_default}
+                            src={pokemon.sprites.other.dream_world.front_default}
                             alt="pokemon"
+                            width={120}
+                            height={120}
                           />
                         </section>
                       </>
@@ -478,8 +487,10 @@ const PokemonCollection: React.FC<Props> = (props) => {
                         >
                           <p className="pokemon-name"> {pokemon.name} </p>
                           <img
-                            src={pokemon.sprites.front_default}
+                            src={pokemon.sprites.other.dream_world.front_default}
                             alt="pokemon"
+                            width={120}
+                            height={120}
                           />
                         </section>
                       </>
@@ -495,7 +506,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
             </section>
           </div>
         </Col>
-        <Col span={10} className="background-list" style={{  borderRadius: 15}}>
+        <Col span={10} className="background-list" style={{ borderRadius: 15 }}>
           <ListTeam isOpenChooseTeam={isOpenChooseTeam} />
         </Col>
       </Row>
@@ -535,6 +546,7 @@ const PokemonList: React.FC = () => {
     if (localStorage.getItem("search") !== undefined) {
       localStorage.removeItem("search");
     }
+    console.log("Effect lúc load list");
   }, []);
 
   // const nextPage = async () => {
@@ -601,15 +613,14 @@ const ListTeam: React.FC<ListTeam> = (props) => {
         }}
       >
         <Col span={1}></Col>
-        <Col
-          span={22}
-          style={{
-            border: "1px solid black",
-            borderRadius: 10,
-            marginTop: 10,
-          }}
-        >
-          <h1>Team 1</h1>
+        <Col span={22} className="template-list-team1">
+          <img
+            src="https://static.wikia.nocookie.net/animated_inanimate_battle/images/b/b9/Team_1_Logo.png"
+            style={{ marginLeft: "36%" }}
+            width={170}
+            height={40}
+            alt=""
+          />
           {localStorage.getItem("team1") !== null ? (
             <Row style={{ marginLeft: 35 }}>
               {/* Ô 1 */}
@@ -622,9 +633,11 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <img
                       src={
                         JSON.parse(localStorage.team1)[0].pokemon.sprites
-                          .front_default
+                        .other.dream_world.front_default
                       }
                       alt=""
+                      width={140}
+                      height={140}
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[0].abilities.map(
@@ -666,9 +679,11 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <img
                       src={
                         JSON.parse(localStorage.team1)[1].pokemon.sprites
-                          .front_default
+                        .other.dream_world.front_default
                       }
                       alt=""
+                      width={140}
+                      height={140}
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[1].abilities.map(
@@ -712,9 +727,11 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <img
                       src={
                         JSON.parse(localStorage.team1)[2].pokemon.sprites
-                          .front_default
+                        .other.dream_world.front_default
                       }
                       alt=""
+                      width={140}
+                      height={140}
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[2].abilities.map(
@@ -774,22 +791,22 @@ const ListTeam: React.FC<ListTeam> = (props) => {
       >
         <Col span={8}></Col>
         <Col span={8} style={{ display: "flex" }}>
-          <Col span={8}></Col>
-          <Col span={8}>
+          <Col span={6}></Col>
+          <Col span={7}>
             <a
-              style={{ display: "flex", marginTop: 12 }}
+              style={{ display: "flex" }}
               href="http://localhost:3000/location"
             >
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Battle_icon_gladii.svg/2048px-Battle_icon_gladii.svg.png"
+                src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
                 alt=""
-                width={50}
-                height={50}
+                width={120}
+                height={80}
                 style={{ margin: "auto" }}
               />
             </a>
           </Col>
-          <Col span={7}></Col>
+          <Col span={8}></Col>
         </Col>
         <Col span={8}></Col>
       </Row>
@@ -800,15 +817,14 @@ const ListTeam: React.FC<ListTeam> = (props) => {
         }}
       >
         <Col span={1}></Col>
-        <Col
-          span={22}
-          style={{
-            border: "1px solid black",
-            borderRadius: 10,
-            marginBottom: 10,
-          }}
-        >
-          <h1>Team 2</h1>
+        <Col span={22} className="template-list-team2">
+          <img
+            src="https://static.wikia.nocookie.net/animated_inanimate_battle/images/4/49/Team_2_Logo.png"
+            style={{ marginLeft: "36%" }}
+            width={170}
+            height={40}
+            alt=""
+          />
           {localStorage.getItem("team2") !== null ? (
             <Row style={{ marginLeft: 35 }}>
               {/* Ô 1 */}
@@ -821,9 +837,11 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <img
                       src={
                         JSON.parse(localStorage.team2)[0].pokemon.sprites
-                          .front_default
+                        .other.dream_world.front_default
                       }
                       alt=""
+                      width={140}
+                      height={140}
                     />
                     <Row>
                       {JSON.parse(localStorage.team2)[0].abilities.map(
@@ -865,9 +883,11 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <img
                       src={
                         JSON.parse(localStorage.team2)[1].pokemon.sprites
-                          .front_default
+                        .other.dream_world.front_default
                       }
                       alt=""
+                      width={140}
+                      height={140}
                     />
                     <Row>
                       {JSON.parse(localStorage.team2)[1].abilities.map(
@@ -911,9 +931,11 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <img
                       src={
                         JSON.parse(localStorage.team2)[2].pokemon.sprites
-                          .front_default
+                        .other.dream_world.front_default
                       }
                       alt=""
+                      width={140}
+                      height={140}
                     />
                     <Row>
                       {JSON.parse(localStorage.team2)[2].abilities.map(
