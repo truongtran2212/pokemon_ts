@@ -280,7 +280,8 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
     },
     {
       name: "Lửa",
-      image:"https://freepngimg.com/save/96182-lohri-orange-fire-flame-for-happy-lyrics/600x876",
+      image:
+        "https://freepngimg.com/save/96182-lohri-orange-fire-flame-for-happy-lyrics/600x876",
       damage: Math.floor(Math.random() * 20) + 10,
       mana: Math.floor(Math.random() * 9) + 17,
     },
@@ -1094,7 +1095,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
         }
         width={"60%"}
       >
-        <h1 style={{color: "#fff", textAlign: "center"}}>CHỌN KỸ NĂNG</h1>
+        <h1 style={{ color: "#fff", textAlign: "center" }}>CHỌN KỸ NĂNG</h1>
         <Row style={{ display: "flex", marginTop: "2%" }}>
           <Col span={8}>
             <div>
@@ -1103,7 +1104,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   borderRadius: "100%",
                   width: 80,
                   height: 80,
-                  marginLeft: "65%",
+                  marginLeft: "55%",
                 }}
               >
                 <img
@@ -1119,8 +1120,8 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   borderRadius: "100%",
                   width: 80,
                   height: 80,
-                  marginLeft: "50%",
-                  marginTop: "5%",
+                  marginLeft: "40%",
+                  marginTop: "7%",
                 }}
               >
                 <img
@@ -1137,8 +1138,8 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   borderRadius: "100%",
                   width: 80,
                   height: 80,
-                  marginLeft: "50%",
-                  marginTop: "5%",
+                  marginLeft: "40%",
+                  marginTop: "7%",
                 }}
               >
                 <img
@@ -1155,8 +1156,8 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   borderRadius: "100%",
                   width: 80,
                   height: 80,
-                  marginLeft: "65%",
-                  marginTop: "5%",
+                  marginLeft: "55%",
+                  marginTop: "7%",
                 }}
               >
                 <img
@@ -1168,6 +1169,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
               </button>
             </div>
           </Col>
+
           <Col span={8}>
             <img
               src={
@@ -1177,17 +1179,42 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   : null
               }
               alt=""
+              height={400}
               style={{ margin: "auto" }}
             />
+            <div className="background-skill">
+              <h1 style={{color: "#fff"}}>Các kỹ năng đã được chọn</h1>
+              <Row >
+                <Col span={3}></Col>
+                {detailPokemon !== undefined
+                  ? detailPokemon.abilities.map((item: any) => (
+                      <Col span={5}>
+                        <button
+                          style={{
+                            borderRadius: "20%",
+                            width: 50,
+                            height: 50,
+                            background: "rgb(0, 0, 0, 0)",
+                            border: "2px solid yellow",
+                          }}
+                        >
+                          <img src={item.image} alt="" height={40} width={40} />
+                        </button>
+                      </Col>
+                    ))
+                  : null}
+              </Row>
+            </div>
           </Col>
-          <Col span={8} style={{ float: "right" }}>
+
+          <Col span={8}>
             <div>
               <button
                 style={{
                   borderRadius: "100%",
                   width: 80,
                   height: 80,
-                  marginLeft: "10%",
+                  marginLeft: "20%",
                 }}
               >
                 <img
@@ -1204,8 +1231,8 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   borderRadius: "100%",
                   width: 80,
                   height: 80,
-                  marginTop: "5%",
-                  marginLeft: "25%",
+                  marginTop: "7%",
+                  marginLeft: "35%",
                 }}
               >
                 <img
@@ -1222,8 +1249,8 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   borderRadius: "100%",
                   width: 80,
                   height: 80,
-                  marginTop: "5%",
-                  marginLeft: "25%",
+                  marginTop: "7%",
+                  marginLeft: "35%",
                 }}
               >
                 <img
@@ -1240,8 +1267,8 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   borderRadius: "100%",
                   width: 80,
                   height: 80,
-                  marginTop: "5%",
-                  marginLeft: "10%",
+                  marginTop: "7%",
+                  marginLeft: "20%",
                 }}
               >
                 <img

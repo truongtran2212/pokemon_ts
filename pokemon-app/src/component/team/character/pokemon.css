@@ -230,3 +230,7 @@
     pointer-events: auto;
     padding: 20px 24px;
 }
+
+.background-skill {
+  background-image: linear-gradient(to right, rgba(255,0,0,0), rgb(223, 218, 140),rgba(255,0,0,0)); 
+}
