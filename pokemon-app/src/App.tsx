@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
+import { LoadingOutlined } from "@ant-design/icons";
+import React, { Suspense } from "react";
 import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Location from "./component/location/Location";
 import ChoosePlayer1 from "./component/team/character/ChoosePlayer1";
 import ChoosePlayer2 from "./component/team/character/ChoosePlayer2";
-import PokemonList from "./component/team/character/PokemonList";
+// import PokemonList from "./component/team/character/PokemonList";
+
+const PokemonList = React.lazy(() => import("./component/team/character/PokemonList"));
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/location" element={<Location />} />
-        <Route path="/" element={<PokemonList />} />
-        <Route path="/choosePlayer1" element={<ChoosePlayer1 />} />
-        <Route path="/choosePlayer2" element={<ChoosePlayer2 />} />
-      </Routes>
+      <Suspense fallback={<div style={{display: "flex"}}><LoadingOutlined className="loading" style={{fontSize: 100}}/></div>}>
+        <Routes>
+          <Route path="/location" element={<Location />} />
+          <Route path="/" element={<PokemonList />} />
+          <Route path="/choosePlayer1" element={<ChoosePlayer1 />} />
+          <Route path="/choosePlayer2" element={<ChoosePlayer2 />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 };

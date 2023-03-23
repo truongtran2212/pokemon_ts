@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./location.css";
 import { Button, Col, Row } from "antd";
+import { localhost } from "../../localhost";
 
 const Location: React.FC = () => {
   var team1: any = localStorage.getItem("team1")
@@ -205,11 +206,11 @@ const Location: React.FC = () => {
     <>
       <div>
         <div>
-          {/* {(listTeam1.length === 0 || listTeam1.length === 0) ? <GameOver /> : null} */}
           {listTeam1.length === 0 &&
-          listTeam2.length === 0 ? null : listTeam1.length === 0 ||
-            listTeam2.length === 0 ? (
-            <GameOver />
+          listTeam2.length === 0 ? null : listTeam1.length === 0 ? (
+            <Team2Win />
+          ) : listTeam2.length === 0 ? (
+            <Team1Win />
           ) : null}
           {/* {listTeam2.length === 0 ? <GameOver /> : null} */}
           {number > 1 && number < 4 ? <CountDown /> : null}
@@ -219,19 +220,20 @@ const Location: React.FC = () => {
           {number === 0 && luckyNumber === 2 ? <Team2 /> : null}
 
           {/* animation skill team1 */}
-          {nameSkillTeam1 === "Gió" ? <WindTeam1 /> : null}
-          {nameSkillTeam1 === "Lửa" ? <FireTeam1 /> : null}
-          {nameSkillTeam1 === "Đóng băng" ? <IceTeam1 /> : null}
-          {nameSkillTeam1 === "Nước" ? <TsunamiTeam1 /> : null}
+          {nameSkillTeam1 === "Gió" ? <WindSkillTeam1 /> : null}
+          {nameSkillTeam1 === "Lửa" ? <FireSkillTeam1 /> : null}
+          {nameSkillTeam1 === "Đóng băng" ? <IceSkillTeam1 /> : null}
+          {nameSkillTeam1 === "Nước" ? <TsunamiSkillTeam1 /> : null}
+          {nameSkillTeam1 === "Sấm sét" ? <ThunderSkillTeam1 /> : null}
           {nameSkillTeam1 === "Đánh thường" ? <AttackTeam1 /> : null}
 
           {/* animation skill team2 */}
-          {nameSkillTeam2 === "Gió" ? <WindTeam2 /> : null}
-          {nameSkillTeam2 === "Lửa" ? <FireTeam2 /> : null}
-          {nameSkillTeam2 === "Đóng băng" ? <IceTeam2 /> : null}
-          {nameSkillTeam2 === "Nước" ? <TsunamiTeam2 /> : null}
+          {nameSkillTeam2 === "Gió" ? <WindSkillTeam2 /> : null}
+          {nameSkillTeam2 === "Lửa" ? <FireSkillTeam2 /> : null}
+          {nameSkillTeam2 === "Đóng băng" ? <IceSkillTeam2 /> : null}
+          {nameSkillTeam2 === "Nước" ? <TsunamiSkillTeam2 /> : null}
+          {nameSkillTeam2 === "Sấm sét" ? <ThunderSkillTeam2 /> : null}
           {nameSkillTeam2 === "Đánh thường" ? <AttackTeam2 /> : null}
-
 
         </div>
         <div className="custom-background">
@@ -362,7 +364,7 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {isCloseStart === true && reduceBloodTeam1 !== 0 ? (
-                        <p className="custom-hp">- {reduceBloodTeam1}</p>
+                        <p className="custom-hp" style={{color: "red", fontSize: 24}}>- {reduceBloodTeam1}</p>
                       ) : null}
                     </div>
                     {statusTeam1 === "Choáng" ? (
@@ -564,7 +566,7 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {isCloseStart === true && reduceBloodTeam2 !== 0 ? (
-                        <p className="custom-hp">- {reduceBloodTeam2}</p>
+                        <p className="custom-hp" style={{color: "red", fontSize: 24}}>- {reduceBloodTeam2}</p>
                       ) : null}
                     </div>
                     {statusTeam2 === "Choáng" ? (
@@ -694,30 +696,49 @@ const NotificationPlayer2: React.FC<NameSkill> = (props) => {
   );
 };
 
-const GameOver = () => {
+const Team1Win = () => {
+  const returnList = () => {
+    window.location.href = localhost;
+  };
+  useEffect(() => {
+    localStorage.removeItem("team2");
+    setTimeout(returnList, 1300);
+  }, []);
+
   return (
     <>
-      <div
-        style={{
-          height: 400,
-          width: 800,
-          backgroundColor: "rgb (0,0,0,0)",
-          zIndex: 999,
-          top: "50%",
-
-          marginLeft: "55%",
-          position: "absolute",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
+      <div className="game-over">
         <img
-          src="https://cdn.staticcrate.com/stock-hd/effects/footagecrate-ko-style1@3X.png"
+          src="https://leo-daniel.github.io/face-off/assets/images/winner-1.png"
           alt=""
+          width={450}
+          height={250}
         />
       </div>
     </>
   );
 };
+
+const Team2Win = () => {
+  useEffect(() => {
+    localStorage.removeItem("team1");
+  }, []);
+  return (
+    <>
+      <div className="game-over">
+        <img
+          src={
+            "https://leo-daniel.github.io/face-off/assets/images/winner-2.png"
+          }
+          alt=""
+          width={450}
+          height={250}
+        />
+      </div>
+    </>
+  );
+};
+
 const Fight = () => {
   return (
     <>
@@ -813,47 +834,21 @@ const CountDown = () => {
     </>
   );
 };
-const WindTeam2 = () => {
-  return (
-    <>
-      <div className={"team2"}>
-        <img
-          style={{ height: 150, width: 100 }}
-          src="https://images.jifo.co/132225151_1664164887618.gif"
-          alt=""
-        />
-      </div>
-    </>
-  );
-};
-const FireTeam2 = () => {
-  return (
-    <>
-      <div className={"team2"}>
-        <img
-          style={{ height: 150, width: 100, transform: "rotate(135deg)" }}
-          src="https://orangemushroom.files.wordpress.com/2016/07/blazing-orbital-flame-effect.gif"
-          alt=""
-        />
-      </div>
-    </>
-  );
-};
 
-const TsunamiTeam2 = () => {
+const IceSkillTeam1 = () => {
   return (
     <>
-      <div className="team2">
+      <div className="team1-1">
         <img
-          style={{ height: 150, width: 100 }}
-          src="https://png.pngtree.com/png-clipart/20230207/original/pngtree-big-wave-of-tsunami-sea-and-summer-png-image_8946949.png"
+          style={{ height: 700, width: 150 }}
+          src="https://spadow.files.wordpress.com/2010/07/newcoldbeam-hit0.gif?w=584"
           alt=""
         />
       </div>
     </>
   );
 };
-const IceTeam2 = () => {
+const IceSkillTeam2 = () => {
   return (
     <>
       <div className="team2-1">
@@ -867,12 +862,12 @@ const IceTeam2 = () => {
   );
 };
 
-const WindTeam1 = () => {
+const WindSkillTeam1 = () => {
   return (
     <>
-      <div className={"team1"}>
+      <div className={"team1-skill"}>
         <img
-          style={{ height: 150, width: 100 }}
+          style={{ height: 200, width: 200 }}
           src="https://images.jifo.co/132225151_1664164887618.gif"
           alt=""
         />
@@ -881,13 +876,13 @@ const WindTeam1 = () => {
   );
 };
 
-const AttackTeam2 = () => {
+const WindSkillTeam2 = () => {
   return (
     <>
-      <div className={"team1-attack"}>
+      <div className={"team2-skill"}>
         <img
-          style={{ height: 200, width: 200, marginLeft: 500 }}
-          src="https://s3-eu-west-1.amazonaws.com/inspire.education.uploads/assets/media/scene/uploads/custom/1599320562_Chocolate_custom.gif"
+          style={{ height: 200, width: 200 }}
+          src="https://images.jifo.co/132225151_1664164887618.gif"
           alt=""
         />
       </div>
@@ -909,13 +904,13 @@ const AttackTeam1 = () => {
   );
 };
 
-const FireTeam1 = () => {
+const AttackTeam2 = () => {
   return (
     <>
-      <div className={"team1"}>
+      <div className={"team1-attack"}>
         <img
-          style={{ height: 150, width: 100, transform: "rotate(-45deg)" }}
-          src="https://orangemushroom.files.wordpress.com/2016/07/blazing-orbital-flame-effect.gif"
+          style={{ height: 200, width: 200, marginLeft: 500 }}
+          src="https://s3-eu-west-1.amazonaws.com/inspire.education.uploads/assets/media/scene/uploads/custom/1599320562_Chocolate_custom.gif"
           alt=""
         />
       </div>
@@ -923,13 +918,13 @@ const FireTeam1 = () => {
   );
 };
 
-const TsunamiTeam1 = () => {
+const FireSkillTeam1 = () => {
   return (
     <>
-      <div className="team1">
+      <div className={"team1-skill"}>
         <img
-          style={{ height: 150, width: 100 }}
-          src="https://png.pngtree.com/png-clipart/20230207/original/pngtree-big-wave-of-tsunami-sea-and-summer-png-image_8946949.png"
+          style={{ height: 200, width: 264 }}
+          src="https://i2.wp.com/www.mustardseedbbq.com/wp-content/uploads/2016/02/Realistic-fire-animated-transparent-gif-short.gif?fit=480%2C272&ssl=1"
           alt=""
         />
       </div>
@@ -937,13 +932,13 @@ const TsunamiTeam1 = () => {
   );
 };
 
-const ThunderTeam1 = () => {
+const FireSkillTeam2 = () => {
   return (
     <>
-      <div className="team1">
+      <div className={"team2-skill"}>
         <img
-          style={{ height: 150, width: 100 }}
-          src="https://www.animatedimages.org/data/media/41/animated-lightning-and-thunderbolt-image-0001.gif"
+          style={{ height: 200, width: 264 }}
+          src="https://i2.wp.com/www.mustardseedbbq.com/wp-content/uploads/2016/02/Realistic-fire-animated-transparent-gif-short.gif?fit=480%2C272&ssl=1"
           alt=""
         />
       </div>
@@ -951,13 +946,54 @@ const ThunderTeam1 = () => {
   );
 };
 
-const IceTeam1 = () => {
+const TsunamiSkillTeam1 = () => {
   return (
     <>
-      <div className="team1-1">
+      <div className="team1-skill">
         <img
-          style={{ height: 700, width: 150 }}
-          src="https://spadow.files.wordpress.com/2010/07/newcoldbeam-hit0.gif?w=584"
+          style={{ height: 400, width: 264 }}
+          src="https://media2.giphy.com/media/yGhIqFuOx84KY/giphy.gif?cid=6c09b952rwfzw4e25min2jx4gnqt1knqdyx5s8khhph9m85c&rid=giphy.gif&ct=s"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+
+const TsunamiSkillTeam2 = () => {
+  return (
+    <>
+      <div className="team2-skill">
+        <img
+          style={{ height: 400, width: 264 }}
+          src="https://media2.giphy.com/media/yGhIqFuOx84KY/giphy.gif?cid=6c09b952rwfzw4e25min2jx4gnqt1knqdyx5s8khhph9m85c&rid=giphy.gif&ct=s"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+
+const ThunderSkillTeam1 = () => {
+  return (
+    <>
+      <div className="team1-skill">
+        <img
+          style={{ height: 200, width: 200 }}
+          src="https://orangemushroom.files.wordpress.com/2016/07/lightning-union-effect.gif"
+          alt=""
+        />
+      </div>
+    </>
+  );
+};
+const ThunderSkillTeam2 = () => {
+  return (
+    <>
+      <div className="team2-skill">
+        <img
+          style={{ height: 200, width: 200 }}
+          src="https://orangemushroom.files.wordpress.com/2016/07/lightning-union-effect.gif"
           alt=""
         />
       </div>

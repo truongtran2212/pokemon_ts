@@ -1,6 +1,6 @@
 import { Button, Col, Drawer, Modal, notification, Row, Input } from "antd";
 import axios from "axios";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
@@ -65,6 +65,13 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
     notification.warning({
       message: "Thông báo",
       description: "Đã đủ team.",
+    });
+  };
+
+  const OpenNotificationQuantityTeam1 = () => {
+    notification.warning({
+      message: "Thông báo",
+      description: "Team 1 hiện tại chưa đủ đội hình",
     });
   };
 
@@ -332,7 +339,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
       >
         <Row key={10}>
           {listAbility.map((item, index) => (
-            <Col span={3}>
+            <Col span={3} key={index}>
               <button
                 onClick={() => {
                   addSkill(item, index);
@@ -357,8 +364,8 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
           <h3>Các skill được chọn</h3>
         </Row>
         <Row key={1}>
-          {skillPoke.map((item: any) => (
-            <Col span={3}>
+          {skillPoke.map((item: any,index) => (
+            <Col span={3} key={index}>
               <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
                 <img
                   style={{ width: 30, height: 30, cursor: "pointer" }}
@@ -403,9 +410,9 @@ const PokemonCollection: React.FC<Props> = (props) => {
   const [search, setSearch] = useState<Pokemon[]>([]);
 
   const onSearch = async (value: any) => {
-    setSearch([])
+    setSearch([]);
     if (value === "") {
-      setSearch([])
+      setSearch([]);
     }
     if (value !== "") {
       // pokemons.map((item: any) => {
@@ -420,7 +427,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             .then((res) => {
               setSearch((p) => [...p, res.data]);
-              console.log(pokemon)
+              console.log(pokemon);
             })
             .catch((err) => {
               console.log("Lỗi ở Search");
@@ -434,14 +441,10 @@ const PokemonCollection: React.FC<Props> = (props) => {
     }
   };
 
-  useEffect(() => {
-
-  }, [search])
-  
+  useEffect(() => {}, [search]);
 
   return (
     <>
-      {console.log(pokemons)}
       <Row>
         <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
           <div className="container">
@@ -460,17 +463,16 @@ const PokemonCollection: React.FC<Props> = (props) => {
             </div>
             <section className="collection-container">
               {search.length === 0
-                ? pokemons.map((pokemon: any) => {
+                ? pokemons.map((pokemon: any,index: number) => {
                     return (
                       <>
-                      {console.log(pokemon)
-                      }
                         <section
                           className="pokemon-list-container"
                           onClick={() => {
                             setIdPokemon(pokemon.id);
                             showModalChooseSkill();
                           }}
+                          key={index}
                         >
                           <p className="pokemon-name"> {pokemon.name} </p>
                           <img
@@ -485,7 +487,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
                       </>
                     );
                   })
-                : search.map((pokemon: any) => {
+                : search.map((pokemon: any,index:number) => {
                     return (
                       <>
                         <section
@@ -494,6 +496,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
                             setIdPokemon(pokemon.id);
                             showModalChooseSkill();
                           }}
+                          key={index}
                         >
                           <p className="pokemon-name"> {pokemon.name} </p>
                           <img
@@ -518,6 +521,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
             </section>
           </div>
         </Col>
+
         <Col span={10} className="background-list" style={{ borderRadius: 15 }}>
           <ListTeam isOpenChooseTeam={isOpenChooseTeam} />
         </Col>
@@ -549,17 +553,11 @@ const PokemonList: React.FC = () => {
         const poke = await axios.get(
           `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
         );
-        console.log(pokemon);
         setPokemons((p) => [...p, poke.data]);
         setLoading(false);
       });
-      // localStorage.setItem("pokemons", JSON.stringify(res.data.results));
     };
     getPokemon();
-    // if (localStorage.getItem("search") !== undefined) {
-    //   localStorage.removeItem("search");
-    // }
-    console.log("Effect lúc load list");
   }, []);
 
   // const nextPage = async () => {
@@ -611,6 +609,25 @@ const ListTeam: React.FC<ListTeam> = (props) => {
     localStorage.setItem("team2", JSON.stringify(team2));
   }, [isOpenChooseTeam]);
 
+  const openNotificationQuantityTeam2 = () => {
+    notification.warning({
+      message: "Thông báo",
+      description: "Team 2 hiện tại chưa đủ đội hình",
+    });
+  };
+  const openNotificationQuantityTeam1 = () => {
+    notification.warning({
+      message: "Thông báo",
+      description: "Team 1 hiện tại chưa đủ đội hình",
+    });
+  };
+  const openNotificationQuantityPoke = () => {
+    notification.warning({
+      message: "Thông báo",
+      description: "Cả 2 team đều chưa đủ đội hình",
+    });
+  };
+
   return (
     <>
       <Row
@@ -647,7 +664,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[0].abilities.map(
-                        (item: any) => (
+                        (item: any,index:number) => (
                           <Col
                             span={5}
                             style={{
@@ -656,6 +673,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               margin: "auto",
                               borderRadius: "100%",
                             }}
+                            key={index}
                           >
                             <img
                               style={{ margin: "auto" }}
@@ -693,7 +711,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[1].abilities.map(
-                        (item: any) => (
+                        (item: any,index: number) => (
                           <Col
                             span={5}
                             style={{
@@ -702,6 +720,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               margin: "auto",
                               borderRadius: "100%",
                             }}
+                            key={index}
                           >
                             <img
                               style={{ margin: "auto" }}
@@ -741,7 +760,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[2].abilities.map(
-                        (item: any) => (
+                        (item: any,index: number) => (
                           <Col
                             span={5}
                             style={{
@@ -750,6 +769,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               margin: "auto",
                               borderRadius: "100%",
                             }}
+                            key={index}
                           >
                             <img
                               style={{ margin: "auto" }}
@@ -796,21 +816,48 @@ const ListTeam: React.FC<ListTeam> = (props) => {
         }}
       >
         <Col span={8}></Col>
+
         <Col span={8} style={{ display: "flex" }}>
           <Col span={6}></Col>
           <Col span={7}>
-            <a
-              style={{ display: "flex" }}
-              href="http://localhost:3000/location"
-            >
+            {team1.length === 3 && team2.length === 3 ? (
+              <Link style={{ display: "flex" }} to={"/location"}>
+                <img
+                  src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
+                  alt=""
+                  width={120}
+                  height={80}
+                  style={{ margin: "auto", cursor: "pointer" }}
+                />
+              </Link>
+            ) : team1.length < 3 && team2.length < 3 ? (
               <img
                 src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
                 alt=""
                 width={120}
                 height={80}
-                style={{ margin: "auto" }}
+                style={{ margin: "auto", cursor: "pointer" }}
+                onClick={openNotificationQuantityPoke}
               />
-            </a>
+            ) : team1.length < 3 ? (
+              <img
+                src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
+                alt=""
+                width={120}
+                height={80}
+                style={{ margin: "auto", cursor: "pointer" }}
+                onClick={openNotificationQuantityTeam1}
+              />
+            ) : team2.length < 3 ? (
+              <img
+                src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
+                alt=""
+                width={120}
+                height={80}
+                style={{ margin: "auto", cursor: "pointer" }}
+                onClick={openNotificationQuantityTeam2}
+              />
+            ) : null}
           </Col>
           <Col span={8}></Col>
         </Col>
@@ -851,7 +898,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team2)[0].abilities.map(
-                        (item: any) => (
+                        (item: any,index:number) => (
                           <Col
                             span={5}
                             style={{
@@ -860,6 +907,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               margin: "auto",
                               borderRadius: "100%",
                             }}
+                            key={index}
                           >
                             <img
                               style={{ margin: "auto" }}
@@ -897,7 +945,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team2)[1].abilities.map(
-                        (item: any) => (
+                        (item: any, index: number) => (
                           <Col
                             span={5}
                             style={{
@@ -906,6 +954,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               margin: "auto",
                               borderRadius: "100%",
                             }}
+                            key={index}
                           >
                             <img
                               style={{ margin: "auto" }}
@@ -945,7 +994,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team2)[2].abilities.map(
-                        (item: any) => (
+                        (item: any, index: number) => (
                           <Col
                             span={5}
                             style={{
@@ -954,6 +1003,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               margin: "auto",
                               borderRadius: "100%",
                             }}
+                            key={index}
                           >
                             <img
                               style={{ margin: "auto" }}

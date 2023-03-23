@@ -107,7 +107,7 @@
 
 .custom-hp {
   animation: hp 2s infinite;
-  color: rgb(190, 182, 182);
+  color: rgb(228, 22, 22);
   text-shadow: 2px 2px 4px #000000;
   margin: 50px 0px 0px 110px;
 }
@@ -276,7 +276,7 @@ button:hover {
 }
 
 .custom-hp {
-  animation: hp 3s linear infinite;
+  animation: hp 4s ease-in infinite;
   color: rgb(190, 182, 182);
   text-shadow: 2px 2px 4px #000000;
   margin: 50px 0px 0px 110px;
@@ -373,4 +373,37 @@ button:hover {
 
 .box2 {
   position: relative;
+}
+
+.team2-skill {
+  height: 100;
+  width: 100;
+  background-color: rgb(0, 0, 0, 0);
+  z-index: 999;
+  top: 20%;
+  left: 77%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.team1-skill {
+  height: 100;
+  width: 100;
+  background-color: rgb(0, 0, 0, 0);
+  z-index: 999;
+  top: 77%;
+  margin-left: 27%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.game-over {
+  height: 200;
+  width: 200;
+  background-color: rgb (0,0,0,0);
+  z-index: 999;
+  top: 50%;
+  margin-left: 53%;
+  position: absolute;
+  transform: translate(-50%, -50%);
 }
