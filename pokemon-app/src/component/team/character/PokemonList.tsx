@@ -709,7 +709,13 @@ const ListTeam: React.FC<ListTeam> = (props) => {
 
               {JSON.parse(localStorage.team1)[1] ? (
                 <>
-                  <Col span={6} className="pokemon-list-team">
+                  <Col
+                    span={6}
+                    className="pokemon-list-team"
+                    onClick={() =>
+                      onShowModalDetail(JSON.parse(localStorage.team1)[1])
+                    }
+                  >
                     <strong style={{ color: "#3d405b", textAlign: "center" }}>
                       {JSON.parse(localStorage.team1)[1].pokemon.name}
                     </strong>
@@ -758,7 +764,9 @@ const ListTeam: React.FC<ListTeam> = (props) => {
 
               {JSON.parse(localStorage.team1)[2] ? (
                 <>
-                  <Col span={6} className="pokemon-list-team">
+                  <Col span={6} className="pokemon-list-team"  onClick={() =>
+                      onShowModalDetail(JSON.parse(localStorage.team1)[2])
+                    }>
                     <strong style={{ color: "#3d405b", textAlign: "center" }}>
                       {JSON.parse(localStorage.team1)[2].pokemon.name}
                     </strong>
@@ -896,7 +904,9 @@ const ListTeam: React.FC<ListTeam> = (props) => {
               {/* Ô 1 */}
               {JSON.parse(localStorage.team2)[0] ? (
                 <>
-                  <Col span={6} className="pokemon-list-team" key={5}>
+                  <Col span={6} className="pokemon-list-team"  onClick={() =>
+                      onShowModalDetail(JSON.parse(localStorage.team2)[0])
+                    } key={5}>
                     <strong style={{ color: "#3d405b", textAlign: "center" }}>
                       {JSON.parse(localStorage.team2)[0].pokemon.name}
                     </strong>
@@ -943,7 +953,9 @@ const ListTeam: React.FC<ListTeam> = (props) => {
 
               {JSON.parse(localStorage.team2)[1] ? (
                 <>
-                  <Col span={6} className="pokemon-list-team">
+                  <Col span={6} className="pokemon-list-team"  onClick={() =>
+                      onShowModalDetail(JSON.parse(localStorage.team2)[1])
+                    }>
                     <strong style={{ color: "#3d405b", textAlign: "center" }}>
                       {JSON.parse(localStorage.team2)[1].pokemon.name}
                     </strong>
@@ -992,7 +1004,9 @@ const ListTeam: React.FC<ListTeam> = (props) => {
 
               {JSON.parse(localStorage.team2)[2] ? (
                 <>
-                  <Col span={6} className="pokemon-list-team">
+                  <Col span={6} className="pokemon-list-team"  onClick={() =>
+                      onShowModalDetail(JSON.parse(localStorage.team2)[2])
+                    }>
                     <strong style={{ color: "#3d405b", textAlign: "center" }}>
                       {JSON.parse(localStorage.team2)[2].pokemon.name}
                     </strong>
@@ -1180,11 +1194,12 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
               }
               alt=""
               height={400}
+              width={410}
               style={{ margin: "auto" }}
             />
             <div className="background-skill">
-              <h1 style={{color: "#fff"}}>Các kỹ năng đã được chọn</h1>
-              <Row >
+              <h1 style={{ color: "#fff" }}>Các kỹ năng đã được chọn</h1>
+              <Row>
                 <Col span={3}></Col>
                 {detailPokemon !== undefined
                   ? detailPokemon.abilities.map((item: any) => (
