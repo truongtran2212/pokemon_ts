@@ -218,3 +218,15 @@
   top: 0;
   z-index: 3;
 }
+
+:where(.css-dev-only-do-not-override-1me4733).ant-modal .ant-modal-content {
+    position: relative;
+    background-image: url("https://i.pinimg.com/originals/ee/c5/5f/eec55f9c4824e8fa8128e06c7b302309.gif");
+    background-size: cover;
+    background-clip: padding-box;
+    border: 0;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    pointer-events: auto;
+    padding: 20px 24px;
+}

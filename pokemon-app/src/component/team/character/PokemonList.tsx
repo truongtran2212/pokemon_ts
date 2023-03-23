@@ -261,15 +261,14 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
     },
     {
       name: "Đóng băng",
-      image:
-        "https://lh5.googleusercontent.com/-Dz4-xQmywtCjYDy6rzC7ybz3A16YcV852Vprt8dbCGdx4ECkcSXTtY7GgSMe9G2xJA40DH6O5BJuNMt9sTq34TBoLhmHdU1mJDZ0fru3MyAMjem3KMPrX9sTdrTUTkLbdPf4TCP",
+      image: "https://icon-library.com/images/freeze-icon/freeze-icon-16.jpg",
       damage: Math.floor(Math.random() * 20) + 10,
       mana: Math.floor(Math.random() * 9) + 17,
     },
     {
       name: "Sấm sét",
       image:
-        "https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/lightning-icon.png",
+        "https://png.pngtree.com/png-vector/20221130/ourmid/pngtree-lightning-icon-simple-transparent-background-png-image_6486043.png",
       damage: Math.floor(Math.random() * 20) + 10,
       mana: Math.floor(Math.random() * 9) + 17,
     },
@@ -281,8 +280,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
     },
     {
       name: "Lửa",
-      image:
-        "https://freepngimg.com/save/96182-lohri-orange-fire-flame-for-happy-lyrics/600x876",
+      image:"https://freepngimg.com/save/96182-lohri-orange-fire-flame-for-happy-lyrics/600x876",
       damage: Math.floor(Math.random() * 20) + 10,
       mana: Math.floor(Math.random() * 9) + 17,
     },
@@ -294,7 +292,8 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
     },
     {
       name: "Gió",
-      image: "https://cdn2.iconfinder.com/data/icons/game-1-2/512/wind-512.png",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/role-playing-game-5/340/game_magic_fantasy_spell_storm_tornado_wind-512.png",
       damage: Math.floor(Math.random() * 20) + 10,
       mana: Math.floor(Math.random() * 9) + 17,
     },
@@ -364,7 +363,7 @@ const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
           <h3>Các skill được chọn</h3>
         </Row>
         <Row key={1}>
-          {skillPoke.map((item: any,index) => (
+          {skillPoke.map((item: any, index) => (
             <Col span={3} key={index}>
               <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
                 <img
@@ -463,7 +462,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
             </div>
             <section className="collection-container">
               {search.length === 0
-                ? pokemons.map((pokemon: any,index: number) => {
+                ? pokemons.map((pokemon: any, index: number) => {
                     return (
                       <>
                         <section
@@ -487,7 +486,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
                       </>
                     );
                   })
-                : search.map((pokemon: any,index:number) => {
+                : search.map((pokemon: any, index: number) => {
                     return (
                       <>
                         <section
@@ -539,16 +538,16 @@ interface Pokemons {
 
 const PokemonList: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  const [nextUrl, setNextUrl] = useState<string>("");
+  // const [nextUrl, setNextUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [detail, setDetail] = useState<Detail>({ id: 0, isOpened: false });
 
   useEffect(() => {
     const getPokemon = async () => {
       const res = await axios.get(
-        "https://pokeapi.co/api/v2/pokemon?limit=2000"
+        "https://pokeapi.co/api/v2/pokemon?limit=200"
       );
-      setNextUrl(res.data.next);
+      // setNextUrl(res.data.next);
       res.data.results.forEach(async (pokemon: Pokemons) => {
         const poke = await axios.get(
           `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
@@ -572,8 +571,6 @@ const PokemonList: React.FC = () => {
   //     setLoading(false);
   //   });
   // };
-
-  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -628,6 +625,14 @@ const ListTeam: React.FC<ListTeam> = (props) => {
     });
   };
 
+  const [isOpenModalDetail, setIsModalDetail] = useState<boolean>(false);
+  const [detailPokemon, setDetailPokemon] = useState();
+
+  const onShowModalDetail = (value: any) => {
+    setIsModalDetail(true);
+    setDetailPokemon(value);
+  };
+
   return (
     <>
       <Row
@@ -649,7 +654,14 @@ const ListTeam: React.FC<ListTeam> = (props) => {
               {/* Ô 1 */}
               {JSON.parse(localStorage.team1)[0] ? (
                 <>
-                  <Col span={6} className="pokemon-list-team" key={5}>
+                  <Col
+                    span={6}
+                    className="pokemon-list-team"
+                    key={5}
+                    onClick={() =>
+                      onShowModalDetail(JSON.parse(localStorage.team1)[0])
+                    }
+                  >
                     <strong style={{ color: "#3d405b", textAlign: "center" }}>
                       {JSON.parse(localStorage.team1)[0].pokemon.name}
                     </strong>
@@ -664,7 +676,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[0].abilities.map(
-                        (item: any,index:number) => (
+                        (item: any, index: number) => (
                           <Col
                             span={5}
                             style={{
@@ -711,7 +723,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[1].abilities.map(
-                        (item: any,index: number) => (
+                        (item: any, index: number) => (
                           <Col
                             span={5}
                             style={{
@@ -760,7 +772,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team1)[2].abilities.map(
-                        (item: any,index: number) => (
+                        (item: any, index: number) => (
                           <Col
                             span={5}
                             style={{
@@ -898,7 +910,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     />
                     <Row>
                       {JSON.parse(localStorage.team2)[0].abilities.map(
-                        (item: any,index:number) => (
+                        (item: any, index: number) => (
                           <Col
                             span={5}
                             style={{
@@ -1043,6 +1055,206 @@ const ListTeam: React.FC<ListTeam> = (props) => {
         </Col>
         <Col span={1}></Col>
       </Row>
+
+      <DetailPokemon
+        isOpenModalDetail={isOpenModalDetail}
+        setIsModalDetail={setIsModalDetail}
+        detailPokemon={detailPokemon}
+      />
+    </>
+  );
+};
+
+interface DetailPokemon {
+  isOpenModalDetail: boolean;
+  setIsModalDetail: React.Dispatch<React.SetStateAction<boolean>>;
+  detailPokemon: any;
+}
+
+const DetailPokemon: React.FC<DetailPokemon> = (props) => {
+  const { isOpenModalDetail, setIsModalDetail, detailPokemon } = props;
+  const onCloseModal = () => {
+    setIsModalDetail(false);
+  };
+  return (
+    <>
+      <Modal
+        open={isOpenModalDetail}
+        // title={<p>12312312</p>}
+        // onOk={handleOk}
+        // confirmLoading={confirmLoading}
+        onCancel={onCloseModal}
+        footer={false}
+        closeIcon={
+          <img
+            src="https://freepngimg.com/save/130412-x-letter-picture-free-png-hq/512x512"
+            width={30}
+            height={30}
+          ></img>
+        }
+        width={"60%"}
+      >
+        <h1 style={{color: "#fff", textAlign: "center"}}>CHỌN KỸ NĂNG</h1>
+        <Row style={{ display: "flex", marginTop: "2%" }}>
+          <Col span={8}>
+            <div>
+              <button
+                style={{
+                  borderRadius: "100%",
+                  width: 80,
+                  height: 80,
+                  marginLeft: "65%",
+                }}
+              >
+                <img
+                  src={JSON.parse(localStorage.abilities)[0].image}
+                  alt=""
+                  width={70}
+                />
+              </button>
+            </div>
+            <div style={{}}>
+              <button
+                style={{
+                  borderRadius: "100%",
+                  width: 80,
+                  height: 80,
+                  marginLeft: "50%",
+                  marginTop: "5%",
+                }}
+              >
+                <img
+                  src={JSON.parse(localStorage.abilities)[1].image}
+                  alt=""
+                  width={70}
+                  height={70}
+                />
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  borderRadius: "100%",
+                  width: 80,
+                  height: 80,
+                  marginLeft: "50%",
+                  marginTop: "5%",
+                }}
+              >
+                <img
+                  src={JSON.parse(localStorage.abilities)[2].image}
+                  alt=""
+                  width={70}
+                  height={70}
+                />
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  borderRadius: "100%",
+                  width: 80,
+                  height: 80,
+                  marginLeft: "65%",
+                  marginTop: "5%",
+                }}
+              >
+                <img
+                  src={JSON.parse(localStorage.abilities)[3].image}
+                  alt=""
+                  width={70}
+                  height={70}
+                />
+              </button>
+            </div>
+          </Col>
+          <Col span={8}>
+            <img
+              src={
+                detailPokemon !== undefined
+                  ? detailPokemon.pokemon.sprites.other.dream_world
+                      .front_default
+                  : null
+              }
+              alt=""
+              style={{ margin: "auto" }}
+            />
+          </Col>
+          <Col span={8} style={{ float: "right" }}>
+            <div>
+              <button
+                style={{
+                  borderRadius: "100%",
+                  width: 80,
+                  height: 80,
+                  marginLeft: "10%",
+                }}
+              >
+                <img
+                  src={JSON.parse(localStorage.abilities)[4].image}
+                  alt=""
+                  width={70}
+                  height={70}
+                />
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  borderRadius: "100%",
+                  width: 80,
+                  height: 80,
+                  marginTop: "5%",
+                  marginLeft: "25%",
+                }}
+              >
+                <img
+                  src={JSON.parse(localStorage.abilities)[5].image}
+                  alt=""
+                  width={70}
+                  height={70}
+                />
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  borderRadius: "100%",
+                  width: 80,
+                  height: 80,
+                  marginTop: "5%",
+                  marginLeft: "25%",
+                }}
+              >
+                <img
+                  src={JSON.parse(localStorage.abilities)[6].image}
+                  alt=""
+                  width={70}
+                  height={70}
+                />
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  borderRadius: "100%",
+                  width: 80,
+                  height: 80,
+                  marginTop: "5%",
+                  marginLeft: "10%",
+                }}
+              >
+                <img
+                  src={JSON.parse(localStorage.abilities)[7].image}
+                  alt=""
+                  width={70}
+                  height={70}
+                />
+              </button>
+            </div>
+          </Col>
+        </Row>
+      </Modal>
     </>
   );
 };
