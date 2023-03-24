@@ -252,3 +252,10 @@
   box-shadow: 1px 1px 8px 8px  #c8f514 ;
   border-radius: 20%;
 }
+
+:where(.css-dev-only-do-not-override-1me4733).ant-btn {
+  font-size: 14px;
+  height: 32px;
+  /* padding: 4px 15px; */
+  border-radius: 6px;
+}

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
 import "./pokemon.css";
 import { withErrorBoundary } from "react-error-boundary";
-import { SearchOutlined } from "@ant-design/icons";
+import { LineOutlined, SearchOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 
@@ -1317,17 +1317,21 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                 {detailPokemon !== undefined
                   ? detailPokemon.abilities.map((item: any) => (
                       <Col span={5}>
-                        <Button
+                        <button
                           style={{
-                            position: "absolute",
+                            height: 15,
                             width: 20,
-                            height: 12,
-                            marginLeft: "45%",
-                            display: "flex",
+                            marginLeft: "55%",
+                            borderRadius: 5,
+                            position: "absolute",
+                            border: "none",
+                            cursor: "pointer",
+                            backgroundColor: "#D8E1DA"
                           }}
-                          icon={<SearchOutlined />}
+                          // icon={<LineOutlined style={{height: 10, marginBottom: 10}}/>}
                         >
-                        </Button>
+                          <LineOutlined />
+                        </button>
                         <button
                           style={{
                             borderRadius: "20%",
