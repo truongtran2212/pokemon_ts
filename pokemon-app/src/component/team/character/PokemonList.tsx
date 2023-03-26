@@ -7,6 +7,7 @@ import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
 import "./pokemon.css";
 import { withErrorBoundary } from "react-error-boundary";
 import { LineOutlined, SearchOutlined } from "@ant-design/icons";
+import { localhost } from "../../../localhost";
 
 const { Search } = Input;
 
@@ -156,7 +157,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
               break;
             }
           }
-          if (flag == true) {
+          if (flag === true) {
             listTeam1.push({
               pokemon,
               hp: 100,
@@ -166,7 +167,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
             localStorage.setItem("team1", JSON.stringify(listTeam1));
             openNotificationSuccessTeam1();
             handleCancel();
-          } else if (flag == false) {
+          } else if (flag === false) {
             openCheckNameTeam1();
           }
         } else {
@@ -208,7 +209,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
               break;
             }
           }
-          if (flag == true) {
+          if (flag === true) {
             listTeam2.push({
               pokemon,
               hp: 100,
@@ -218,7 +219,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
             localStorage.setItem("team2", JSON.stringify(listTeam2));
             openNotificationSuccessTeam2();
             handleCancel();
-          } else if (flag == false) {
+          } else if (flag === false) {
             openCheckNameTeam2();
           }
         } else {
@@ -626,6 +627,26 @@ const ListTeam: React.FC<ListTeam> = (props) => {
     });
   };
 
+  const openNotificationQuantitySkillTeam1 = () => {
+    notification.warning({
+      message: "Thông báo",
+      description: "Poke Team 1 chưa đủ skill.",
+    });
+  };
+
+  const openNotificationQuantitySkillTeam2 = () => {
+    notification.warning({
+      message: "Thông báo",
+      description: "Poke Team 2 chưa đủ skill.",
+    });
+  };
+  const openNotificationQuantitySkill = () => {
+    notification.warning({
+      message: "Thông báo",
+      description: "Poke cả 2 team đều thiếu skill.",
+    });
+  };
+
   const [isOpenModalDetail, setIsModalDetail] = useState<boolean>(false);
   const [detailPokemon, setDetailPokemon] = useState();
   const [team, setTeam] = useState<number>(0);
@@ -633,6 +654,44 @@ const ListTeam: React.FC<ListTeam> = (props) => {
   const onShowModalDetail = (value: any) => {
     setIsModalDetail(true);
     setDetailPokemon(value);
+  };
+
+  const goToArena = () => {
+    let flagTeam1 = false;
+    let flagTeam2 = false;
+
+    for (let i = 0; i < team1.length; i++) {
+      if (team1[i].abilities.length < 4) {
+        flagTeam1 = false;
+        break;
+      } else {
+        flagTeam1 = true;
+      }
+    }
+
+    for (let i = 0; i < team1.length; i++) {
+      if (team2[i].abilities.length < 4) {
+        flagTeam2 = false;
+        break;
+      } else {
+        flagTeam2 = true;
+      }
+    }
+
+    if (flagTeam1 === false && flagTeam2 === true) {
+      openNotificationQuantitySkillTeam1();
+    }
+
+    if (flagTeam2 === false && flagTeam1 === true) {
+      openNotificationQuantitySkillTeam2();
+    }
+    if (flagTeam2 === false && flagTeam1 === false) {
+      openNotificationQuantitySkill();
+    }
+
+    if (flagTeam2 === true && flagTeam1 === true) {
+      window.location.href = localhost + "location";
+    }
   };
 
   return (
@@ -678,7 +737,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                       height={140}
                     />
                     <Row>
-                      {/* {JSON.parse(localStorage.team1)[0].abilities.map(
+                      {JSON.parse(localStorage.team1)[0].abilities.map(
                         (item: any, index: number) => (
                           <Col
                             span={5}
@@ -699,7 +758,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                             />
                           </Col>
                         )
-                      )} */}
+                      )}
                     </Row>
                   </Col>
                 </>
@@ -732,7 +791,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                       height={140}
                     />
                     <Row>
-                      {/* {JSON.parse(localStorage.team1)[1].abilities.map(
+                      {JSON.parse(localStorage.team1)[1].abilities.map(
                         (item: any, index: number) => (
                           <Col
                             span={5}
@@ -753,7 +812,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                             />
                           </Col>
                         )
-                      )} */}
+                      )}
                     </Row>
                   </Col>
                 </>
@@ -788,7 +847,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                       height={140}
                     />
                     <Row>
-                      {/* {JSON.parse(localStorage.team1)[2].abilities.map(
+                      {JSON.parse(localStorage.team1)[2].abilities.map(
                         (item: any, index: number) => (
                           <Col
                             span={5}
@@ -809,7 +868,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                             />
                           </Col>
                         )
-                      )} */}
+                      )}
                     </Row>
                   </Col>
                 </>
@@ -850,16 +909,17 @@ const ListTeam: React.FC<ListTeam> = (props) => {
           <Col span={6}></Col>
           <Col span={7}>
             {team1.length === 3 && team2.length === 3 ? (
-              <Link style={{ display: "flex" }} to={"/location"}>
-                <img
-                  src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
-                  alt=""
-                  width={120}
-                  height={80}
-                  style={{ margin: "auto", cursor: "pointer" }}
-                />
-              </Link>
-            ) : team1.length < 3 && team2.length < 3 ? (
+              // <Link style={{ display: "flex" }} to={"/location"}>
+              <img
+                src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
+                alt=""
+                width={120}
+                height={80}
+                style={{ margin: "auto", cursor: "pointer" }}
+                onClick={goToArena}
+              />
+            ) : // </Link>
+            team1.length < 3 && team2.length < 3 ? (
               <img
                 src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
                 alt=""
@@ -934,7 +994,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                       height={140}
                     />
                     <Row>
-                      {/* {JSON.parse(localStorage.team2)[0].abilities.map(
+                      {JSON.parse(localStorage.team2)[0].abilities.map(
                         (item: any, index: number) => (
                           <Col
                             span={5}
@@ -955,7 +1015,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                             />
                           </Col>
                         )
-                      )} */}
+                      )}
                     </Row>
                   </Col>
                 </>
@@ -988,7 +1048,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                       height={140}
                     />
                     <Row>
-                      {/* {JSON.parse(localStorage.team2)[1].abilities.map(
+                      {JSON.parse(localStorage.team2)[1].abilities.map(
                         (item: any, index: number) => (
                           <Col
                             span={5}
@@ -1009,7 +1069,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                             />
                           </Col>
                         )
-                      )} */}
+                      )}
                     </Row>
                   </Col>
                 </>
@@ -1044,7 +1104,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                       height={140}
                     />
                     <Row>
-                      {/* {JSON.parse(localStorage.team2)[2].abilities.map(
+                      {JSON.parse(localStorage.team2)[2].abilities.map(
                         (item: any, index: number) => (
                           <Col
                             span={5}
@@ -1065,7 +1125,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                             />
                           </Col>
                         )
-                      )} */}
+                      )}
                     </Row>
                   </Col>
                 </>
@@ -1119,9 +1179,14 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
       description: "Đã đủ skill.",
     });
   };
+  const openNotificationQuantitySkill = () => {
+    notification.warning({
+      message: "Thông báo",
+      description: "Poke chưa đủ skill",
+    });
+  };
 
   const { isOpenModalDetail, setIsModalDetail, detailPokemon, team } = props;
-  const [chooseSkill, setChooseSkill] = useState([]);
   const [skillPoke, setSkillPoke] = useState<Abilities[]>(
     detailPokemon ? detailPokemon.abilities : []
   );
@@ -1142,9 +1207,9 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
           break;
         }
       }
-      if (flag == false) {
+      if (flag === false) {
         setSkillPoke([...skillPoke, item]);
-      } else if (flag == true) {
+      } else if (flag === true) {
         console.log("Đã có skill này");
       }
     }
@@ -1163,10 +1228,15 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
       (item: any) => item.pokemon.name === detailPokemon.pokemon.name
     );
     if (check) {
-      check.abilities = skillPoke;
-      localStorage.setItem("team1", JSON.stringify(team1));
+      if (skillPoke.length === 4) {
+        check.abilities = skillPoke;
+        localStorage.setItem("team1", JSON.stringify(team1));
+        setIsModalDetail(false);
+      }
+      if (skillPoke.length < 4) {
+        openNotificationQuantitySkill();
+      }
     }
-    console.log("Vào lockTeam1");
   };
   const lockTeam2 = () => {
     const temp = localStorage.getItem("team2");
@@ -1177,10 +1247,15 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
       (item: any) => item.pokemon.name === detailPokemon.pokemon.name
     );
     if (check) {
-      check.abilities = skillPoke;
-      localStorage.setItem("team2", JSON.stringify(team2));
+      if (skillPoke.length === 4) {
+        check.abilities = skillPoke;
+        localStorage.setItem("team2", JSON.stringify(team2));
+        setIsModalDetail(false);
+      }
+      if (skillPoke.length < 4) {
+        openNotificationQuantitySkill();
+      }
     }
-    console.log("Vào lockTeam2");
   };
 
   useEffect(() => {
@@ -1190,11 +1265,17 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   const onCloseModal = () => {
     setIsModalDetail(false);
   };
+
+  const removeSkill = (index: number) => {
+    console.log(skillPoke);
+    skillPoke.splice(index, 1);
+    setSkillPoke([...skillPoke]);
+    console.log(skillPoke);
+  };
+
   return (
     <>
       {console.log(skillPoke)}
-      {console.log(detailPokemon)}
-
       <Modal
         open={isOpenModalDetail}
         // title={<p>12312312</p>}
@@ -1205,6 +1286,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
         closeIcon={
           <img
             src="https://freepngimg.com/save/130412-x-letter-picture-free-png-hq/512x512"
+            alt=""
             width={30}
             height={30}
           ></img>
@@ -1315,7 +1397,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
               <Row>
                 <Col span={3}></Col>
                 {detailPokemon !== undefined
-                  ? detailPokemon.abilities.map((item: any) => (
+                  ? skillPoke.map((item: any, index: number) => (
                       <Col span={5}>
                         <button
                           style={{
@@ -1326,8 +1408,9 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                             position: "absolute",
                             border: "none",
                             cursor: "pointer",
-                            backgroundColor: "#D8E1DA"
+                            backgroundColor: "#D8E1DA",
                           }}
+                          onClick={() => removeSkill(index)}
                           // icon={<LineOutlined style={{height: 10, marginBottom: 10}}/>}
                         >
                           <LineOutlined />
