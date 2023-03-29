@@ -78,6 +78,17 @@
   justify-content: center;
   align-items: center;
 }
+.pokemon-list-edit {
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  background-color: #f4f1de;
+  margin: 1rem;
+  /* padding: 0 1rem; */
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+}
 
 .pokemon-list-team {
   display: flex;
@@ -98,7 +109,6 @@
 
 .pokemon-list-team-null {
   display: flex;
-  cursor: pointer;
   flex-direction: column;
   /* background-color: #f4f1de; */
   background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvvzINB4GSBiF5BKE_DDhu5ne5MbXO2Gf1MBDX_DfnMPbZSIjwJblOL9pJ6jry3e2hXu0&usqp=CAU");
@@ -202,7 +212,7 @@
 .template-list-team2 {
   border-radius: 10px;
   margin-bottom: 10px;
-  box-shadow: 1px 1px 10px 10px  #c8f514 inset;
+  box-shadow: 1px 1px 10px 10px #c8f514 inset;
   border: 1px solid rgb(175, 154, 68);
 }
 
@@ -210,8 +220,8 @@
   border: 1px solid rgb(175, 168, 68);
   border-radius: 10px;
   margin-top: 10px;
-  box-shadow: 1px 1px 10px 10px  #c8f514 inset;
- }
+  box-shadow: 1px 1px 10px 10px #c8f514 inset;
+}
 
 .custom-sticky {
   position: sticky;
@@ -219,20 +229,26 @@
   z-index: 3;
 }
 
-:where(.css-dev-only-do-not-override-1me4733).ant-modal .ant-modal-content{
-    position: relative;
-    background-image: url("https://i.pinimg.com/originals/ee/c5/5f/eec55f9c4824e8fa8128e06c7b302309.gif");
-    background-size: cover;
-    background-clip: padding-box;
-    border: 0;
-    border-radius: 8px;
-    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-    pointer-events: auto;
-    padding: 20px 24px;
+:where(.css-dev-only-do-not-override-1me4733).ant-modal .ant-modal-content {
+  position: relative;
+  background-image: url("https://i.pinimg.com/originals/ee/c5/5f/eec55f9c4824e8fa8128e06c7b302309.gif");
+  background-size: cover;
+  background-clip: padding-box;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  pointer-events: auto;
+  padding: 20px 24px;
 }
 
 .background-skill {
-  background-image: linear-gradient(to right, rgba(255,0,0,0), rgb(223, 218, 140),rgba(255,0,0,0)); 
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 0, 0, 0),
+    rgb(223, 218, 140),
+    rgba(255, 0, 0, 0)
+  );
 }
 
 .bg-modal {
@@ -249,7 +265,7 @@
 }
 
 .btn-skill :hover {
-  box-shadow: 1px 1px 8px 8px  #c8f514 ;
+  box-shadow: 1px 1px 8px 8px #c8f514;
   border-radius: 20%;
 }
 
@@ -258,4 +274,19 @@
   height: 32px;
   /* padding: 4px 15px; */
   border-radius: 6px;
+}
+
+:where(.css-dev-only-do-not-override-1me4733).ant-drawer .ant-drawer-body {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  /* padding: 24px; */
+  overflow: auto;
+}
+
+.btn-team {
+  border-radius: 10px;
+  cursor: pointer;
+  width: 200px;
+  height: 70px;
 }

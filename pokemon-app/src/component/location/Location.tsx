@@ -2,7 +2,7 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./location.css";
-import { Button, Col, Row } from "antd";
+import { Button, Col, Image, Row } from "antd";
 import { localhost } from "../../localhost";
 
 const Location: React.FC = () => {
@@ -46,6 +46,7 @@ const Location: React.FC = () => {
       setHpTeam2(0);
       listTeam2.shift();
       setListTeam2(listTeam2);
+      setReduceBloodTeam2(0);
       if (listTeam2.length > 0) {
         setHpTeam2(100);
       }
@@ -235,6 +236,7 @@ const Location: React.FC = () => {
           {nameSkillTeam2 === "Sấm sét" ? <ThunderSkillTeam2 /> : null}
           {nameSkillTeam2 === "Đánh thường" ? <AttackTeam2 /> : null}
 
+          {/* <Team2Win /> */}
         </div>
         <div className="custom-background">
           <div
@@ -282,7 +284,15 @@ const Location: React.FC = () => {
                         height: 45,
                         cursor: "pointer",
                       }}
-                    ></button>
+                    >
+                      <img
+                        style={{ width: 35, height: 30 }}
+                        src={
+                          "https://cdn-icons-png.flaticon.com/512/65/65525.png"
+                        }
+                        alt=""
+                      />
+                    </button>
                   )}
                 </Col>
 
@@ -312,7 +322,15 @@ const Location: React.FC = () => {
                         height: 45,
                         cursor: "pointer",
                       }}
-                    ></button>
+                    >
+                      <img
+                        style={{ width: 35, height: 30 }}
+                        src={
+                          "https://cdn-icons-png.flaticon.com/512/65/65525.png"
+                        }
+                        alt=""
+                      />
+                    </button>
                   )}
                 </Col>
               </Row>
@@ -364,7 +382,12 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {isCloseStart === true && reduceBloodTeam1 !== 0 ? (
-                        <p className="custom-hp" style={{color: "red", fontSize: 24}}>- {reduceBloodTeam1}</p>
+                        <p
+                          className="custom-hp"
+                          style={{ color: "red", fontSize: 24 }}
+                        >
+                          - {reduceBloodTeam1}
+                        </p>
                       ) : null}
                     </div>
                     {statusTeam1 === "Choáng" ? (
@@ -484,7 +507,15 @@ const Location: React.FC = () => {
                         height: 45,
                         cursor: "pointer",
                       }}
-                    ></button>
+                    >
+                      <img
+                        style={{ width: 35, height: 30 }}
+                        src={
+                          "https://cdn-icons-png.flaticon.com/512/65/65525.png"
+                        }
+                        alt=""
+                      />
+                    </button>
                   )}
                 </Col>
 
@@ -514,7 +545,15 @@ const Location: React.FC = () => {
                         height: 45,
                         cursor: "pointer",
                       }}
-                    ></button>
+                    >
+                      <img
+                        style={{ width: 35, height: 30 }}
+                        src={
+                          "https://cdn-icons-png.flaticon.com/512/65/65525.png"
+                        }
+                        alt=""
+                      />
+                    </button>
                   )}
                 </Col>
               </Row>
@@ -566,7 +605,12 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {isCloseStart === true && reduceBloodTeam2 !== 0 ? (
-                        <p className="custom-hp" style={{color: "red", fontSize: 24}}>- {reduceBloodTeam2}</p>
+                        <p
+                          className="custom-hp"
+                          style={{ color: "red", fontSize: 24 }}
+                        >
+                          - {reduceBloodTeam2}
+                        </p>
                       ) : null}
                     </div>
                     {statusTeam2 === "Choáng" ? (
@@ -702,17 +746,18 @@ const Team1Win = () => {
   };
   useEffect(() => {
     localStorage.removeItem("team2");
-    setTimeout(returnList, 1300);
+    setTimeout(returnList, 2000);
   }, []);
 
   return (
     <>
       <div className="game-over">
         <img
-          src="https://leo-daniel.github.io/face-off/assets/images/winner-1.png"
+          src="player1.gif"
           alt=""
-          width={450}
-          height={250}
+          width={600}
+          height={200}
+          style={{borderRadius: 20}}
         />
       </div>
     </>
@@ -720,19 +765,23 @@ const Team1Win = () => {
 };
 
 const Team2Win = () => {
+  const returnList = () => {
+    window.location.href = localhost;
+  };
   useEffect(() => {
     localStorage.removeItem("team1");
+    setTimeout(returnList, 2000);
   }, []);
+
   return (
     <>
       <div className="game-over">
         <img
-          src={
-            "https://leo-daniel.github.io/face-off/assets/images/winner-2.png"
-          }
+          src="player2.gif"
           alt=""
-          width={450}
-          height={250}
+          width={600}
+          height={200}
+          style={{borderRadius: 20}}
         />
       </div>
     </>

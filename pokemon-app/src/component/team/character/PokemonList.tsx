@@ -1,6 +1,13 @@
 import { Button, Col, Drawer, Modal, notification, Row, Input } from "antd";
 import axios from "axios";
-import { Suspense, useEffect } from "react";
+import {
+  createContext,
+  Suspense,
+  useContext,
+  useEffect,
+  memo,
+  useCallback,
+} from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
@@ -10,6 +17,7 @@ import { LineOutlined, SearchOutlined } from "@ant-design/icons";
 import { localhost } from "../../../localhost";
 
 const { Search } = Input;
+const UserContext = createContext<IPokemonDetail[]>([]);
 
 interface Props {
   pokemons: IPokemonDetail[];
@@ -83,49 +91,56 @@ interface ChooseTeam {
   // skillPoke: Abilities[];
 }
 
+const openNotificationSuccessTeam1 = () => {
+  notification.success({
+    message: "Thông báo",
+    description: "Thêm vào team 1 thành công.",
+  });
+};
+const openCheckNameTeam1 = () => {
+  notification.error({
+    message: "Thông báo",
+    description: "Pokemon này đã có trong team 1.",
+  });
+};
+
+const openCheckNameTeam2 = () => {
+  notification.error({
+    message: "Thông báo",
+    description: "Pokemon này đã có trong team 2.",
+  });
+};
+const openNotificationSuccessTeam2 = () => {
+  notification.success({
+    message: "Thông báo",
+    description: "Thêm vào team 2 thành công.",
+  });
+};
+const openNotificationError = () => {
+  notification.warning({
+    message: "Thông báo",
+    description: "Đã đủ team.",
+  });
+};
+const openNotificationSuccessEditSkill = () => {
+  notification.success({
+    message: "Thông báo",
+    description: "Cập nhật Pokemon thành công.",
+  });
+};
+const openNotificationSuccessEditPokemon = () => {
+  notification.success({
+    message: "Thông báo",
+    description: "Thay đổi POKEMON thành công.",
+  });
+};
+
 const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
-  const {
-    isOpenModalChooseTeam,
-    setIsOpenModalChooseTeam,
-    idPokemon,
-    // setSkillPoke,
-    // skillPoke,
-  } = props;
+  const { isOpenModalChooseTeam, setIsOpenModalChooseTeam, idPokemon } = props;
 
   const handleCancel = () => {
     setIsOpenModalChooseTeam(false);
     // setSkillPoke([]);
-  };
-
-  const openNotificationSuccessTeam1 = () => {
-    notification.success({
-      message: "Thông báo",
-      description: "Thêm vào team 1 thành công.",
-    });
-  };
-  const openCheckNameTeam1 = () => {
-    notification.error({
-      message: "Thông báo",
-      description: "Pokemon này đã có trong team 1.",
-    });
-  };
-  const openCheckNameTeam2 = () => {
-    notification.error({
-      message: "Thông báo",
-      description: "Pokemon này đã có trong team 2.",
-    });
-  };
-  const openNotificationSuccessTeam2 = () => {
-    notification.success({
-      message: "Thông báo",
-      description: "Thêm vào team 2 thành công.",
-    });
-  };
-  const openNotificationError = () => {
-    notification.warning({
-      message: "Thông báo",
-      description: "Đã đủ team.",
-    });
   };
 
   const chooseTeam1 = async () => {
@@ -237,21 +252,31 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
         open={isOpenModalChooseTeam}
         onCancel={handleCancel}
         footer={false}
-        width={600}
-        style={{ marginTop: "7%" }}
+        width={"40%"}
+        style={{ marginTop: "9%" }}
+        getContainer={false}
       >
-        <Row style={{ height: 200, display: "flex" }}>
-          <Col span={4}></Col>
+        <h1 style={{ color: "#fff", textAlign: "center", fontSize: 35 }}>
+          CHỌN TEAM
+        </h1>
+        <Row style={{ height: 150, display: "flex" }}>
+          <Col span={2}></Col>
           <Col span={4} style={{ margin: "auto" }}>
-            <Button style={{ height: 45, width: 120 }} onClick={chooseTeam1}>
-              Team 1
-            </Button>
+            <img
+              src="team1.gif"
+              alt=""
+              className="btn-team"
+              onClick={chooseTeam1}
+            />
           </Col>
           <Col span={5}></Col>
           <Col span={4} style={{ margin: "auto" }}>
-            <Button style={{ height: 45, width: 120 }} onClick={chooseTeam2}>
-              Team 2
-            </Button>
+            <img
+              src="team2.gif"
+              alt=""
+              className="btn-team"
+              onClick={chooseTeam2}
+            />
           </Col>
           <Col span={4}></Col>
         </Row>
@@ -392,35 +417,22 @@ interface ChooseSkill {
 
 const PokemonCollection: React.FC<Props> = (props) => {
   const { pokemons, detail, setDetail } = props;
-  const [isOpenModalChooseSkill, setIsOpenModalChooseSkill] =
-    useState<boolean>(false);
   const [isOpenChooseTeam, setIsOpenChooseTeam] = useState<boolean>(false);
 
   const [idPokemon, setIdPokemon] = useState<number>(0);
+
   const showModalChooseTeam = () => {
     setIsOpenChooseTeam(true);
   };
 
-  const selectPokemon = async (id: number) => {
-    const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    localStorage.setItem("player2", JSON.stringify(res.data));
-    window.location.assign("http://localhost:3000");
-  };
-
-  // const [searchPoke, setSearchPoke] = useState<any[]>([]);
   const [search, setSearch] = useState<Pokemon[]>([]);
 
-  const onSearch = async (value: any) => {
+  const onSearch = (value: any) => {
     setSearch([]);
     if (value === "") {
       setSearch([]);
     }
     if (value !== "") {
-      // pokemons.map((item: any) => {
-
-      // for (let i = 0; i < pokemons.length; i++) {
-
-      // let found = pokemons[i].name.match(value.toLowerCase());
       pokemons.forEach(async (pokemon) => {
         let found = pokemon.name.includes(value.toLowerCase());
         if (found !== false) {
@@ -428,21 +440,14 @@ const PokemonCollection: React.FC<Props> = (props) => {
             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             .then((res) => {
               setSearch((p) => [...p, res.data]);
-              console.log(pokemon);
             })
             .catch((err) => {
               console.log("Lỗi ở Search");
             });
         }
       });
-
-      // }
-
-      // });
     }
   };
-
-  useEffect(() => {}, [search]);
 
   return (
     <>
@@ -524,7 +529,9 @@ const PokemonCollection: React.FC<Props> = (props) => {
         </Col>
 
         <Col span={10} className="background-list" style={{ borderRadius: 15 }}>
-          <ListTeam isOpenChooseTeam={isOpenChooseTeam} />
+          <UserContext.Provider value={pokemons}>
+            <ListTeam isOpenChooseTeam={isOpenChooseTeam} />
+          </UserContext.Provider>
         </Col>
       </Row>
     </>
@@ -543,13 +550,16 @@ const PokemonList: React.FC = () => {
   // const [nextUrl, setNextUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [detail, setDetail] = useState<Detail>({ id: 0, isOpened: false });
-
+  const limit: number = 600;
   useEffect(() => {
-    const getPokemon = async () => {
-      const res = await axios.get(
-        "https://pokeapi.co/api/v2/pokemon?limit=200"
-      );
-      // setNextUrl(res.data.next);
+    getPokemon();
+  }, []);
+
+  const getPokemon = async () => {
+    const res = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon?limit=${limit}`
+    );
+    if (pokemons.length < limit) {
       res.data.results.forEach(async (pokemon: Pokemons) => {
         const poke = await axios.get(
           `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
@@ -557,9 +567,11 @@ const PokemonList: React.FC = () => {
         setPokemons((p) => [...p, poke.data]);
         setLoading(false);
       });
-    };
-    getPokemon();
-  }, []);
+    }
+    if (pokemons.length === limit) {
+      console.log("Không load nữa");
+    }
+  };
 
   // const nextPage = async () => {
   //   setLoading(true);
@@ -576,6 +588,7 @@ const PokemonList: React.FC = () => {
 
   return (
     <>
+      {console.log(pokemons)}
       <PokemonCollection
         pokemons={pokemons}
         detail={detail}
@@ -711,7 +724,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
             alt=""
           />
           {localStorage.getItem("team1") !== null ? (
-            <Row style={{ marginLeft: 35 }}>
+            <Row style={{ marginLeft: 35, marginTop: " 4%" }}>
               {/* Ô 1 */}
               {JSON.parse(localStorage.team1)[0] ? (
                 <>
@@ -753,8 +766,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               style={{ margin: "auto" }}
                               src={item.image}
                               alt=""
-                              width={25}
-                              height={25}
+                              width={28}
+                              height={28}
                             />
                           </Col>
                         )
@@ -807,8 +820,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               style={{ margin: "auto" }}
                               src={item.image}
                               alt=""
-                              width={25}
-                              height={25}
+                              width={28}
+                              height={28}
                             />
                           </Col>
                         )
@@ -863,8 +876,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               style={{ margin: "auto" }}
                               src={item.image}
                               alt=""
-                              width={25}
-                              height={25}
+                              width={28}
+                              height={28}
                             />
                           </Col>
                         )
@@ -968,7 +981,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
             alt=""
           />
           {localStorage.getItem("team2") !== null ? (
-            <Row style={{ marginLeft: 35 }}>
+            <Row style={{ marginLeft: 35, marginTop: " 4%" }}>
               {/* Ô 1 */}
               {JSON.parse(localStorage.team2)[0] ? (
                 <>
@@ -1010,8 +1023,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               style={{ margin: "auto" }}
                               src={item.image}
                               alt=""
-                              width={25}
-                              height={25}
+                              width={28}
+                              height={28}
                             />
                           </Col>
                         )
@@ -1064,8 +1077,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               style={{ margin: "auto" }}
                               src={item.image}
                               alt=""
-                              width={25}
-                              height={25}
+                              width={28}
+                              height={28}
                             />
                           </Col>
                         )
@@ -1120,8 +1133,8 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                               style={{ margin: "auto" }}
                               src={item.image}
                               alt=""
-                              width={25}
-                              height={25}
+                              width={28}
+                              height={28}
                             />
                           </Col>
                         )
@@ -1159,6 +1172,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
         isOpenModalDetail={isOpenModalDetail}
         setIsModalDetail={setIsModalDetail}
         detailPokemon={detailPokemon}
+        setDetailPokemon={setDetailPokemon}
         team={team}
       />
     </>
@@ -1170,7 +1184,126 @@ interface DetailPokemon {
   setIsModalDetail: React.Dispatch<React.SetStateAction<boolean>>;
   detailPokemon: any;
   team: number;
+  setDetailPokemon: React.Dispatch<React.SetStateAction<undefined>>;
 }
+
+// interface PokemonListEdit {
+//   pokemons: IPokemonDetail[];
+// }
+
+// const PokemonListEdit: React.FC<PokemonListEdit> = (props) => {
+//   const { pokemons } = props;
+//   const [idPokemon, setIdPokemon] = useState<number>(0);
+
+//   const [search, setSearch] = useState<Pokemon[]>([]);
+
+//   const onSearch = async (value: any) => {
+//     setSearch([]);
+//     if (value === "") {
+//       setSearch([]);
+//     }
+//     if (value !== "") {
+//       // pokemons.map((item: any) => {
+
+//       // for (let i = 0; i < pokemons.length; i++) {
+
+//       // let found = pokemons[i].name.match(value.toLowerCase());
+//       pokemons.forEach(async (pokemon) => {
+//         let found = pokemon.name.includes(value.toLowerCase());
+//         if (found !== false) {
+//           await axios
+//             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+//             .then((res) => {
+//               setSearch((p) => [...p, res.data]);
+//               console.log(pokemon);
+//             })
+//             .catch((err) => {
+//               console.log("Lỗi ở Search");
+//             });
+//         }
+//       });
+
+//       // }
+
+//       // });
+//     }
+//   };
+
+//   useEffect(() => {}, [search]);
+
+//   return (
+//     <>
+//       <Row>
+//         <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
+//           <div className="container">
+//             <h1 style={{ color: "#fff" }}>POKEMON LIST</h1>
+//             <div className="custom-sticky">
+//               <Search
+//                 placeholder="input search text"
+//                 allowClear
+//                 onSearch={onSearch}
+//                 style={{
+//                   width: 300,
+//                   marginLeft: "130%",
+//                 }}
+//                 // width={200}
+//               />
+//             </div>
+//             <section className="collection-container">
+//               {search.length === 0
+//                 ? pokemons.map((pokemon: any, index: number) => {
+//                     return (
+//                       <>
+//                         <section
+//                           className="pokemon-list-container"
+//                           onClick={() => {
+//                             setIdPokemon(pokemon.id);
+//                           }}
+//                           key={index}
+//                         >
+//                           <p className="pokemon-name"> {pokemon.name} </p>
+//                           <img
+//                             src={
+//                               pokemon.sprites.other.dream_world.front_default
+//                             }
+//                             alt="pokemon"
+//                             width={120}
+//                             height={120}
+//                           />
+//                         </section>
+//                       </>
+//                     );
+//                   })
+//                 : search.map((pokemon: any, index: number) => {
+//                     return (
+//                       <>
+//                         <section
+//                           className="pokemon-list-container"
+//                           onClick={() => {
+//                             setIdPokemon(pokemon.id);
+//                           }}
+//                           key={index}
+//                         >
+//                           <p className="pokemon-name"> {pokemon.name} </p>
+//                           <img
+//                             src={
+//                               pokemon.sprites.other.dream_world.front_default
+//                             }
+//                             alt="pokemon"
+//                             width={120}
+//                             height={120}
+//                           />
+//                         </section>
+//                       </>
+//                     );
+//                   })}
+//             </section>
+//           </div>
+//         </Col>
+//       </Row>
+//     </>
+//   );
+// };
 
 const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   const openNotification = () => {
@@ -1186,10 +1319,28 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
     });
   };
 
-  const { isOpenModalDetail, setIsModalDetail, detailPokemon, team } = props;
+  const openNotificationCheckSkill = () => {
+    notification.error({
+      message: "Thông báo",
+      description: "Đã có skill này. ",
+    });
+  };
+
+  const {
+    isOpenModalDetail,
+    setIsModalDetail,
+    detailPokemon,
+    team,
+    setDetailPokemon,
+  } = props;
   const [skillPoke, setSkillPoke] = useState<Abilities[]>(
     detailPokemon ? detailPokemon.abilities : []
   );
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const pokemons = useContext(UserContext);
+  const [idPokemon, setIdPokemon] = useState<number>(0);
+  const [search, setSearch] = useState<Pokemon[]>([]);
+
   let team1: any = [];
   let team2: any = [];
 
@@ -1210,7 +1361,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
       if (flag === false) {
         setSkillPoke([...skillPoke, item]);
       } else if (flag === true) {
-        console.log("Đã có skill này");
+        openNotificationCheckSkill();
       }
     }
     if (skillPoke.length === 4) {
@@ -1227,17 +1378,20 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
     const check = team1.find(
       (item: any) => item.pokemon.name === detailPokemon.pokemon.name
     );
+
     if (check) {
       if (skillPoke.length === 4) {
         check.abilities = skillPoke;
         localStorage.setItem("team1", JSON.stringify(team1));
         setIsModalDetail(false);
+        openNotificationSuccessEditSkill();
       }
       if (skillPoke.length < 4) {
         openNotificationQuantitySkill();
       }
     }
   };
+
   const lockTeam2 = () => {
     const temp = localStorage.getItem("team2");
     if (temp) {
@@ -1251,6 +1405,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
         check.abilities = skillPoke;
         localStorage.setItem("team2", JSON.stringify(team2));
         setIsModalDetail(false);
+        openNotificationSuccessEditSkill();
       }
       if (skillPoke.length < 4) {
         openNotificationQuantitySkill();
@@ -1260,6 +1415,9 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
 
   useEffect(() => {
     setSkillPoke(detailPokemon ? detailPokemon.abilities : []);
+    setIsOpenDrawer(false);
+    setValueSearch("");
+    onSearch(valueSearch);
   }, [isOpenModalDetail]);
 
   const onCloseModal = () => {
@@ -1273,14 +1431,117 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
     console.log(skillPoke);
   };
 
+  const openListPokeEdit = () => {
+    setIsOpenDrawer(true);
+    console.log(valueSearch);
+  };
+
+  const editPokemonTeam1 = (value: any) => {
+    const temp = localStorage.getItem("team1");
+    let checkNameTeam1 = false;
+    if (temp) {
+      team1 = JSON.parse(temp);
+    }
+    const check = team1.find(
+      (item: any) => item.pokemon.name === detailPokemon.pokemon.name
+    );
+
+    for (let i = 0; i < team1.length; i++) {
+      if (team1[i].pokemon.name === value.name) {
+        checkNameTeam1 = false;
+        break;
+      } else {
+        checkNameTeam1 = true;
+      }
+    }
+    if (checkNameTeam1 === true) {
+      if (check) {
+        detailPokemon.pokemon = value;
+        check.pokemon = value;
+        localStorage.setItem("team1", JSON.stringify(team1));
+        setIsOpenDrawer(false);
+        openNotificationSuccessEditPokemon();
+      } else {
+        console.log(check);
+      }
+    }
+    if (checkNameTeam1 === false) {
+      openCheckNameTeam1();
+    }
+  };
+
+  const editPokemonTeam2 = (value: any) => {
+    const temp = localStorage.getItem("team2");
+    let checkNameTeam2 = false;
+
+    if (temp) {
+      team2 = JSON.parse(temp);
+    }
+    const check = team2.find(
+      (item: any) => item.pokemon.name === detailPokemon.pokemon.name
+    );
+    for (let i = 0; i < team2.length; i++) {
+      if (team2[i].pokemon.name === value.name) {
+        checkNameTeam2 = false;
+        break;
+      } else {
+        checkNameTeam2 = true;
+      }
+    }
+
+    if (checkNameTeam2 === true) {
+      if (check) {
+        detailPokemon.pokemon = value;
+        check.pokemon = value;
+        localStorage.setItem("team2", JSON.stringify(team2));
+        setIsOpenDrawer(false);
+        openNotificationSuccessEditPokemon();
+      } else {
+        console.log(check);
+      }
+    }
+    if (checkNameTeam2 === false) {
+      openCheckNameTeam2();
+    }
+  };
+
+  // const editPokemonTeam1 = (value: any) => {
+  //   detailPokemon.pokemon = value;
+  //   setDetailPokemon(detailPokemon);
+  //   setIsOpenDrawer(false);
+  // };
+
+  // const editPokemonTeam2 = (value: any) => {};
+  const [valueSearch, setValueSearch] = useState("");
+  const onSearch = async (value: string) => {
+    setSearch([]);
+    // if(search.length === 0) {
+    //   value = "";
+    // }
+    if (value === "") {
+      setSearch([]);
+    }
+    if (value !== "") {
+      pokemons.forEach(async (pokemon) => {
+        let found = pokemon.name.includes(value.toLowerCase());
+        if (found !== false) {
+          await axios
+            .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+            .then((res) => {
+              setSearch((p) => [...p, res.data]);
+            })
+            .catch((err) => {
+              console.log("Lỗi ở Search");
+            });
+        }
+      });
+    }
+  };
+
   return (
     <>
-      {console.log(skillPoke)}
       <Modal
         open={isOpenModalDetail}
-        // title={<p>12312312</p>}
-        // onOk={handleOk}
-        // confirmLoading={confirmLoading}
         onCancel={onCloseModal}
         footer={false}
         closeIcon={
@@ -1291,22 +1552,96 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
             height={30}
           ></img>
         }
+        zIndex={1}
+        style={{ overflow: "hidden" }}
         width={"60%"}
-        // bodyStyle={{
-        //   position: "relative",
-        //   backgroundImage: `url(
-        //     "https://i.pinimg.com/originals/ee/c5/5f/eec55f9c4824e8fa8128e06c7b302309.gif"
-        //   )`,
-        //   backgroundSize: "cover",
-        //   border: 0,
-        //   backgroundClip: "padding-box",
-        //   borderRadius: "8px",
-        //   boxShadow:
-        //     "0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)",
-        //   pointerEvents: "auto",
-        //   padding: "20px 24px",
-        // }}
       >
+        <Drawer
+          title={
+            <Search
+              placeholder="input search text"
+              allowClear
+              onSearch={(value) => onSearch(value)}
+              style={{
+                width: 300,
+              }}
+              value={valueSearch}
+              onChange={(e) => setValueSearch(e.target.value)}
+              // width={200}
+            />
+          }
+          placement={"right"}
+          closable={true}
+          onClose={() => setIsOpenDrawer(false)}
+          open={isOpenDrawer}
+          key={"right"}
+          style={{ borderRadius: "0px 8px 8px 0px" }}
+          getContainer={false}
+          zIndex={1200}
+          width={"60%"}
+        >
+          <Row>
+            <Col span={24}>
+              <div>
+                <section className="collection-container">
+                  {search.length === 0
+                    ? pokemons.map((pokemon: any, index: number) => {
+                        return (
+                          <>
+                            <section
+                              className="pokemon-list-edit"
+                              onClick={() => {
+                                team === 1
+                                  ? editPokemonTeam1(pokemon)
+                                  : editPokemonTeam2(pokemon);
+                              }}
+                              key={index}
+                            >
+                              <p className="pokemon-name"> {pokemon.name} </p>
+                              <img
+                                src={
+                                  pokemon.sprites.other.dream_world
+                                    .front_default
+                                }
+                                alt="pokemon"
+                                width={120}
+                                height={120}
+                              />
+                            </section>
+                          </>
+                        );
+                      })
+                    : search.map((pokemon: any, index: number) => {
+                        return (
+                          <>
+                            <section
+                              className="pokemon-list-edit"
+                              onClick={() => {
+                                team === 1
+                                  ? editPokemonTeam1(pokemon)
+                                  : editPokemonTeam2(pokemon);
+                              }}
+                              key={index}
+                            >
+                              <p className="pokemon-name"> {pokemon.name} </p>
+                              <img
+                                src={
+                                  pokemon.sprites.other.dream_world
+                                    .front_default
+                                }
+                                alt="pokemon"
+                                width={120}
+                                height={120}
+                              />
+                            </section>
+                          </>
+                        );
+                      })}
+                </section>
+              </div>
+            </Col>
+          </Row>
+        </Drawer>
         <h1 style={{ color: "#fff", textAlign: "center" }}>CHỌN KỸ NĂNG</h1>
         <Row style={{ display: "flex", marginTop: "2%" }}>
           <Col span={8}>
@@ -1390,7 +1725,8 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
               alt=""
               height={400}
               width={410}
-              style={{ margin: "auto" }}
+              style={{ margin: "auto", cursor: "pointer" }}
+              onClick={openListPokeEdit}
             />
             <div className="background-skill">
               <h1 style={{ color: "#fff" }}>Các kỹ năng đã được chọn</h1>
@@ -1398,7 +1734,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                 <Col span={3}></Col>
                 {detailPokemon !== undefined
                   ? skillPoke.map((item: any, index: number) => (
-                      <Col span={5}>
+                      <Col span={5} key={index}>
                         <button
                           style={{
                             height: 15,
@@ -1520,6 +1856,7 @@ const ErrorComponent: React.FC<Error> = (prorps) => {
   return <div>{error.message}</div>;
 };
 
-export default withErrorBoundary(PokemonList, {
-  FallbackComponent: ErrorComponent,
-});
+// export default withErrorBoundary(PokemonList, {
+//   FallbackComponent: ErrorComponent,
+// });
+export default memo(PokemonList);
