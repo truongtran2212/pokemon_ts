@@ -102,6 +102,7 @@ const Location: React.FC = () => {
         setReduceBloodTeam2(hp2);
         setLuckyNumber(3);
         setStatusTeam2("Choáng");
+        // audioTeam1Fight()
       }
 
       if (name !== "Đóng băng") {
@@ -110,11 +111,12 @@ const Location: React.FC = () => {
         setReduceBloodTeam2(hp2);
         setLuckyNumber(2);
         setStatusTeam2("Bình thường");
+        // audioTeam1Fight()
       }
       if (hpTeam2 - hp2 <= 0) {
         setManaTeam2(100);
         setStatusTeam2("Bình thường");
-        console.log(hpTeam2);
+        // audioTeam1Fight()
       }
     }
 
@@ -125,6 +127,7 @@ const Location: React.FC = () => {
       setReduceBloodTeam2(9);
       setLuckyNumber(2);
       setStatusTeam2("Bình thường");
+      // audioTeam1Fight()
       if (hpTeam2 - 9 <= 0) {
         setManaTeam2(100);
         setStatusTeam2("Bình thường");
@@ -188,6 +191,7 @@ const Location: React.FC = () => {
     if (number < 4 && number > -1) {
       start();
     }
+    // audioTeam1Fight()
   }, [number]);
 
   // Random số để chọn bên bắt đầu
@@ -235,7 +239,6 @@ const Location: React.FC = () => {
           {nameSkillTeam2 === "Nước" ? <TsunamiSkillTeam2 /> : null}
           {nameSkillTeam2 === "Sấm sét" ? <ThunderSkillTeam2 /> : null}
           {nameSkillTeam2 === "Đánh thường" ? <AttackTeam2 /> : null}
-
           {/* <Team2Win /> */}
         </div>
         <div className="custom-background">
@@ -640,50 +643,22 @@ const Location: React.FC = () => {
                     </div>
                   </div>
                 ) : null}
-
-                {/* {listTeam1[0] ? (
-                  <Row
-                    style={{
-                      border: "2px solid #EAE61A",
-                      borderRadius: "0px 0px 12px 12px",
-                      marginTop: 160,
-                    }}
-                  >
-                    {listTeam1[0].abilities.map((item: any) => (
-                      <>
-                        <Col span={1}></Col>
-                        <Col span={5}>
-                          <button
-                            id="auto-click"
-                            style={{
-                              borderRadius: "100%",
-                              width: 50,
-                              height: 50,
-                              cursor: "pointer",
-                            }}
-                          >
-                            <img
-                              style={{
-                                width: 30,
-                                height: 30,
-                              }}
-                              src={item.image}
-                              alt=""
-                            />
-                          </button>
-                        </Col>
-                      </>
-                    ))}
-                  </Row>
-                ) : null} */}
               </div>
             </section>
-            {/* {hpTeam1 === 0 ? <NotificationPlayer1 /> : null} */}
-            {/* <NotificationPlayer1 /> */}
           </div>
         </div>
       </div>
     </>
+  );
+};
+
+const AudioTeam1Fight = () => {
+  return (
+    <audio
+      autoPlay={true}
+      src="mixkit-impact-of-a-strong-punch-2155.mp3"
+      typeof="audio/mp3"
+    ></audio>
   );
 };
 
@@ -711,35 +686,6 @@ const NotificationPlayer1 = () => {
   );
 };
 
-interface NameSkill {
-  skillNameTeam1: string;
-}
-
-const NotificationPlayer2: React.FC<NameSkill> = (props) => {
-  const { skillNameTeam1 } = props;
-  return (
-    <>
-      <div
-        style={{
-          height: 80,
-          width: 200,
-          backgroundColor: "white",
-          marginTop: "2%",
-          marginLeft: "31%",
-          borderRadius: 30,
-          display: "flex",
-          opacity: 0.9,
-          fontFamily: "Verdana",
-          border: "2px solid blue",
-          boxShadow: "5px 5px 5px #888",
-        }}
-      >
-        <h3 style={{ margin: "auto" }}>{skillNameTeam1}</h3>
-      </div>
-    </>
-  );
-};
-
 const Team1Win = () => {
   const returnList = () => {
     window.location.href = localhost;
@@ -757,7 +703,7 @@ const Team1Win = () => {
           alt=""
           width={600}
           height={200}
-          style={{borderRadius: 20}}
+          style={{ borderRadius: 20 }}
         />
       </div>
     </>
@@ -781,7 +727,7 @@ const Team2Win = () => {
           alt=""
           width={600}
           height={200}
-          style={{borderRadius: 20}}
+          style={{ borderRadius: 20 }}
         />
       </div>
     </>
@@ -949,6 +895,7 @@ const AttackTeam1 = () => {
           alt=""
         />
       </div>
+      <AudioTeam1Fight />
     </>
   );
 };
