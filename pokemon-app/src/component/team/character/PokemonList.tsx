@@ -1,4 +1,14 @@
-import { Button, Col, Drawer, Modal, notification, Row, Input } from "antd";
+import {
+  Button,
+  Col,
+  Drawer,
+  Modal,
+  notification,
+  Row,
+  Input,
+  Spin,
+  Tooltip,
+} from "antd";
 import axios from "axios";
 import {
   createContext,
@@ -7,22 +17,31 @@ import {
   useEffect,
   memo,
   useCallback,
+  useMemo,
 } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
 import "./pokemon.css";
 import { withErrorBoundary } from "react-error-boundary";
-import { LineOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  LineOutlined,
+  LoadingOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { localhost } from "../../../localhost";
 
 const { Search } = Input;
 const UserContext = createContext<IPokemonDetail[]>([]);
-
+notification.config({
+  placement: "top",
+  duration: 1.5,
+});
 interface Props {
   pokemons: IPokemonDetail[];
   detail: Detail;
   setDetail: React.Dispatch<React.SetStateAction<Detail>>;
+  loading: boolean;
 }
 
 let listAbilities: Abilities[] = [
@@ -93,45 +112,38 @@ interface ChooseTeam {
 
 const openNotificationSuccessTeam1 = () => {
   notification.success({
-    message: "Thông báo",
-    description: "Thêm vào team 1 thành công.",
+    message: "Thêm vào team 1 thành công.",
   });
 };
 const openCheckNameTeam1 = () => {
   notification.error({
-    message: "Thông báo",
-    description: "Pokemon này đã có trong team 1.",
+    message: "Pokemon này đã có trong team 1.",
   });
 };
 
 const openCheckNameTeam2 = () => {
   notification.error({
-    message: "Thông báo",
-    description: "Pokemon này đã có trong team 2.",
+    message: "Pokemon này đã có trong team 2.",
   });
 };
 const openNotificationSuccessTeam2 = () => {
   notification.success({
-    message: "Thông báo",
-    description: "Thêm vào team 2 thành công.",
+    message: "Thêm vào team 2 thành công.",
   });
 };
 const openNotificationError = () => {
   notification.warning({
-    message: "Thông báo",
-    description: "Đã đủ team.",
+    message: "Đã đủ team.",
   });
 };
 const openNotificationSuccessEditSkill = () => {
   notification.success({
-    message: "Thông báo",
-    description: "Cập nhật Pokemon thành công.",
+    message: "Cập nhật Pokemon thành công.",
   });
 };
 const openNotificationSuccessEditPokemon = () => {
   notification.success({
-    message: "Thông báo",
-    description: "Thay đổi POKEMON thành công.",
+    message: "Thay đổi POKEMON thành công.",
   });
 };
 
@@ -416,7 +428,7 @@ interface ChooseSkill {
 // };
 
 const PokemonCollection: React.FC<Props> = (props) => {
-  const { pokemons, detail, setDetail } = props;
+  const { pokemons, detail, setDetail, loading } = props;
   const [isOpenChooseTeam, setIsOpenChooseTeam] = useState<boolean>(false);
 
   const [idPokemon, setIdPokemon] = useState<number>(0);
@@ -448,7 +460,13 @@ const PokemonCollection: React.FC<Props> = (props) => {
       });
     }
   };
-
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 100,
+      }}
+    />
+  );
   return (
     <>
       <Row>
@@ -467,67 +485,73 @@ const PokemonCollection: React.FC<Props> = (props) => {
                 // width={200}
               />
             </div>
-            <section className="collection-container">
-              {search.length === 0
-                ? pokemons.map((pokemon: any, index: number) => {
-                    return (
-                      <>
-                        <section
-                          className="pokemon-list-container"
-                          onClick={() => {
-                            setIdPokemon(pokemon.id);
-                            showModalChooseTeam();
-                          }}
-                          key={index}
-                        >
-                          <p className="pokemon-name"> {pokemon.name} </p>
-                          <img
-                            src={
-                              pokemon.sprites.other.dream_world.front_default
-                            }
-                            alt="pokemon"
-                            width={120}
-                            height={120}
-                          />
-                        </section>
-                      </>
-                    );
-                  })
-                : search.map((pokemon: any, index: number) => {
-                    return (
-                      <>
-                        <section
-                          className="pokemon-list-container"
-                          onClick={() => {
-                            setIdPokemon(pokemon.id);
-                            showModalChooseTeam();
-                          }}
-                          key={index}
-                        >
-                          <p className="pokemon-name"> {pokemon.name} </p>
-                          <img
-                            src={
-                              pokemon.sprites.other.dream_world.front_default
-                            }
-                            alt="pokemon"
-                            width={120}
-                            height={120}
-                          />
-                        </section>
-                      </>
-                    );
-                  })}
-              <ModalChooseTeam
-                // isOpenModalChooseSkill={isOpenModalChooseSkill}
-                // setIsOpenModalChooseSkill={setIsOpenModalChooseSkill}
-                idPokemon={idPokemon}
-                isOpenModalChooseTeam={isOpenChooseTeam}
-                setIsOpenModalChooseTeam={setIsOpenChooseTeam}
-              />
-            </section>
+            <Spin
+              spinning={loading}
+              indicator={antIcon}
+              className="loading"
+              style={{ marginTop: 300 }}
+            >
+              <section className="collection-container">
+                {search.length === 0
+                  ? pokemons.map((pokemon: any, index: number) => {
+                      return (
+                        <>
+                          <section
+                            className="pokemon-list-container"
+                            onClick={() => {
+                              setIdPokemon(pokemon.id);
+                              showModalChooseTeam();
+                            }}
+                            key={index}
+                          >
+                            <p className="pokemon-name"> {pokemon.name} </p>
+                            <img
+                              src={
+                                pokemon.sprites.other.dream_world.front_default
+                              }
+                              alt="pokemon"
+                              width={120}
+                              height={120}
+                            />
+                          </section>
+                        </>
+                      );
+                    })
+                  : search.map((pokemon: any, index: number) => {
+                      return (
+                        <>
+                          <section
+                            className="pokemon-list-container"
+                            onClick={() => {
+                              setIdPokemon(pokemon.id);
+                              showModalChooseTeam();
+                            }}
+                            key={index}
+                          >
+                            <p className="pokemon-name"> {pokemon.name} </p>
+                            <img
+                              src={
+                                pokemon.sprites.other.dream_world.front_default
+                              }
+                              alt="pokemon"
+                              width={120}
+                              height={120}
+                            />
+                          </section>
+                        </>
+                      );
+                    })}
+                <ModalChooseTeam
+                  // isOpenModalChooseSkill={isOpenModalChooseSkill}
+                  // setIsOpenModalChooseSkill={setIsOpenModalChooseSkill}
+                  idPokemon={idPokemon}
+                  isOpenModalChooseTeam={isOpenChooseTeam}
+                  setIsOpenModalChooseTeam={setIsOpenChooseTeam}
+                />
+              </section>
+            </Spin>
           </div>
         </Col>
-
         <Col span={10} className="background-list" style={{ borderRadius: 15 }}>
           <UserContext.Provider value={pokemons}>
             <ListTeam isOpenChooseTeam={isOpenChooseTeam} />
@@ -551,40 +575,30 @@ const PokemonList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [detail, setDetail] = useState<Detail>({ id: 0, isOpened: false });
   const limit: number = 600;
-  useEffect(() => {
-    getPokemon();
-  }, []);
 
-  const getPokemon = async () => {
+  const getPokemon = useCallback(async () => {
     const res = await axios.get(
       `https://pokeapi.co/api/v2/pokemon?limit=${limit}`
     );
     if (pokemons.length < limit) {
-      res.data.results.forEach(async (pokemon: Pokemons) => {
+      const promises = res.data.results.map(async (pokemon: Pokemons) => {
         const poke = await axios.get(
           `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
         );
-        setPokemons((p) => [...p, poke.data]);
-        setLoading(false);
+        return poke.data;
       });
+      const newPokemons = await Promise.all(promises);
+      setPokemons((p) => [...p, ...newPokemons]);
     }
     if (pokemons.length === limit) {
       console.log("Không load nữa");
     }
-  };
+    setLoading(false);
+  }, [limit, setPokemons, pokemons.length]);
 
-  // const nextPage = async () => {
-  //   setLoading(true);
-  //   let res = await axios.get(nextUrl);
-  //   setNextUrl(res.data.next);
-  //   res.data.results.forEach(async (pokemon: Pokemons) => {
-  //     const poke = await axios.get(
-  //       `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
-  //     );
-  //     setPokemons((p) => [...p, poke.data]);
-  //     setLoading(false);
-  //   });
-  // };
+  useEffect(() => {
+    getPokemon();
+  }, [getPokemon]);
 
   return (
     <>
@@ -593,6 +607,7 @@ const PokemonList: React.FC = () => {
         pokemons={pokemons}
         detail={detail}
         setDetail={setDetail}
+        loading={loading}
       />
     </>
   );
@@ -623,40 +638,34 @@ const ListTeam: React.FC<ListTeam> = (props) => {
 
   const openNotificationQuantityTeam2 = () => {
     notification.warning({
-      message: "Thông báo",
-      description: "Team 2 hiện tại chưa đủ đội hình",
+      message: "Team 2 hiện tại chưa đủ đội hình",
     });
   };
   const openNotificationQuantityTeam1 = () => {
     notification.warning({
-      message: "Thông báo",
-      description: "Team 1 hiện tại chưa đủ đội hình",
+      message: "Team 1 hiện tại chưa đủ đội hình",
     });
   };
   const openNotificationQuantityPoke = () => {
     notification.warning({
-      message: "Thông báo",
-      description: "Cả 2 team đều chưa đủ đội hình",
+      message: "Cả 2 team đều chưa đủ đội hình",
     });
   };
 
   const openNotificationQuantitySkillTeam1 = () => {
     notification.warning({
-      message: "Thông báo",
-      description: "Poke Team 1 chưa đủ skill.",
+      message: "Poke Team 1 chưa đủ skill.",
     });
   };
 
   const openNotificationQuantitySkillTeam2 = () => {
     notification.warning({
-      message: "Thông báo",
-      description: "Poke Team 2 chưa đủ skill.",
+      message: "Poke Team 2 chưa đủ skill.",
     });
   };
   const openNotificationQuantitySkill = () => {
     notification.warning({
-      message: "Thông báo",
-      description: "Poke cả 2 team đều thiếu skill.",
+      message: "Poke cả 2 team đều thiếu skill.",
     });
   };
 
@@ -711,7 +720,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
     <>
       <Row
         style={{
-          height: "46%",
+          height: "42%",
         }}
       >
         <Col span={1}></Col>
@@ -913,49 +922,49 @@ const ListTeam: React.FC<ListTeam> = (props) => {
 
       <Row
         style={{
-          height: "8%",
+          height: "15%",
         }}
       >
         <Col span={8}></Col>
 
         <Col span={8} style={{ display: "flex" }}>
-          <Col span={6}></Col>
+          <Col span={7}></Col>
           <Col span={7}>
             {team1.length === 3 && team2.length === 3 ? (
               // <Link style={{ display: "flex" }} to={"/location"}>
               <img
-                src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
+                src="https://icon-library.com/images/swords-icon/swords-icon-12.jpg"
                 alt=""
-                width={120}
-                height={80}
+                width={130}
+                height={130}
                 style={{ margin: "auto", cursor: "pointer" }}
                 onClick={goToArena}
               />
             ) : // </Link>
             team1.length < 3 && team2.length < 3 ? (
               <img
-                src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
+                src="https://icon-library.com/images/swords-icon/swords-icon-12.jpg"
                 alt=""
-                width={120}
-                height={80}
+                width={130}
+                height={130}
                 style={{ margin: "auto", cursor: "pointer" }}
                 onClick={openNotificationQuantityPoke}
               />
             ) : team1.length < 3 ? (
               <img
-                src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
+                src="https://icon-library.com/images/swords-icon/swords-icon-12.jpg"
                 alt=""
-                width={120}
-                height={80}
+                width={130}
+                height={130}
                 style={{ margin: "auto", cursor: "pointer" }}
                 onClick={openNotificationQuantityTeam1}
               />
             ) : team2.length < 3 ? (
               <img
-                src="https://media0.giphy.com/media/SwUwZMPpgwHNQGIjI7/giphy.gif?cid=6c09b952uhxxu2pwsxiydomwnc5f0edgapg2wjezjxosxf4a&rid=giphy.gif&ct=s"
+                src="https://icon-library.com/images/swords-icon/swords-icon-12.jpg"
                 alt=""
-                width={120}
-                height={80}
+                width={130}
+                height={130}
                 style={{ margin: "auto", cursor: "pointer" }}
                 onClick={openNotificationQuantityTeam2}
               />
@@ -968,7 +977,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
 
       <Row
         style={{
-          height: "46%",
+          height: "42%",
         }}
       >
         <Col span={1}></Col>
@@ -1308,21 +1317,18 @@ interface DetailPokemon {
 const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   const openNotification = () => {
     notification.open({
-      message: "Thông báo",
-      description: "Đã đủ skill.",
+      message: "Đã đủ skill.",
     });
   };
   const openNotificationQuantitySkill = () => {
     notification.warning({
-      message: "Thông báo",
-      description: "Poke chưa đủ skill",
+      message: "Poke chưa đủ skill",
     });
   };
 
   const openNotificationCheckSkill = () => {
     notification.error({
-      message: "Thông báo",
-      description: "Đã có skill này. ",
+      message: "Đã có skill này.",
     });
   };
 
@@ -1643,22 +1649,39 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
           </Row>
         </Drawer>
         <h1 style={{ color: "#fff", textAlign: "center" }}>CHỌN KỸ NĂNG</h1>
+
         <Row style={{ display: "flex", marginTop: "2%" }}>
           <Col span={8}>
             <div>
-              <button
-                className="btn-skill"
-                style={{
-                  marginLeft: "55%",
-                }}
-                onClick={() => addSkill(JSON.parse(localStorage.abilities)[0])}
+              <Tooltip
+                placement="rightBottom"
+                color="#fff"
+                title={
+                  <>
+                    <div style={{ color: "black", width: 200, height: 100 }}>
+                      <p>{JSON.parse(localStorage.abilities)[0].name}</p>
+                      <p>{JSON.parse(localStorage.abilities)[0].damage}</p>
+                      <p>{JSON.parse(localStorage.abilities)[0].mana}</p>
+                    </div>
+                  </>
+                }
               >
-                <img
-                  src={JSON.parse(localStorage.abilities)[0].image}
-                  alt=""
-                  width={70}
-                />
-              </button>
+                <button
+                  className="btn-skill"
+                  style={{
+                    marginLeft: "55%",
+                  }}
+                  onClick={() =>
+                    addSkill(JSON.parse(localStorage.abilities)[0])
+                  }
+                >
+                  <img
+                    src={JSON.parse(localStorage.abilities)[0].image}
+                    alt=""
+                    width={70}
+                  />
+                </button>
+              </Tooltip>
             </div>
             <div style={{}}>
               <button
@@ -1715,57 +1738,71 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
           </Col>
 
           <Col span={8}>
-            <img
-              src={
-                detailPokemon !== undefined
-                  ? detailPokemon.pokemon.sprites.other.dream_world
-                      .front_default
-                  : null
-              }
-              alt=""
-              height={400}
-              width={410}
-              style={{ margin: "auto", cursor: "pointer" }}
-              onClick={openListPokeEdit}
-            />
-            <div className="background-skill">
-              <h1 style={{ color: "#fff" }}>Các kỹ năng đã được chọn</h1>
-              <Row>
-                <Col span={3}></Col>
-                {detailPokemon !== undefined
-                  ? skillPoke.map((item: any, index: number) => (
-                      <Col span={5} key={index}>
-                        <button
-                          style={{
-                            height: 15,
-                            width: 20,
-                            marginLeft: "55%",
-                            borderRadius: 5,
-                            position: "absolute",
-                            border: "none",
-                            cursor: "pointer",
-                            backgroundColor: "#D8E1DA",
-                          }}
-                          onClick={() => removeSkill(index)}
-                          // icon={<LineOutlined style={{height: 10, marginBottom: 10}}/>}
-                        >
-                          <LineOutlined />
-                        </button>
-                        <button
-                          style={{
-                            borderRadius: "20%",
-                            width: 50,
-                            height: 50,
-                            background: "rgb(0, 0, 0, 0)",
-                            border: "2px solid yellow",
-                          }}
-                        >
-                          <img src={item.image} alt="" height={40} width={40} />
-                        </button>
-                      </Col>
-                    ))
-                  : null}
-              </Row>
+            <div onClick={openListPokeEdit}>
+              <img
+                src="https://media0.giphy.com/media/mUm6ULzNcCUpeq2zQO/giphy.gif?cid=6c09b9526e3296f22f00acb4322635cf33fa961ef3ac60b2&rid=giphy.gif&ct=s"
+                alt=""
+                className="swap-pokemon"
+                width={200}
+                height={200}
+              />
+              <img
+                src={
+                  detailPokemon !== undefined
+                    ? detailPokemon.pokemon.sprites.other.dream_world
+                        .front_default
+                    : null
+                }
+                alt=""
+                height={400}
+                width={410}
+                style={{ margin: "auto", cursor: "pointer" }}
+                // onClick={openListPokeEdit}
+              />
+              <div className="background-skill">
+                <h1 style={{ color: "#fff" }}>Các kỹ năng đã được chọn</h1>
+                <Row>
+                  <Col span={3}></Col>
+                  {detailPokemon !== undefined
+                    ? skillPoke.map((item: any, index: number) => (
+                        <Col span={5} key={index}>
+                          <button
+                            style={{
+                              height: 15,
+                              width: 20,
+                              marginLeft: "55%",
+                              borderRadius: 5,
+                              position: "absolute",
+                              border: "none",
+                              cursor: "pointer",
+                              backgroundColor: "#D8E1DA",
+                            }}
+                            onClick={() => removeSkill(index)}
+                            // icon={<LineOutlined style={{height: 10, marginBottom: 10}}/>}
+                          >
+                            <LineOutlined />
+                          </button>
+                          <button
+                            style={{
+                              borderRadius: "20%",
+                              width: 50,
+                              height: 50,
+                              background: "rgb(0, 0, 0, 0)",
+                              border: "2px solid yellow",
+                            }}
+                          >
+                            <img
+                              src={item.image}
+                              alt=""
+                              height={40}
+                              width={40}
+                            />
+                          </button>
+                        </Col>
+                      ))
+                    : null}
+                </Row>
+              </div>
             </div>
           </Col>
 
@@ -1839,6 +1876,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
             </div>
           </Col>
         </Row>
+
         <Row>
           <Button onClick={team === 1 ? lockTeam1 : lockTeam2}>Khóa</Button>
         </Row>

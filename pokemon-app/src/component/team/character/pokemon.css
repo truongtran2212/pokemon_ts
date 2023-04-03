@@ -290,3 +290,12 @@
   width: 200px;
   height: 70px;
 }
+
+.swap-pokemon {
+    position: absolute;
+    margin: auto;
+    margin-left: 27%;
+    margin-top: 30%;
+    opacity: 0.4;
+    cursor: pointer;
+}
