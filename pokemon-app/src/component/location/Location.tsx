@@ -1,9 +1,6 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import "./location.css";
 import { Button, Col, Image, Row } from "antd";
-import { localhost } from "../../localhost";
 
 const Location: React.FC = () => {
   var team1: any = localStorage.getItem("team1")

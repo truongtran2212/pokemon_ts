@@ -292,140 +292,10 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
           </Col>
           <Col span={4}></Col>
         </Row>
-
-        {/* <Row>
-          {listAbility.map((item) => (
-            <Col span={3}>
-              <button
-                onClick={() => addSkill(item)}
-                style={{ borderRadius: "100%", width: 50, height: 50 }}
-              >
-                <img
-                  style={{ width: 30, height: 30, cursor: "pointer" }}
-                  src={item.image}
-                  alt=""
-                />
-              </button>
-            </Col>
-          ))}
-        </Row> */}
       </Modal>
     </>
   );
 };
-
-interface ChooseSkill {
-  isOpenModalChooseSkill: boolean;
-  setIsOpenModalChooseSkill: React.Dispatch<React.SetStateAction<boolean>>;
-  idPokemon: number;
-  isOpenChooseTeam: boolean;
-  setIsOpenChooseTeam: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-// const ModalChooseSkill: React.FC<ChooseSkill> = (props) => {
-//   const {
-//     isOpenModalChooseSkill,
-//     setIsOpenModalChooseSkill,
-//     idPokemon,
-//     isOpenChooseTeam,
-//     setIsOpenChooseTeam,
-//   } = props;
-//   const openNotification = () => {
-//     notification.open({
-//       message: "Thông báo",
-//       description: "Đã đủ skill.",
-//     });
-//   };
-//
-
-//   const [listAbility, setListAbility] = useState<Abilities[]>(listAbilities);
-
-//   useEffect(() => {
-//     localStorage.setItem("abilities", JSON.stringify(listAbility));
-//   }, [isOpenModalChooseSkill]);
-
-//   const handleOk = () => {
-//     setIsOpenModalChooseSkill(false);
-//     setListAbility(listAbilities);
-//     setIsOpenChooseTeam(true);
-//   };
-//   const handleCancel = () => {
-//     setListAbility(listAbilities);
-//     setSkillPoke([]);
-//     setIsOpenModalChooseSkill(false);
-//   };
-
-//   const [skillPoke, setSkillPoke] = useState<Abilities[]>([]);
-
-//   const addSkill = (item: any, index: number) => {
-//     if (skillPoke.length < 4) {
-//       setSkillPoke([...skillPoke, item]);
-//       listAbility.splice(index, 1);
-//       setListAbility(listAbility);
-//     }
-//     if (skillPoke.length === 4) {
-//       openNotification();
-//     }
-//   };
-//   return (
-//     <>
-//       <Modal
-//         title="Chọn Skill"
-//         open={isOpenModalChooseSkill}
-//         onCancel={handleCancel}
-//         onOk={handleOk}
-//       >
-//         <Row key={10}>
-//           {listAbility.map((item, index) => (
-//             <Col span={3} key={index}>
-//               <button
-//                 onClick={() => {
-//                   addSkill(item, index);
-//                 }}
-//                 style={{
-//                   borderRadius: "100%",
-//                   width: 50,
-//                   height: 50,
-//                   cursor: "pointer",
-//                 }}
-//               >
-//                 <img
-//                   style={{ width: 30, height: 30 }}
-//                   src={item.image}
-//                   alt=""
-//                 />
-//               </button>
-//             </Col>
-//           ))}
-//         </Row>
-//         <Row>
-//           <h3>Các skill được chọn</h3>
-//         </Row>
-//         <Row key={1}>
-//           {skillPoke.map((item: any, index) => (
-//             <Col span={3} key={index}>
-//               <button style={{ borderRadius: "100%", width: 50, height: 50 }}>
-//                 <img
-//                   style={{ width: 30, height: 30, cursor: "pointer" }}
-//                   src={item.image}
-//                   alt=""
-//                 />
-//               </button>
-//             </Col>
-//           ))}
-//         </Row>
-//       </Modal>
-
-//       <ModalChooseTeam
-//         isOpenModalChooseTeam={isOpenChooseTeam}
-//         setIsOpenModalChooseTeam={setIsOpenChooseTeam}
-//         setSkillPoke={setSkillPoke}
-//         idPokemon={idPokemon}
-//         skillPoke={skillPoke}
-//       />
-//     </>
-//   );
-// };
 
 const PokemonCollection: React.FC<Props> = (props) => {
   const { pokemons, detail, setDetail, loading } = props;
@@ -544,8 +414,6 @@ const PokemonCollection: React.FC<Props> = (props) => {
                       );
                     })}
                 <ModalChooseTeam
-                  // isOpenModalChooseSkill={isOpenModalChooseSkill}
-                  // setIsOpenModalChooseSkill={setIsOpenModalChooseSkill}
                   idPokemon={idPokemon}
                   isOpenModalChooseTeam={isOpenChooseTeam}
                   setIsOpenModalChooseTeam={setIsOpenChooseTeam}
@@ -573,7 +441,6 @@ interface Pokemons {
 
 const PokemonList: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  // const [nextUrl, setNextUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [detail, setDetail] = useState<Detail>({ id: 0, isOpened: false });
   const limit: number = 600;
@@ -764,12 +631,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                         (item: any, index: number) => (
                           <Col
                             span={5}
-                            style={{
-                              display: "flex",
-                              backgroundColor: "#3d405b",
-                              margin: "auto",
-                              borderRadius: "100%",
-                            }}
+                            className="skill-pokemon"
                             key={index}
                           >
                             <img
@@ -818,12 +680,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                         (item: any, index: number) => (
                           <Col
                             span={5}
-                            style={{
-                              display: "flex",
-                              backgroundColor: "#3d405b",
-                              margin: "auto",
-                              borderRadius: "100%",
-                            }}
+                            className="skill-pokemon"
                             key={index}
                           >
                             <img
@@ -874,12 +731,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                         (item: any, index: number) => (
                           <Col
                             span={5}
-                            style={{
-                              display: "flex",
-                              backgroundColor: "#3d405b",
-                              margin: "auto",
-                              borderRadius: "100%",
-                            }}
+                            className="skill-pokemon"
                             key={index}
                           >
                             <img
@@ -1021,12 +873,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                         (item: any, index: number) => (
                           <Col
                             span={5}
-                            style={{
-                              display: "flex",
-                              backgroundColor: "#3d405b",
-                              margin: "auto",
-                              borderRadius: "100%",
-                            }}
+                            className="skill-pokemon"
                             key={index}
                           >
                             <img
@@ -1075,12 +922,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                         (item: any, index: number) => (
                           <Col
                             span={5}
-                            style={{
-                              display: "flex",
-                              backgroundColor: "#3d405b",
-                              margin: "auto",
-                              borderRadius: "100%",
-                            }}
+                            className="skill-pokemon"
                             key={index}
                           >
                             <img
@@ -1131,12 +973,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                         (item: any, index: number) => (
                           <Col
                             span={5}
-                            style={{
-                              display: "flex",
-                              backgroundColor: "#3d405b",
-                              margin: "auto",
-                              borderRadius: "100%",
-                            }}
+                            className="skill-pokemon"
                             key={index}
                           >
                             <img
@@ -1197,124 +1034,6 @@ interface DetailPokemon {
   setDetailPokemon: React.Dispatch<React.SetStateAction<undefined>>;
 }
 
-// interface PokemonListEdit {
-//   pokemons: IPokemonDetail[];
-// }
-
-// const PokemonListEdit: React.FC<PokemonListEdit> = (props) => {
-//   const { pokemons } = props;
-//   const [idPokemon, setIdPokemon] = useState<number>(0);
-
-//   const [search, setSearch] = useState<Pokemon[]>([]);
-
-//   const onSearch = async (value: any) => {
-//     setSearch([]);
-//     if (value === "") {
-//       setSearch([]);
-//     }
-//     if (value !== "") {
-//       // pokemons.map((item: any) => {
-
-//       // for (let i = 0; i < pokemons.length; i++) {
-
-//       // let found = pokemons[i].name.match(value.toLowerCase());
-//       pokemons.forEach(async (pokemon) => {
-//         let found = pokemon.name.includes(value.toLowerCase());
-//         if (found !== false) {
-//           await axios
-//             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
-//             .then((res) => {
-//               setSearch((p) => [...p, res.data]);
-//               console.log(pokemon);
-//             })
-//             .catch((err) => {
-//               console.log("Lỗi ở Search");
-//             });
-//         }
-//       });
-
-//       // }
-
-//       // });
-//     }
-//   };
-
-//   useEffect(() => {}, [search]);
-
-//   return (
-//     <>
-//       <Row>
-//         <Col span={14} style={{ overflow: "scroll", overflowX: "hidden" }}>
-//           <div className="container">
-//             <h1 style={{ color: "#fff" }}>POKEMON LIST</h1>
-//             <div className="custom-sticky">
-//               <Search
-//                 placeholder="input search text"
-//                 allowClear
-//                 onSearch={onSearch}
-//                 style={{
-//                   width: 300,
-//                   marginLeft: "130%",
-//                 }}
-//                 // width={200}
-//               />
-//             </div>
-//             <section className="collection-container">
-//               {search.length === 0
-//                 ? pokemons.map((pokemon: any, index: number) => {
-//                     return (
-//                       <>
-//                         <section
-//                           className="pokemon-list-container"
-//                           onClick={() => {
-//                             setIdPokemon(pokemon.id);
-//                           }}
-//                           key={index}
-//                         >
-//                           <p className="pokemon-name"> {pokemon.name} </p>
-//                           <img
-//                             src={
-//                               pokemon.sprites.other.dream_world.front_default
-//                             }
-//                             alt="pokemon"
-//                             width={120}
-//                             height={120}
-//                           />
-//                         </section>
-//                       </>
-//                     );
-//                   })
-//                 : search.map((pokemon: any, index: number) => {
-//                     return (
-//                       <>
-//                         <section
-//                           className="pokemon-list-container"
-//                           onClick={() => {
-//                             setIdPokemon(pokemon.id);
-//                           }}
-//                           key={index}
-//                         >
-//                           <p className="pokemon-name"> {pokemon.name} </p>
-//                           <img
-//                             src={
-//                               pokemon.sprites.other.dream_world.front_default
-//                             }
-//                             alt="pokemon"
-//                             width={120}
-//                             height={120}
-//                           />
-//                         </section>
-//                       </>
-//                     );
-//                   })}
-//             </section>
-//           </div>
-//         </Col>
-//       </Row>
-//     </>
-//   );
-// };
-
 const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   const openNotification = () => {
     notification.open({
@@ -1374,7 +1093,6 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
     if (skillPoke.length === 4) {
       openNotification();
     }
-    // setListAbility(listAbility);
   };
 
   const lockTeam1 = () => {
@@ -1512,13 +1230,6 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
     }
   };
 
-  // const editPokemonTeam1 = (value: any) => {
-  //   detailPokemon.pokemon = value;
-  //   setDetailPokemon(detailPokemon);
-  //   setIsOpenDrawer(false);
-  // };
-
-  // const editPokemonTeam2 = (value: any) => {};
   const [valueSearch, setValueSearch] = useState("");
   const onSearch = async (value: string) => {
     if (value === "") {
@@ -1767,29 +1478,13 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     ? skillPoke.map((item: any, index: number) => (
                         <Col span={5} key={index}>
                           <button
-                            style={{
-                              height: 15,
-                              width: 20,
-                              marginLeft: "55%",
-                              borderRadius: 5,
-                              position: "absolute",
-                              border: "none",
-                              cursor: "pointer",
-                              backgroundColor: "#D8E1DA",
-                            }}
+                            className="list-skill"
                             onClick={() => removeSkill(index)}
-                            // icon={<LineOutlined style={{height: 10, marginBottom: 10}}/>}
                           >
                             <LineOutlined />
                           </button>
                           <button
-                            style={{
-                              borderRadius: "20%",
-                              width: 50,
-                              height: 50,
-                              background: "rgb(0, 0, 0, 0)",
-                              border: "2px solid yellow",
-                            }}
+                           className="chose-skill"
                           >
                             <img
                               src={item.image}

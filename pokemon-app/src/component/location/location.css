@@ -224,28 +224,6 @@
   margin: 80px auto;
 }
 
-/* button {
-  cursor: pointer;
-  background-color: #fff;
-  color: #3d405b;
-  padding: 0.5rem;
-  border-radius: 12px;
-  font-size: 1.5rem;
-  border: none;
-  transition: 200ms ease-in-out;
-}
-button:hover {
-  cursor: pointer;
-  background-color: #f4f1de;
-  color: #80828a;
-  padding: 0.5rem;
-  border-radius: 12px;
-  font-size: 1.5rem;
-  border: none;
-  width: 60px;
-  height: 60px;
-} */
-
 .fight-icon {
   width: 45px;
   height: 45px;
