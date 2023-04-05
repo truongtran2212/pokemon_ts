@@ -275,7 +275,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
           <Col span={2}></Col>
           <Col span={4} style={{ margin: "auto" }}>
             <img
-              src="team1.gif"
+              src="image/team1.gif"
               alt=""
               className="btn-team"
               onClick={chooseTeam1}
@@ -284,7 +284,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
           <Col span={5}></Col>
           <Col span={4} style={{ margin: "auto" }}>
             <img
-              src="team2.gif"
+              src="image/team2.gif"
               alt=""
               className="btn-team"
               onClick={chooseTeam2}
@@ -440,26 +440,28 @@ const PokemonCollection: React.FC<Props> = (props) => {
   const [search, setSearch] = useState<Pokemon[]>([]);
 
   const onSearch = (value: any) => {
-    setSearch([]);
     if (value === "") {
       setSearch([]);
     }
     if (value !== "") {
-      pokemons.forEach(async (pokemon) => {
-        let found = pokemon.name.includes(value.toLowerCase());
-        if (found !== false) {
-          await axios
+      const promises = pokemons
+        .filter((pokemon) => pokemon.name.includes(value.toLowerCase()))
+        .map((pokemon) =>
+          axios
             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
-            .then((res) => {
-              setSearch((p) => [...p, res.data]);
-            })
+            .then((res) => res.data)
             .catch((err) => {
               console.log("Lỗi ở Search");
-            });
-        }
+              return null;
+            })
+        );
+      Promise.all(promises).then((results) => {
+        const validResults = results.filter((result) => result !== null);
+        setSearch(validResults);
       });
     }
   };
+
   const antIcon = (
     <LoadingOutlined
       style={{
@@ -602,7 +604,6 @@ const PokemonList: React.FC = () => {
 
   return (
     <>
-      {console.log(pokemons)}
       <PokemonCollection
         pokemons={pokemons}
         detail={detail}
@@ -1520,26 +1521,24 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   // const editPokemonTeam2 = (value: any) => {};
   const [valueSearch, setValueSearch] = useState("");
   const onSearch = async (value: string) => {
-    setSearch([]);
-    // if(search.length === 0) {
-    //   value = "";
-    // }
     if (value === "") {
       setSearch([]);
     }
     if (value !== "") {
-      pokemons.forEach(async (pokemon) => {
-        let found = pokemon.name.includes(value.toLowerCase());
-        if (found !== false) {
-          await axios
+      const promises = pokemons
+        .filter((pokemon) => pokemon.name.includes(value.toLowerCase()))
+        .map((pokemon) =>
+          axios
             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
-            .then((res) => {
-              setSearch((p) => [...p, res.data]);
-            })
+            .then((res) => res.data)
             .catch((err) => {
               console.log("Lỗi ở Search");
-            });
-        }
+              return null;
+            })
+        );
+      Promise.all(promises).then((results) => {
+        const validResults = results.filter((result) => result !== null);
+        setSearch(validResults);
       });
     }
   };
@@ -1738,13 +1737,14 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
           </Col>
 
           <Col span={8}>
-            <div onClick={openListPokeEdit}>
+            <div>
               <img
                 src="https://media0.giphy.com/media/mUm6ULzNcCUpeq2zQO/giphy.gif?cid=6c09b9526e3296f22f00acb4322635cf33fa961ef3ac60b2&rid=giphy.gif&ct=s"
                 alt=""
                 className="swap-pokemon"
                 width={200}
                 height={200}
+                onClick={openListPokeEdit}
               />
               <img
                 src={
@@ -1757,7 +1757,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                 height={400}
                 width={410}
                 style={{ margin: "auto", cursor: "pointer" }}
-                // onClick={openListPokeEdit}
+                onClick={openListPokeEdit}
               />
               <div className="background-skill">
                 <h1 style={{ color: "#fff" }}>Các kỹ năng đã được chọn</h1>

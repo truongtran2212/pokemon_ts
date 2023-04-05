@@ -101,8 +101,9 @@ const Location: React.FC = () => {
         setManaTeam1(manaTeam1 - manaSkill);
         setReduceBloodTeam2(hp2);
         setLuckyNumber(3);
-        setStatusTeam2("Choáng");
-        // audioTeam1Fight()
+        if (hpTeam2 - hp2 > 0) {
+          setStatusTeam2("Choáng");
+        }
       }
 
       if (name !== "Đóng băng") {
@@ -111,12 +112,10 @@ const Location: React.FC = () => {
         setReduceBloodTeam2(hp2);
         setLuckyNumber(2);
         setStatusTeam2("Bình thường");
-        // audioTeam1Fight()
       }
       if (hpTeam2 - hp2 <= 0) {
         setManaTeam2(100);
         setStatusTeam2("Bình thường");
-        // audioTeam1Fight()
       }
     }
 
@@ -127,7 +126,6 @@ const Location: React.FC = () => {
       setReduceBloodTeam2(9);
       setLuckyNumber(2);
       setStatusTeam2("Bình thường");
-      // audioTeam1Fight()
       if (hpTeam2 - 9 <= 0) {
         setManaTeam2(100);
         setStatusTeam2("Bình thường");
@@ -155,7 +153,11 @@ const Location: React.FC = () => {
         setManaTeam2(manaTeam2 - manaSkill);
         setReduceBloodTeam1(hp1);
         setLuckyNumber(4);
-        setStatusTeam1("Choáng");
+        if (hpTeam1 - hp1 > 0) {
+          setStatusTeam1("Choáng");
+        }else {
+          setStatusTeam1("Bình thường")
+        }
       }
 
       if (name !== "Đóng băng") {
@@ -230,6 +232,7 @@ const Location: React.FC = () => {
           {nameSkillTeam1 === "Đóng băng" ? <IceSkillTeam1 /> : null}
           {nameSkillTeam1 === "Nước" ? <TsunamiSkillTeam1 /> : null}
           {nameSkillTeam1 === "Sấm sét" ? <ThunderSkillTeam1 /> : null}
+          {nameSkillTeam1 === "Động đất" ? <RockSkillTeam1 /> : null}
           {nameSkillTeam1 === "Đánh thường" ? <AttackTeam1 /> : null}
 
           {/* animation skill team2 */}
@@ -238,8 +241,8 @@ const Location: React.FC = () => {
           {nameSkillTeam2 === "Đóng băng" ? <IceSkillTeam2 /> : null}
           {nameSkillTeam2 === "Nước" ? <TsunamiSkillTeam2 /> : null}
           {nameSkillTeam2 === "Sấm sét" ? <ThunderSkillTeam2 /> : null}
+          {nameSkillTeam2 === "Động đất" ? <RockSkillTeam2 /> : null}
           {nameSkillTeam2 === "Đánh thường" ? <AttackTeam2 /> : null}
-          {/* <Team2Win /> */}
         </div>
         <div className="custom-background">
           <div
@@ -652,54 +655,20 @@ const Location: React.FC = () => {
   );
 };
 
-const AudioTeam1Fight = () => {
-  return (
-    <audio
-      autoPlay={true}
-      src="mixkit-impact-of-a-strong-punch-2155.mp3"
-      typeof="audio/mp3"
-    ></audio>
-  );
-};
-
-const NotificationPlayer1 = () => {
-  return (
-    <>
-      <div
-        style={{
-          height: 80,
-          width: 200,
-          backgroundColor: "white",
-          marginTop: "28%",
-          marginRight: "25%",
-          borderRadius: 30,
-          display: "flex",
-          opacity: 0.9,
-          fontFamily: "Verdana",
-          border: "2px solid blue",
-          boxShadow: "5px 5px 5px #888",
-        }}
-      >
-        <h3 style={{ margin: "auto" }}>TUỔI L**</h3>
-      </div>
-    </>
-  );
-};
-
 const Team1Win = () => {
-  const returnList = () => {
-    window.location.href = localhost;
-  };
-  useEffect(() => {
-    localStorage.removeItem("team2");
-    setTimeout(returnList, 2000);
-  }, []);
+  // const returnList = () => {
+  //   window.location.href = localhost;
+  // };
+  // useEffect(() => {
+  //   localStorage.removeItem("team2");
+  //   setTimeout(returnList, 2000);
+  // }, []);
 
   return (
     <>
       <div className="game-over">
         <img
-          src="player1.gif"
+          src="image/player1.gif"
           alt=""
           width={600}
           height={200}
@@ -711,19 +680,19 @@ const Team1Win = () => {
 };
 
 const Team2Win = () => {
-  const returnList = () => {
-    window.location.href = localhost;
-  };
-  useEffect(() => {
-    localStorage.removeItem("team1");
-    setTimeout(returnList, 2000);
-  }, []);
+  // const returnList = () => {
+  //   window.location.href = localhost;
+  // };
+  // useEffect(() => {
+  //   localStorage.removeItem("team1");
+  //   setTimeout(returnList, 2000);
+  // }, []);
 
   return (
     <>
       <div className="game-over">
         <img
-          src="player2.gif"
+          src="image/player2.gif"
           alt=""
           width={600}
           height={200}
@@ -826,6 +795,11 @@ const CountDown = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/fight.mp3"
+        typeof="audio/mp3"
+      ></audio>
     </>
   );
 };
@@ -840,6 +814,11 @@ const IceSkillTeam1 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/freeze.mp3"
+        typeof="audio/mp3"
+      ></audio>
     </>
   );
 };
@@ -853,6 +832,11 @@ const IceSkillTeam2 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/freeze.mp3"
+        typeof="audio/mp3"
+      ></audio>
     </>
   );
 };
@@ -867,6 +851,11 @@ const WindSkillTeam1 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/wind.mp3"
+        typeof="audio/mp3"
+      ></audio>
     </>
   );
 };
@@ -881,9 +870,54 @@ const WindSkillTeam2 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/wind.mp3"
+        typeof="audio/mp3"
+      ></audio>
     </>
   );
 };
+
+const RockSkillTeam1 = () => {
+  return (
+    <>
+      <div className={"team1-skill"}>
+        <img
+          style={{ height: 200, width: 200 }}
+          src="https://wiki.tuxemon.org/images/7/7d/Rockfall_193.gif"
+          alt=""
+        />
+      </div>
+      <audio
+        autoPlay={true}
+        src="audio/stone.mp3"
+        typeof="audio/mp3"
+      ></audio>
+    </>
+  );
+};
+
+const RockSkillTeam2 = () => {
+  return (
+    <>
+      <div className={"team2-skill"}>
+        <img
+          style={{ height: 200, width: 200 }}
+          src="https://wiki.tuxemon.org/images/7/7d/Rockfall_193.gif"
+          alt=""
+        />
+      </div>
+      <audio
+        autoPlay={true}
+        src="audio/stone.mp3"
+        typeof="audio/mp3"
+      ></audio>
+    </>
+  );
+};
+
+
 
 const AttackTeam1 = () => {
   return (
@@ -895,7 +929,11 @@ const AttackTeam1 = () => {
           alt=""
         />
       </div>
-      <AudioTeam1Fight />
+      <audio
+        autoPlay={true}
+        src="audio/punch.mp3"
+        typeof="audio/mp3"
+      ></audio>
     </>
   );
 };
@@ -910,6 +948,11 @@ const AttackTeam2 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/punch.mp3"
+        typeof="audio/wav"
+      ></audio>
     </>
   );
 };
@@ -924,6 +967,11 @@ const FireSkillTeam1 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/fire.wav"
+        typeof="audio/wav"
+      ></audio>
     </>
   );
 };
@@ -938,6 +986,11 @@ const FireSkillTeam2 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/fire.wav"
+        typeof="audio/wav"
+      ></audio>
     </>
   );
 };
@@ -952,6 +1005,11 @@ const TsunamiSkillTeam1 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/wave.wav"
+        typeof="audio/wav"
+      ></audio>
     </>
   );
 };
@@ -966,6 +1024,11 @@ const TsunamiSkillTeam2 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/wave.wav"
+        typeof="audio/wav"
+      ></audio>
     </>
   );
 };
@@ -980,6 +1043,11 @@ const ThunderSkillTeam1 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/thunder.wav"
+        typeof="audio/wav"
+      ></audio>
     </>
   );
 };
@@ -993,6 +1061,11 @@ const ThunderSkillTeam2 = () => {
           alt=""
         />
       </div>
+      <audio
+        autoPlay={true}
+        src="audio/thunder.wav"
+        typeof="audio/wav"
+      ></audio>
     </>
   );
 };
