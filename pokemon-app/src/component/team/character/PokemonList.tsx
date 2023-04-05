@@ -354,6 +354,8 @@ const PokemonCollection: React.FC<Props> = (props) => {
                   width: 300,
                   marginLeft: "130%",
                 }}
+                id="focus"
+                // loading={true}
                 // width={200}
               />
             </div>
