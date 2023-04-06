@@ -48,15 +48,15 @@ let listAbilities: Abilities[] = [
   {
     name: "Hút mana",
     image: "https://cdn-icons-png.flaticon.com/512/5966/5966507.png",
-    damage: Math.floor(Math.random() * 20) + 10, // 10 => 29
+    damage: Math.floor(Math.random() * 12) + 10, // 10 => 22
     mana: Math.floor(Math.random() * 9) + 17, // 17 => 25
   },
   {
     name: "Hút máu",
     image:
       "https://rpgmaker.net/media/content/games/4468/screenshots/hp_potion.png",
-    damage: Math.floor(Math.random() * 20) + 10,
-    mana: Math.floor(Math.random() * 9) + 17,
+    damage: Math.floor(Math.random() * 12) + 10, // 10 => 22
+    mana: Math.floor(Math.random() * 9) + 17, // 17 => 25
   },
 
   {
@@ -1366,17 +1366,21 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
           <Col span={8}>
             <div>
               <Tooltip
-                placement="rightBottom"
-                color="#fff"
+                placement="right"
+                color="rgba(0,0,0,0)"
+                arrow={false}
                 title={
                   <>
-                    <div style={{ color: "black", width: 200, height: 100 }}>
+                    {/* <div style={{ color: "black", width: 200, height: 100 }}>
                       <p>{JSON.parse(localStorage.abilities)[0].name}</p>
                       <p>{JSON.parse(localStorage.abilities)[0].damage}</p>
                       <p>{JSON.parse(localStorage.abilities)[0].mana}</p>
-                    </div>
+                    </div> */}
+                    <img src="image/mana.png" alt="" width="200px" height="200px" style={{opacity: 0.9, borderRadius: 10}}/>
                   </>
+                  
                 }
+                
               >
                 <button
                   className="btn-skill"
