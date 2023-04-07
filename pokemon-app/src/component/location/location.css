@@ -26,7 +26,8 @@
 }
 
 .custom-background {
-  background-image: url("https://img.freepik.com/free-vector/space-game-background-neon-night-alien-landscape_107791-1624.jpg");
+  /* background-image: url("https://img.freepik.com/free-vector/space-game-background-neon-night-alien-landscape_107791-1624.jpg"); */
+  background-image: url("https://img.freepik.com/premium-photo/soccer-stadium-green-grass-field-spot-lights-night_163855-387.jpg");
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;

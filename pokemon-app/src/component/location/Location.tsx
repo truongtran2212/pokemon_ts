@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./location.css";
 import { Button, Col, Image, Row } from "antd";
+import { log } from "console";
 
 const Location: React.FC = () => {
   var team1: any = localStorage.getItem("team1")
@@ -37,30 +38,29 @@ const Location: React.FC = () => {
 
   const [isCloseStart, setIsCloseStart] = useState<boolean>(false);
 
-  // Team2 bị đánh
-  useEffect(() => {
-    if (hpTeam2 <= 0) {
-      setHpTeam2(0);
-      listTeam2.shift();
-      setListTeam2(listTeam2);
-      setReduceBloodTeam2(0);
-      if (listTeam2.length > 0) {
-        setHpTeam2(100);
-      }
-    }
-  }, [hpTeam2]);
-
   // Team1 bị đánh
-  useEffect(() => {
-    if (hpTeam1 <= 0) {
-      listTeam1.shift();
-      setListTeam1(listTeam1);
-      setReduceBloodTeam1(0);
-      if (listTeam1.length > 0) {
-        setHpTeam1(100);
-      }
-    }
-  }, [hpTeam1]);
+  // useEffect(() => {
+  //   if (hpTeam1 <= 0) {
+  //     listTeam1.shift();
+  //     setListTeam1(listTeam1);
+  //     setReduceBloodTeam1(0);
+  //     if (listTeam1.length > 0) {
+  //       setHpTeam1(100);
+  //     }
+  //   }
+  // }, [luckyNumber, hpTeam1]);
+
+  // Team2 bị đánh
+  // useEffect(() => {
+  //   if (hpTeam2 <= 0) {
+  //     listTeam2.shift();
+  //     setListTeam2(listTeam2);
+  //     setReduceBloodTeam2(0);
+  //     if (listTeam2.length > 0) {
+  //       setHpTeam2(100);
+  //     }
+  //   }
+  // }, [hpTeam2]);
 
   // Bắt đầu trận đấu
   useEffect(() => {
@@ -87,32 +87,60 @@ const Location: React.FC = () => {
   const team1Fight = () => {
     setNameSkillTeam2("");
     let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
-    let hp2 = skillRandom.damage;
+    let damageSkill = skillRandom.damage;
     let manaSkill = skillRandom.mana;
     let name = skillRandom.name;
 
     if (manaTeam1 >= manaSkill) {
       setNameSkillTeam1(name);
       if (name === "Đóng băng") {
-        setHpTeam2(hpTeam2 - hp2);
+        setHpTeam2(hpTeam2 - damageSkill);
         setManaTeam1(manaTeam1 - manaSkill);
-        setReduceBloodTeam2(hp2);
-        setLuckyNumber(3);
-        if (hpTeam2 - hp2 > 0) {
+        setReduceBloodTeam2(damageSkill);
+        if (hpTeam2 - damageSkill > 0) {
+          setLuckyNumber(3);
           setStatusTeam2("Choáng");
+        } else {
+          setLuckyNumber(4);
+          setStatusTeam2("Bình thường");
         }
       }
 
-      if (name !== "Đóng băng") {
-        setHpTeam2(hpTeam2 - hp2);
+      if (name === "Hút máu") {
+        if (hpTeam1 === 100 || hpTeam1 + damageSkill >= 100) {
+          setHpTeam1(100);
+          setHpTeam2(hpTeam2 - damageSkill);
+          setManaTeam1(manaTeam1 - manaSkill);
+          setReduceBloodTeam2(damageSkill);
+          setLuckyNumber(2);
+          setStatusTeam2("Bình thường");
+        } else {
+          setHpTeam1(hpTeam1 + damageSkill);
+          setHpTeam2(hpTeam2 - damageSkill);
+          setManaTeam1(manaTeam1 - manaSkill);
+          setReduceBloodTeam2(damageSkill);
+          setLuckyNumber(2);
+          setStatusTeam2("Bình thường");
+        }
+      }
+
+      if (name !== "Đóng băng" && name !== "Hút máu") {
+        setHpTeam2(hpTeam2 - damageSkill);
         setManaTeam1(manaTeam1 - manaSkill);
-        setReduceBloodTeam2(hp2);
+        setReduceBloodTeam2(damageSkill);
         setLuckyNumber(2);
         setStatusTeam2("Bình thường");
       }
-      if (hpTeam2 - hp2 <= 0) {
-        setManaTeam2(100);
+
+      if (hpTeam2 - damageSkill <= 0) {
         setStatusTeam2("Bình thường");
+        listTeam2.shift();
+        setListTeam2(listTeam2);
+        setReduceBloodTeam2(0);
+        if (listTeam2.length > 0) {
+          setManaTeam2(100);
+          setHpTeam2(100);
+        }
       }
     }
 
@@ -124,9 +152,14 @@ const Location: React.FC = () => {
       setLuckyNumber(2);
       setStatusTeam2("Bình thường");
       if (hpTeam2 - 9 <= 0) {
-        setManaTeam2(100);
         setStatusTeam2("Bình thường");
-        console.log(hpTeam2);
+        listTeam2.shift();
+        setListTeam2(listTeam2);
+        setReduceBloodTeam2(0);
+        if (listTeam2.length > 0) {
+          setManaTeam2(100);
+          setHpTeam2(100);
+        }
       }
     }
   };
@@ -138,7 +171,7 @@ const Location: React.FC = () => {
   const team2Fight = () => {
     setNameSkillTeam1("");
     let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
-    let hp1 = skillRandom.damage;
+    let damageSkill = skillRandom.damage;
     let name = skillRandom.name;
     let manaSkill = skillRandom.mana;
 
@@ -146,41 +179,73 @@ const Location: React.FC = () => {
       setNameSkillTeam2(name);
 
       if (name === "Đóng băng") {
-        setHpTeam1(hpTeam1 - hp1);
+        setHpTeam1(hpTeam1 - damageSkill);
         setManaTeam2(manaTeam2 - manaSkill);
-        setReduceBloodTeam1(hp1);
+        setReduceBloodTeam1(damageSkill);
         setLuckyNumber(4);
-        if (hpTeam1 - hp1 > 0) {
+        if (hpTeam1 - damageSkill > 0) {
           setStatusTeam1("Choáng");
-        }else {
-          setStatusTeam1("Bình thường")
+        } else {
+          {
+            setLuckyNumber(3);
+            setStatusTeam1("Bình thường");
+          }
         }
       }
 
-      if (name !== "Đóng băng") {
-        setHpTeam1(hpTeam1 - hp1);
+      if (name === "Hút máu") {
+        if (hpTeam2 === 100 || hpTeam2 + damageSkill >= 100) {
+          setHpTeam2(100);
+          setHpTeam1(hpTeam1 - damageSkill);
+          setManaTeam2(manaTeam2 - manaSkill);
+          setReduceBloodTeam1(damageSkill);
+          setLuckyNumber(1);
+          setStatusTeam1("Bình thường");
+        } else {
+          setHpTeam1(hpTeam2 + damageSkill);
+          setHpTeam2(hpTeam1 - damageSkill);
+          setManaTeam1(manaTeam2 - manaSkill);
+          setReduceBloodTeam1(damageSkill);
+          setLuckyNumber(1);
+          setStatusTeam1("Bình thường");
+        }
+      }
+
+      if (name !== "Đóng băng" && name !== "Hút máu") {
+        setHpTeam1(hpTeam1 - damageSkill);
         setManaTeam2(manaTeam2 - manaSkill);
-        setReduceBloodTeam1(hp1);
+        setReduceBloodTeam1(damageSkill);
         setLuckyNumber(1);
         setStatusTeam1("Bình thường");
       }
-      if (hpTeam1 - hp1 <= 0) {
-        setManaTeam1(100);
+      if (hpTeam1 - damageSkill <= 0) {
         setStatusTeam1("Bình thường");
+        listTeam1.shift();
+        setListTeam1(listTeam1);
+        setReduceBloodTeam1(0);
+        if (listTeam1.length > 0) {
+          setManaTeam1(100);
+          setHpTeam1(100);
+        }
       }
     }
 
     if (manaTeam2 < manaSkill) {
       setNameSkillTeam2("Đánh thường");
-
       setHpTeam1(hpTeam1 - 9);
       setManaTeam2(manaTeam2 + (Math.floor(Math.random() * 10) + 5));
       setReduceBloodTeam1(9);
       setLuckyNumber(1);
       setStatusTeam1("Bình thường");
       if (hpTeam1 - 9 <= 0) {
-        setManaTeam1(100);
         setStatusTeam1("Bình thường");
+        listTeam1.shift();
+        setListTeam1(listTeam1);
+        setReduceBloodTeam1(0);
+        if (listTeam1.length > 0) {
+          setManaTeam1(100);
+          setHpTeam1(100);
+        }
       }
     }
   };
@@ -385,12 +450,21 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {isCloseStart === true && reduceBloodTeam1 !== 0 ? (
-                        <p
-                          className="custom-hp"
-                          style={{ color: "red", fontSize: 24 }}
-                        >
-                          - {reduceBloodTeam1}
-                        </p>
+                        nameSkillTeam1 !== "Hút máu" ? (
+                          <p
+                            className="custom-hp"
+                            style={{ color: "red", fontSize: 24 }}
+                          >
+                            - {reduceBloodTeam1}
+                          </p>
+                        ) : (
+                          <p
+                            className="custom-hp"
+                            style={{ color: "green", fontSize: 24 }}
+                          >
+                            + {reduceBloodTeam2}
+                          </p>
+                        )
                       ) : null}
                     </div>
                     {statusTeam1 === "Choáng" ? (
@@ -608,12 +682,21 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {isCloseStart === true && reduceBloodTeam2 !== 0 ? (
-                        <p
-                          className="custom-hp"
-                          style={{ color: "red", fontSize: 24 }}
-                        >
-                          - {reduceBloodTeam2}
-                        </p>
+                        nameSkillTeam2 !== "Hút máu" ? (
+                          <p
+                            className="custom-hp"
+                            style={{ color: "red", fontSize: 24 }}
+                          >
+                            - {reduceBloodTeam2}
+                          </p>
+                        ) : (
+                          <p
+                            className="custom-hp"
+                            style={{ color: "green", fontSize: 24 }}
+                          >
+                            + {reduceBloodTeam1}
+                          </p>
+                        )
                       ) : null}
                     </div>
                     {statusTeam2 === "Choáng" ? (
@@ -792,11 +875,7 @@ const CountDown = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/fight.mp3"
-        typeof="audio/mp3"
-      ></audio>
+      <audio autoPlay={true} src="audio/fight.mp3" typeof="audio/mp3"></audio>
     </>
   );
 };
@@ -811,11 +890,7 @@ const IceSkillTeam1 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/freeze.mp3"
-        typeof="audio/mp3"
-      ></audio>
+      <audio autoPlay={true} src="audio/freeze.mp3" typeof="audio/mp3"></audio>
     </>
   );
 };
@@ -829,11 +904,7 @@ const IceSkillTeam2 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/freeze.mp3"
-        typeof="audio/mp3"
-      ></audio>
+      <audio autoPlay={true} src="audio/freeze.mp3" typeof="audio/mp3"></audio>
     </>
   );
 };
@@ -848,11 +919,7 @@ const WindSkillTeam1 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/wind.mp3"
-        typeof="audio/mp3"
-      ></audio>
+      <audio autoPlay={true} src="audio/wind.mp3" typeof="audio/mp3"></audio>
     </>
   );
 };
@@ -867,11 +934,7 @@ const WindSkillTeam2 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/wind.mp3"
-        typeof="audio/mp3"
-      ></audio>
+      <audio autoPlay={true} src="audio/wind.mp3" typeof="audio/mp3"></audio>
     </>
   );
 };
@@ -886,11 +949,7 @@ const RockSkillTeam1 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/stone.mp3"
-        typeof="audio/mp3"
-      ></audio>
+      <audio autoPlay={true} src="audio/stone.mp3" typeof="audio/mp3"></audio>
     </>
   );
 };
@@ -905,16 +964,10 @@ const RockSkillTeam2 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/stone.mp3"
-        typeof="audio/mp3"
-      ></audio>
+      <audio autoPlay={true} src="audio/stone.mp3" typeof="audio/mp3"></audio>
     </>
   );
 };
-
-
 
 const AttackTeam1 = () => {
   return (
@@ -926,11 +979,7 @@ const AttackTeam1 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/punch.mp3"
-        typeof="audio/mp3"
-      ></audio>
+      <audio autoPlay={true} src="audio/punch.mp3" typeof="audio/mp3"></audio>
     </>
   );
 };
@@ -945,11 +994,7 @@ const AttackTeam2 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/punch.mp3"
-        typeof="audio/wav"
-      ></audio>
+      <audio autoPlay={true} src="audio/punch.mp3" typeof="audio/wav"></audio>
     </>
   );
 };
@@ -964,11 +1009,7 @@ const FireSkillTeam1 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/fire.wav"
-        typeof="audio/wav"
-      ></audio>
+      <audio autoPlay={true} src="audio/fire.wav" typeof="audio/wav"></audio>
     </>
   );
 };
@@ -983,11 +1024,7 @@ const FireSkillTeam2 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/fire.wav"
-        typeof="audio/wav"
-      ></audio>
+      <audio autoPlay={true} src="audio/fire.wav" typeof="audio/wav"></audio>
     </>
   );
 };
@@ -1002,11 +1039,7 @@ const TsunamiSkillTeam1 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/wave.wav"
-        typeof="audio/wav"
-      ></audio>
+      <audio autoPlay={true} src="audio/wave.wav" typeof="audio/wav"></audio>
     </>
   );
 };
@@ -1021,11 +1054,7 @@ const TsunamiSkillTeam2 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/wave.wav"
-        typeof="audio/wav"
-      ></audio>
+      <audio autoPlay={true} src="audio/wave.wav" typeof="audio/wav"></audio>
     </>
   );
 };
@@ -1040,11 +1069,7 @@ const ThunderSkillTeam1 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/thunder.wav"
-        typeof="audio/wav"
-      ></audio>
+      <audio autoPlay={true} src="audio/thunder.wav" typeof="audio/wav"></audio>
     </>
   );
 };
@@ -1058,11 +1083,7 @@ const ThunderSkillTeam2 = () => {
           alt=""
         />
       </div>
-      <audio
-        autoPlay={true}
-        src="audio/thunder.wav"
-        typeof="audio/wav"
-      ></audio>
+      <audio autoPlay={true} src="audio/thunder.wav" typeof="audio/wav"></audio>
     </>
   );
 };

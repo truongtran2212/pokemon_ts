@@ -30,6 +30,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { localhost } from "../../../localhost";
+// import Mana from "image/skill_mana.jpg"
 
 const { Search } = Input;
 const UserContext = createContext<IPokemonDetail[]>([]);
@@ -37,6 +38,9 @@ notification.config({
   placement: "top",
   duration: 1.5,
 });
+
+const mana = "image/skill_mana.jpg";
+
 interface Props {
   pokemons: IPokemonDetail[];
   detail: Detail;
@@ -55,7 +59,7 @@ let listAbilities: Abilities[] = [
     name: "Hút máu",
     image:
       "https://rpgmaker.net/media/content/games/4468/screenshots/hp_potion.png",
-    damage: Math.floor(Math.random() * 12) + 10, // 10 => 22
+    damage: Math.floor(Math.random() * 10) + 10, // 10 => 20
     mana: Math.floor(Math.random() * 9) + 17, // 17 => 25
   },
 
@@ -82,7 +86,7 @@ let listAbilities: Abilities[] = [
   {
     name: "Đóng băng",
     image: "https://icon-library.com/images/freeze-icon/freeze-icon-16.jpg",
-    damage: Math.floor(Math.random() * 20) + 10,
+    damage: Math.floor(Math.random() * 15) + 10,
     mana: Math.floor(Math.random() * 9) + 17,
   },
   {
@@ -631,11 +635,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <Row>
                       {JSON.parse(localStorage.team1)[0].abilities.map(
                         (item: any, index: number) => (
-                          <Col
-                            span={5}
-                            className="skill-pokemon"
-                            key={index}
-                          >
+                          <Col span={5} className="skill-pokemon" key={index}>
                             <img
                               style={{ margin: "auto" }}
                               src={item.image}
@@ -680,11 +680,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <Row>
                       {JSON.parse(localStorage.team1)[1].abilities.map(
                         (item: any, index: number) => (
-                          <Col
-                            span={5}
-                            className="skill-pokemon"
-                            key={index}
-                          >
+                          <Col span={5} className="skill-pokemon" key={index}>
                             <img
                               style={{ margin: "auto" }}
                               src={item.image}
@@ -731,11 +727,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <Row>
                       {JSON.parse(localStorage.team1)[2].abilities.map(
                         (item: any, index: number) => (
-                          <Col
-                            span={5}
-                            className="skill-pokemon"
-                            key={index}
-                          >
+                          <Col span={5} className="skill-pokemon" key={index}>
                             <img
                               style={{ margin: "auto" }}
                               src={item.image}
@@ -873,11 +865,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <Row>
                       {JSON.parse(localStorage.team2)[0].abilities.map(
                         (item: any, index: number) => (
-                          <Col
-                            span={5}
-                            className="skill-pokemon"
-                            key={index}
-                          >
+                          <Col span={5} className="skill-pokemon" key={index}>
                             <img
                               style={{ margin: "auto" }}
                               src={item.image}
@@ -922,11 +910,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <Row>
                       {JSON.parse(localStorage.team2)[1].abilities.map(
                         (item: any, index: number) => (
-                          <Col
-                            span={5}
-                            className="skill-pokemon"
-                            key={index}
-                          >
+                          <Col span={5} className="skill-pokemon" key={index}>
                             <img
                               style={{ margin: "auto" }}
                               src={item.image}
@@ -973,11 +957,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
                     <Row>
                       {JSON.parse(localStorage.team2)[2].abilities.map(
                         (item: any, index: number) => (
-                          <Col
-                            span={5}
-                            className="skill-pokemon"
-                            key={index}
-                          >
+                          <Col span={5} className="skill-pokemon" key={index}>
                             <img
                               style={{ margin: "auto" }}
                               src={item.image}
@@ -1371,16 +1351,15 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                 arrow={false}
                 title={
                   <>
-                    {/* <div style={{ color: "black", width: 200, height: 100 }}>
-                      <p>{JSON.parse(localStorage.abilities)[0].name}</p>
-                      <p>{JSON.parse(localStorage.abilities)[0].damage}</p>
-                      <p>{JSON.parse(localStorage.abilities)[0].mana}</p>
-                    </div> */}
-                    <img src="image/mana.png" alt="" width="200px" height="200px" style={{opacity: 0.9, borderRadius: 10}}/>
+                    <img
+                      src="detail_skill/take_mana.jpg"
+                      alt=""
+                      width="200px"
+                      height="150px"
+                      style={{ opacity: 0.9, borderRadius: 10 }}
+                    />
                   </>
-                  
                 }
-                
               >
                 <button
                   className="btn-skill"
@@ -1399,57 +1378,115 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                 </button>
               </Tooltip>
             </div>
-            <div style={{}}>
-              <button
-                className="btn-skill"
-                style={{
-                  marginLeft: "40%",
-                  marginTop: "7%",
-                }}
-                onClick={() => addSkill(JSON.parse(localStorage.abilities)[1])}
+
+            <div>
+              <Tooltip
+                placement="right"
+                color="rgba(0,0,0,0)"
+                arrow={false}
+                title={
+                  <>
+                    <img
+                      src="detail_skill/health.jpg"
+                      alt=""
+                      width="200px"
+                      height="150px"
+                      style={{ opacity: 0.9, borderRadius: 10 }}
+                    />
+                  </>
+                }
               >
-                <img
-                  src={JSON.parse(localStorage.abilities)[1].image}
-                  alt=""
-                  width={70}
-                  height={70}
-                />
-              </button>
+                <button
+                  className="btn-skill"
+                  style={{
+                    marginLeft: "40%",
+                    marginTop: "7%",
+                  }}
+                  onClick={() =>
+                    addSkill(JSON.parse(localStorage.abilities)[1])
+                  }
+                >
+                  <img
+                    src={JSON.parse(localStorage.abilities)[1].image}
+                    alt=""
+                    width={70}
+                    height={70}
+                  />
+                </button>
+              </Tooltip>
             </div>
             <div>
-              <button
-                className="btn-skill"
-                style={{
-                  marginLeft: "40%",
-                  marginTop: "7%",
-                }}
-                onClick={() => addSkill(JSON.parse(localStorage.abilities)[2])}
+              <Tooltip
+                placement="right"
+                color="rgba(0,0,0,0)"
+                arrow={false}
+                title={
+                  <>
+                    <img
+                      src="detail_skill/fire.jpg"
+                      alt=""
+                      width="200px"
+                      height="150px"
+                      style={{ opacity: 0.9, borderRadius: 10 }}
+                    />
+                  </>
+                }
               >
-                <img
-                  src={JSON.parse(localStorage.abilities)[2].image}
-                  alt=""
-                  width={70}
-                  height={70}
-                />
-              </button>
+                <button
+                  className="btn-skill"
+                  style={{
+                    marginLeft: "40%",
+                    marginTop: "7%",
+                  }}
+                  onClick={() =>
+                    addSkill(JSON.parse(localStorage.abilities)[2])
+                  }
+                >
+                  <img
+                    src={JSON.parse(localStorage.abilities)[2].image}
+                    alt=""
+                    width={70}
+                    height={70}
+                  />
+                </button>
+              </Tooltip>
             </div>
             <div>
-              <button
-                className="btn-skill"
-                style={{
-                  marginLeft: "55%",
-                  marginTop: "7%",
-                }}
-                // disabled={true}
-                onClick={() => addSkill(JSON.parse(localStorage.abilities)[3])}
+              <Tooltip
+                placement="right"
+                color="rgba(0,0,0,0)"
+                arrow={false}
+                title={
+                  <>
+                    <img
+                      src="detail_skill/thunder.jpg"
+                      alt=""
+                      width="200px"
+                      height="150px"
+                      style={{ opacity: 0.9, borderRadius: 10 }}
+                    />
+                  </>
+                }
               >
-                <img
-                  src={JSON.parse(localStorage.abilities)[3].image}
-                  alt=""
-                  width={70}
-                  height={70}
-                />
-              </button>
+                <button
+                  className="btn-skill"
+                  style={{
+                    marginLeft: "55%",
+                    marginTop: "7%",
+                  }}
+                  // disabled={true}
+                  onClick={() =>
+                    addSkill(JSON.parse(localStorage.abilities)[3])
+                  }
+                >
+                  <img
+                    src={JSON.parse(localStorage.abilities)[3].image}
+                    alt=""
+                    width={70}
+                    height={70}
+                  />
+                </button>
+              </Tooltip>
             </div>
           </Col>
 
@@ -1489,9 +1526,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                           >
                             <LineOutlined />
                           </button>
-                          <button
-                           className="chose-skill"
-                          >
+                          <button className="chose-skill">
                             <img
                               src={item.image}
                               alt=""
@@ -1509,71 +1544,147 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
 
           <Col span={8}>
             <div>
-              <button
-                className="btn-skill"
-                style={{
-                  marginLeft: "20%",
-                }}
-                onClick={() => addSkill(JSON.parse(localStorage.abilities)[4])}
+              <Tooltip
+                placement="left"
+                color="rgba(0,0,0,0)"
+                arrow={false}
+                title={
+                  <>
+                    <img
+                      src="detail_skill/tsunami.jpg"
+                      alt=""
+                      width="200px"
+                      height="150px"
+                      style={{ opacity: 0.9, borderRadius: 10 }}
+                    />
+                  </>
+                }
               >
-                <img
-                  src={JSON.parse(localStorage.abilities)[4].image}
-                  alt=""
-                  width={70}
-                  height={70}
-                />
-              </button>
+                <button
+                  className="btn-skill"
+                  style={{
+                    marginLeft: "20%",
+                  }}
+                  onClick={() =>
+                    addSkill(JSON.parse(localStorage.abilities)[4])
+                  }
+                >
+                  <img
+                    src={JSON.parse(localStorage.abilities)[4].image}
+                    alt=""
+                    width={70}
+                    height={70}
+                  />
+                </button>
+              </Tooltip>
             </div>
             <div>
-              <button
-                className="btn-skill"
-                style={{
-                  marginTop: "7%",
-                  marginLeft: "35%",
-                }}
-                onClick={() => addSkill(JSON.parse(localStorage.abilities)[5])}
+              <Tooltip
+                placement="left"
+                color="rgba(0,0,0,0)"
+                arrow={false}
+                title={
+                  <>
+                    <img
+                      src="detail_skill/freeze.jpg"
+                      alt=""
+                      width="200px"
+                      height="150px"
+                      style={{ opacity: 0.9, borderRadius: 10 }}
+                    />
+                  </>
+                }
               >
-                <img
-                  src={JSON.parse(localStorage.abilities)[5].image}
-                  alt=""
-                  width={70}
-                  height={70}
-                />
-              </button>
+                <button
+                  className="btn-skill"
+                  style={{
+                    marginTop: "7%",
+                    marginLeft: "35%",
+                  }}
+                  onClick={() =>
+                    addSkill(JSON.parse(localStorage.abilities)[5])
+                  }
+                >
+                  <img
+                    src={JSON.parse(localStorage.abilities)[5].image}
+                    alt=""
+                    width={70}
+                    height={70}
+                  />
+                </button>
+              </Tooltip>
             </div>
             <div>
-              <button
-                className="btn-skill"
-                style={{
-                  marginTop: "7%",
-                  marginLeft: "35%",
-                }}
-                onClick={() => addSkill(JSON.parse(localStorage.abilities)[6])}
+              <Tooltip
+                placement="left"
+                color="rgba(0,0,0,0)"
+                arrow={false}
+                title={
+                  <>
+                    <img
+                      src="detail_skill/earthquake.jpg"
+                      alt=""
+                      width="200px"
+                      height="150px"
+                      style={{ opacity: 0.9, borderRadius: 10 }}
+                    />
+                  </>
+                }
               >
-                <img
-                  src={JSON.parse(localStorage.abilities)[6].image}
-                  alt=""
-                  width={70}
-                  height={70}
-                />
-              </button>
+                <button
+                  className="btn-skill"
+                  style={{
+                    marginTop: "7%",
+                    marginLeft: "35%",
+                  }}
+                  onClick={() =>
+                    addSkill(JSON.parse(localStorage.abilities)[6])
+                  }
+                >
+                  <img
+                    src={JSON.parse(localStorage.abilities)[6].image}
+                    alt=""
+                    width={70}
+                    height={70}
+                  />
+                </button>
+              </Tooltip>
             </div>
             <div>
-              <button
-                className="btn-skill"
-                style={{
-                  marginTop: "7%",
-                  marginLeft: "20%",
-                }}
-                onClick={() => addSkill(JSON.parse(localStorage.abilities)[7])}
+              <Tooltip
+                placement="left"
+                color="rgba(0,0,0,0)"
+                arrow={false}
+                title={
+                  <>
+                    <img
+                      src="detail_skill/tornado.jpg"
+                      alt=""
+                      width="200px"
+                      height="150px"
+                      style={{ opacity: 0.9, borderRadius: 10 }}
+                    />
+                  </>
+                }
               >
-                <img
-                  src={JSON.parse(localStorage.abilities)[7].image}
-                  alt=""
-                  width={70}
-                  height={70}
-                />
-              </button>
+                <button
+                  className="btn-skill"
+                  style={{
+                    marginTop: "7%",
+                    marginLeft: "20%",
+                  }}
+                  onClick={() =>
+                    addSkill(JSON.parse(localStorage.abilities)[7])
+                  }
+                >
+                  <img
+                    src={JSON.parse(localStorage.abilities)[7].image}
+                    alt=""
+                    width={70}
+                    height={70}
+                  />
+                </button>
+              </Tooltip>
             </div>
           </Col>
         </Row>
