@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./location.css";
-import { Button, Col, Image, Row } from "antd";
-import { log } from "console";
+import { Col, Row } from "antd";
 
 const Location: React.FC = () => {
   var team1: any = localStorage.getItem("team1")
@@ -64,19 +63,19 @@ const Location: React.FC = () => {
 
   // Bắt đầu trận đấu
   useEffect(() => {
-    if (luckyNumber == 1) {
+    if (luckyNumber === 1) {
       setTimeout(team1Fight, 2000);
     }
 
-    if (luckyNumber == 2) {
+    if (luckyNumber === 2) {
       setTimeout(team2Fight, 2000);
     }
 
-    if (luckyNumber == 3) {
+    if (luckyNumber === 3) {
       setLuckyNumber(1);
     }
 
-    if (luckyNumber == 4) {
+    if (luckyNumber === 4) {
       setLuckyNumber(2);
     }
   }, [luckyNumber]);
@@ -89,11 +88,11 @@ const Location: React.FC = () => {
     let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
     let damageSkill = skillRandom.damage;
     let manaSkill = skillRandom.mana;
-    let name = skillRandom.name;
+    let nameSkill = skillRandom.name;
 
     if (manaTeam1 >= manaSkill) {
-      setNameSkillTeam1(name);
-      if (name === "Đóng băng") {
+      setNameSkillTeam1(nameSkill);
+      if (nameSkill === "Đóng băng") {
         setHpTeam2(hpTeam2 - damageSkill);
         setManaTeam1(manaTeam1 - manaSkill);
         setReduceBloodTeam2(damageSkill);
@@ -106,7 +105,25 @@ const Location: React.FC = () => {
         }
       }
 
-      if (name === "Hút máu") {
+      if (nameSkill === "Hút mana") {
+        if (manaTeam1 === 100 || manaTeam1 + damageSkill >= 100) {
+          setManaTeam1(100);
+          setManaTeam2(manaTeam2 - damageSkill);
+          // đang phân vân có nên trừ mana của Team 1 không?
+          setReduceBloodTeam2(damageSkill);
+          setLuckyNumber(2);
+          setStatusTeam2("Bình thường");
+        }
+         else {
+          setManaTeam1(manaTeam1 + damageSkill);
+          setManaTeam2(manaTeam2 - damageSkill);
+          setReduceBloodTeam2(damageSkill);
+          setLuckyNumber(2);
+          setStatusTeam2("Bình thường");
+        }
+      }
+
+      if (nameSkill === "Hút máu") {
         if (hpTeam1 === 100 || hpTeam1 + damageSkill >= 100) {
           setHpTeam1(100);
           setHpTeam2(hpTeam2 - damageSkill);
@@ -124,7 +141,11 @@ const Location: React.FC = () => {
         }
       }
 
-      if (name !== "Đóng băng" && name !== "Hút máu") {
+      if (
+        nameSkill !== "Đóng băng" &&
+        nameSkill !== "Hút máu" &&
+        nameSkill !== "Hút mana"
+      ) {
         setHpTeam2(hpTeam2 - damageSkill);
         setManaTeam1(manaTeam1 - manaSkill);
         setReduceBloodTeam2(damageSkill);
@@ -169,16 +190,17 @@ const Location: React.FC = () => {
   const [nameSkillTeam2, setNameSkillTeam2] = useState<string>("");
 
   const team2Fight = () => {
+    debugger
     setNameSkillTeam1("");
     let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
     let damageSkill = skillRandom.damage;
-    let name = skillRandom.name;
+    let nameSkill = skillRandom.name;
     let manaSkill = skillRandom.mana;
 
     if (manaTeam2 >= manaSkill) {
-      setNameSkillTeam2(name);
+      setNameSkillTeam2(nameSkill);
 
-      if (name === "Đóng băng") {
+      if (nameSkill === "Đóng băng") {
         setHpTeam1(hpTeam1 - damageSkill);
         setManaTeam2(manaTeam2 - manaSkill);
         setReduceBloodTeam1(damageSkill);
@@ -186,14 +208,29 @@ const Location: React.FC = () => {
         if (hpTeam1 - damageSkill > 0) {
           setStatusTeam1("Choáng");
         } else {
-          {
-            setLuckyNumber(3);
-            setStatusTeam1("Bình thường");
-          }
+          setLuckyNumber(3);
+          setStatusTeam1("Bình thường");
         }
       }
 
-      if (name === "Hút máu") {
+      if (nameSkill === "Hút mana") {
+        if (manaTeam2 === 100 || manaTeam2 + damageSkill >= 100) {
+          setManaTeam2(100);
+          setManaTeam1(manaTeam1 - damageSkill);
+          // đang phân vân có nên trừ mana của Team 1 không?
+          setReduceBloodTeam1(damageSkill);
+          setLuckyNumber(1);
+          setStatusTeam1("Bình thường");
+        } else {
+          setManaTeam2(manaTeam2 + damageSkill);
+          setManaTeam1(manaTeam1 - damageSkill);
+          setReduceBloodTeam1(damageSkill);
+          setLuckyNumber(1);
+          setStatusTeam1("Bình thường");
+        }
+      }
+
+      if (nameSkill === "Hút máu") {
         if (hpTeam2 === 100 || hpTeam2 + damageSkill >= 100) {
           setHpTeam2(100);
           setHpTeam1(hpTeam1 - damageSkill);
@@ -202,16 +239,20 @@ const Location: React.FC = () => {
           setLuckyNumber(1);
           setStatusTeam1("Bình thường");
         } else {
-          setHpTeam1(hpTeam2 + damageSkill);
-          setHpTeam2(hpTeam1 - damageSkill);
-          setManaTeam1(manaTeam2 - manaSkill);
+          setHpTeam2(hpTeam2 + damageSkill);
+          setHpTeam1(hpTeam1 - damageSkill);
+          setManaTeam2(manaTeam2 - manaSkill);
           setReduceBloodTeam1(damageSkill);
           setLuckyNumber(1);
           setStatusTeam1("Bình thường");
         }
       }
 
-      if (name !== "Đóng băng" && name !== "Hút máu") {
+      if (
+        nameSkill !== "Đóng băng" &&
+        nameSkill !== "Hút máu" &&
+        nameSkill !== "Hút mana"
+      ) {
         setHpTeam1(hpTeam1 - damageSkill);
         setManaTeam2(manaTeam2 - manaSkill);
         setReduceBloodTeam1(damageSkill);
@@ -255,14 +296,13 @@ const Location: React.FC = () => {
     if (number < 4 && number > -1) {
       start();
     }
-    // audioTeam1Fight()
   }, [number]);
 
   // Random số để chọn bên bắt đầu
   const start = () => {
     setIsCloseStart(true);
     setTimeout(start2, 1300);
-    if (number == 0) {
+    if (number === 0) {
       setLuckyNumber(Math.floor(Math.random() * 2) + 1);
     }
   };
@@ -450,19 +490,33 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {isCloseStart === true && reduceBloodTeam1 !== 0 ? (
-                        nameSkillTeam1 !== "Hút máu" ? (
+                        nameSkillTeam1 === "Hút máu" ? (
                           <p
                             className="custom-hp"
-                            style={{ color: "red", fontSize: 24 }}
+                            style={{ color: "green", fontSize: 24 }}
+                          >
+                            + {reduceBloodTeam2}
+                          </p>
+                        ) : nameSkillTeam1 === "Hút mana" ? (
+                          <p
+                            className="custom-hp"
+                            style={{ color: "blue", fontSize: 24 }}
+                          >
+                            + {reduceBloodTeam2}
+                          </p>
+                        ) : nameSkillTeam2 === "Hút mana" ? (
+                          <p
+                            className="custom-hp"
+                            style={{ color: "blue", fontSize: 24 }}
                           >
                             - {reduceBloodTeam1}
                           </p>
                         ) : (
                           <p
                             className="custom-hp"
-                            style={{ color: "green", fontSize: 24 }}
+                            style={{ color: "red", fontSize: 24 }}
                           >
-                            + {reduceBloodTeam2}
+                            - {reduceBloodTeam1}
                           </p>
                         )
                       ) : null}
@@ -682,22 +736,36 @@ const Location: React.FC = () => {
                   <div className="box2">
                     <div className="box">
                       {isCloseStart === true && reduceBloodTeam2 !== 0 ? (
-                        nameSkillTeam2 !== "Hút máu" ? (
-                          <p
-                            className="custom-hp"
-                            style={{ color: "red", fontSize: 24 }}
-                          >
-                            - {reduceBloodTeam2}
-                          </p>
-                        ) : (
-                          <p
-                            className="custom-hp"
-                            style={{ color: "green", fontSize: 24 }}
-                          >
-                            + {reduceBloodTeam1}
-                          </p>
-                        )
-                      ) : null}
+                       nameSkillTeam2 === "Hút máu" ? (
+                        <p
+                          className="custom-hp"
+                          style={{ color: "green", fontSize: 24 }}
+                        >
+                          + {reduceBloodTeam1}
+                        </p>
+                      ) : nameSkillTeam2 === "Hút mana" ? (
+                        <p
+                          className="custom-hp"
+                          style={{ color: "blue", fontSize: 24 }}
+                        >
+                          + {reduceBloodTeam1}
+                        </p>
+                      ) : nameSkillTeam1 === "Hút mana" ? (
+                        <p
+                          className="custom-hp"
+                          style={{ color: "blue", fontSize: 24 }}
+                        >
+                          - {reduceBloodTeam2}
+                        </p>
+                      ) : (
+                        <p
+                          className="custom-hp"
+                          style={{ color: "red", fontSize: 24 }}
+                        >
+                          - {reduceBloodTeam2}
+                        </p>
+                      )
+                    ) : null}
                     </div>
                     {statusTeam2 === "Choáng" ? (
                       <div className="box">
@@ -809,6 +877,7 @@ const Fight = () => {
     </>
   );
 };
+
 const Team1 = () => {
   return (
     <>
