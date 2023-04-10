@@ -4,20 +4,37 @@ import { Button, Col, Row } from "antd";
 import { DatabaseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
-const Location: React.FC = () => {
+const History: React.FC = () => {
   var team1: any = localStorage.getItem("team1")
     ? JSON.parse(localStorage.team1)
     : null;
+
+  var skillHistoryTeam1: any = localStorage.getItem("skillHistoryTeam1")
+    ? JSON.parse(localStorage.skillHistoryTeam1)
+    : null;
+
   var team2: any = localStorage.getItem("team2")
     ? JSON.parse(localStorage.team2)
     : null;
 
+  var skillHistoryTeam2: any = localStorage.getItem("skillHistoryTeam2")
+    ? JSON.parse(localStorage.skillHistoryTeam2)
+    : null;
+
   const [listTeam1, setListTeam1] = useState<any>(team1 !== null ? team1 : []);
+  const [listSkillHistoryTeam1, setListSkillHistoryTeam1] = useState<any>(
+    skillHistoryTeam1 !== null ? skillHistoryTeam1 : []
+  );
+
   const [listTeam2, setListTeam2] = useState<any>(team2 !== null ? team2 : []);
+  const [listSkillHistoryTeam2, setListSkillHistoryTeam2] = useState<any>(
+    skillHistoryTeam2 !== null ? skillHistoryTeam2 : []
+  );
 
   const [manaTeam1, setManaTeam1] = useState<number>(
     team1 !== null ? team1[0].mana : 0
   );
+
   const [manaTeam2, setManaTeam2] = useState<number>(
     team2 !== null ? team2[0].mana : 0
   );
@@ -39,14 +56,17 @@ const Location: React.FC = () => {
 
   const [isCloseStart, setIsCloseStart] = useState<boolean>(false);
 
+  const [indexSkillTeam1, setIndexSkillTeam1] = useState(0);
+  const [indexSkillTeam2, setIndexSkillTeam2] = useState(0);
+
   // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber === 1) {
-      setTimeout(team1Fight, 1000);
+      setTimeout(team1Fight, 2000);
     }
 
     if (luckyNumber === 2) {
-      setTimeout(team2Fight, 1000);
+      setTimeout(team2Fight, 2000);
     }
 
     if (luckyNumber === 3) {
@@ -60,14 +80,13 @@ const Location: React.FC = () => {
 
   // Team 1 bắt đầu đánh
   const [nameSkillTeam1, setNameSkillTeam1] = useState<string>("");
-  const [skillHistoryTeam1, setSkillHistoryTeam1] = useState<any>([]);
   const team1Fight = () => {
     setNameSkillTeam2("");
-    let skillRandom = listTeam1[0].abilities[Math.floor(Math.random() * 4)];
+    let skillRandom = listSkillHistoryTeam1[indexSkillTeam1];
     let damageSkill = skillRandom.damage;
     let manaSkill = skillRandom.mana;
     let nameSkill = skillRandom.name;
-    setSkillHistoryTeam1([...skillHistoryTeam1, skillRandom]);
+    setIndexSkillTeam1(indexSkillTeam1 + 1);
 
     if (manaTeam1 >= manaSkill) {
       setNameSkillTeam1(nameSkill);
@@ -174,16 +193,14 @@ const Location: React.FC = () => {
   // Team 2 bắt đầu đánh
 
   const [nameSkillTeam2, setNameSkillTeam2] = useState<string>("");
-  const [skillHistoryTeam2, setSkillHistoryTeam2] = useState<any>([]);
 
   const team2Fight = () => {
     setNameSkillTeam1("");
-    let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
+    let skillRandom = listSkillHistoryTeam2[indexSkillTeam2];
     let damageSkill = skillRandom.damage;
     let nameSkill = skillRandom.name;
     let manaSkill = skillRandom.mana;
-    setSkillHistoryTeam2([...skillHistoryTeam2, skillRandom]);
-
+    setIndexSkillTeam2(indexSkillTeam2 + 1);
     if (manaTeam2 >= manaSkill) {
       setNameSkillTeam2(nameSkill);
 
@@ -255,6 +272,7 @@ const Location: React.FC = () => {
           setManaTeam1(100);
           setHpTeam1(100);
         }
+
         if (listTeam1.length === 0) {
           setManaTeam1(0);
           setHpTeam1(0);
@@ -278,6 +296,7 @@ const Location: React.FC = () => {
           setManaTeam1(100);
           setHpTeam1(100);
         }
+
         if (listTeam1.length === 0) {
           setManaTeam1(0);
           setHpTeam1(0);
@@ -298,9 +317,8 @@ const Location: React.FC = () => {
     setIsCloseStart(true);
     setTimeout(start2, 1300);
     if (number === 0) {
-      let lucky = Math.floor(Math.random() * 2) + 1;
+      let lucky = Number(localStorage.getItem("luckyNumber"));
       setLuckyNumber(lucky);
-      localStorage.setItem("luckyNumber", JSON.stringify(lucky));
     }
   };
 
@@ -310,22 +328,13 @@ const Location: React.FC = () => {
 
   return (
     <>
-      {console.log(skillHistoryTeam1)}
-      {console.log(skillHistoryTeam2)}
-
       <div>
         <div>
           {listTeam1.length === 0 &&
           listTeam2.length === 0 ? null : listTeam1.length === 0 ? (
-            <Team2Win
-              skillHistoryTeam1={skillHistoryTeam1}
-              skillHistoryTeam2={skillHistoryTeam2}
-            />
+            <Team2Win />
           ) : listTeam2.length === 0 ? (
-            <Team1Win
-              skillHistoryTeam1={skillHistoryTeam1}
-              skillHistoryTeam2={skillHistoryTeam2}
-            />
+            <Team1Win />
           ) : null}
           {/* {listTeam2.length === 0 ? <GameOver /> : null} */}
           {number > 1 && number < 4 ? <CountDown /> : null}
@@ -823,23 +832,14 @@ const Location: React.FC = () => {
   );
 };
 
-interface HistorySkill {
-  skillHistoryTeam1: any;
-  skillHistoryTeam2: any;
-}
-const Team1Win: React.FC<HistorySkill> = (props) => {
-  const { skillHistoryTeam1, skillHistoryTeam2 } = props;
-
-  useEffect(() => {
-    localStorage.setItem(
-      "skillHistoryTeam1",
-      JSON.stringify(skillHistoryTeam1)
-    );
-    localStorage.setItem(
-      "skillHistoryTeam2",
-      JSON.stringify(skillHistoryTeam2)
-    );
-  }, []);
+const Team1Win = () => {
+  // const returnList = () => {
+  //   window.location.href = localhost;
+  // };
+  // useEffect(() => {
+  //   localStorage.removeItem("team2");
+  //   setTimeout(returnList, 2000);
+  // }, []);
 
   return (
     <>
@@ -856,18 +856,14 @@ const Team1Win: React.FC<HistorySkill> = (props) => {
   );
 };
 
-const Team2Win: React.FC<HistorySkill> = (props) => {
-  const { skillHistoryTeam1, skillHistoryTeam2 } = props;
-  useEffect(() => {
-    localStorage.setItem(
-      "skillHistoryTeam1",
-      JSON.stringify(skillHistoryTeam1)
-    );
-    localStorage.setItem(
-      "skillHistoryTeam2",
-      JSON.stringify(skillHistoryTeam2)
-    );
-  }, []);
+const Team2Win = () => {
+  // const returnList = () => {
+  //   window.location.href = localhost;
+  // };
+  // useEffect(() => {
+  //   localStorage.removeItem("team1");
+  //   setTimeout(returnList, 2000);
+  // }, []);
 
   return (
     <>
@@ -1190,4 +1186,4 @@ const ThunderSkillTeam2 = () => {
   );
 };
 
-export default Location;
+export default History;
