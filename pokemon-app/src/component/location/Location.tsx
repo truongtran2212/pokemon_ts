@@ -190,7 +190,6 @@ const Location: React.FC = () => {
   const [nameSkillTeam2, setNameSkillTeam2] = useState<string>("");
 
   const team2Fight = () => {
-    debugger
     setNameSkillTeam1("");
     let skillRandom = listTeam2[0].abilities[Math.floor(Math.random() * 4)];
     let damageSkill = skillRandom.damage;
