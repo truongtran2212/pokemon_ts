@@ -336,7 +336,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
     }
   };
 
-  const antIcon = (
+  const loadingIcon = (
     <LoadingOutlined
       style={{
         fontSize: 100,
@@ -365,7 +365,7 @@ const PokemonCollection: React.FC<Props> = (props) => {
             </div>
             <Spin
               spinning={loading}
-              indicator={antIcon}
+              indicator={loadingIcon}
               className="loading"
               style={{ marginTop: 300 }}
             >
@@ -752,17 +752,6 @@ const ListTeam: React.FC<ListTeam> = (props) => {
               <Col span={6} className="pokemon-list-team-null"></Col>
             </>
           )}
-          {/* <Row>
-                {localStorage.getItem("abilities")
-                  ? JSON.parse(localStorage.abilities).map((item: any) => (
-                      <>
-                        <Col span={2} className="pokemon-list-abilities">
-                          <img src={item.image} alt="" width={40} height={40} />
-                        </Col>
-                      </>
-                    ))
-                  : null}
-              </Row> */}
         </Col>
         <Col span={1}></Col>
       </Row>
@@ -817,7 +806,6 @@ const ListTeam: React.FC<ListTeam> = (props) => {
               />
             ) : null}
           </Col>
-          <Col span={8}></Col>
         </Col>
         <Col span={8}></Col>
       </Row>
