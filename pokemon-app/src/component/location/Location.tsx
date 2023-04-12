@@ -45,11 +45,11 @@ const Location: React.FC = () => {
   // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber === 1) {
-      setTimeout(team1Fight, 1000);
+      setTimeout(team1Fight, 500);
     }
 
     if (luckyNumber === 2) {
-      setTimeout(team2Fight, 1000);
+      setTimeout(team2Fight, 500);
     }
 
     if (luckyNumber === 3) {
@@ -296,12 +296,14 @@ const Location: React.FC = () => {
     }
   }, [number]);
 
+  const [luckyHistory, setLuckyHistory] = useState<number>(0);
   // Random số để chọn bên bắt đầu
   const start = () => {
     setIsCloseStart(true);
     setTimeout(start2, 1300);
     if (number === 0) {
       let lucky = Math.floor(Math.random() * 2) + 1;
+      setLuckyHistory(lucky);
       setLuckyNumber(lucky);
       localStorage.setItem("luckyNumber", JSON.stringify(lucky));
     }
@@ -329,11 +331,17 @@ const Location: React.FC = () => {
             <Team2Win
               skillHistoryTeam1={skillHistoryTeam1}
               skillHistoryTeam2={skillHistoryTeam2}
+              luckyHistory={luckyHistory}
+              listTeam1={team1}
+              listTeam2={team2}
             />
           ) : listTeam2.length === 0 ? (
             <Team1Win
               skillHistoryTeam1={skillHistoryTeam1}
               skillHistoryTeam2={skillHistoryTeam2}
+              luckyHistory={luckyHistory}
+              listTeam1={team1}
+              listTeam2={team2}
             />
           ) : null}
           {/* {listTeam2.length === 0 ? <GameOver /> : null} */}
@@ -844,26 +852,53 @@ const Location: React.FC = () => {
   );
 };
 
+// LocalStorage hay SessionStorage đều không chịu nổi
+// Lỗi Failed to execute 'setItem' on 'Storage': Setting the value of 'history' exceeded the quota.
+
 interface HistorySkill {
   skillHistoryTeam1: any;
   skillHistoryTeam2: any;
+  luckyHistory: number;
+  listTeam1: any;
+  listTeam2: any;
 }
+
 const Team1Win: React.FC<HistorySkill> = (props) => {
-  const { skillHistoryTeam1, skillHistoryTeam2 } = props;
+  const {
+    skillHistoryTeam1,
+    skillHistoryTeam2,
+    luckyHistory,
+    listTeam1,
+    listTeam2,
+  } = props;
+
+  const history = {
+    skillHistoryTeam1,
+    skillHistoryTeam2,
+    luckyHistory,
+    listTeam1,
+    listTeam2,
+  };
+  let lsHistory: any = sessionStorage.getItem("history")
+    ? JSON.parse(sessionStorage.history)
+    : null;
+
+  const [listHistory, setListHistory] = useState(
+    lsHistory !== null ? lsHistory : []
+  );
 
   useEffect(() => {
-    localStorage.setItem(
-      "skillHistoryTeam1",
-      JSON.stringify(skillHistoryTeam1)
-    );
-    localStorage.setItem(
-      "skillHistoryTeam2",
-      JSON.stringify(skillHistoryTeam2)
-    );
+    if (lsHistory === null) {
+      setListHistory([history]);
+    } else {
+      setListHistory([...listHistory, history]);
+    }
   }, []);
+  sessionStorage.setItem("history", JSON.stringify(listHistory));
 
   return (
     <>
+      {console.log(listHistory)}
       <div className="game-over">
         <img
           src="image/player1.gif"
@@ -878,20 +913,41 @@ const Team1Win: React.FC<HistorySkill> = (props) => {
 };
 
 const Team2Win: React.FC<HistorySkill> = (props) => {
-  const { skillHistoryTeam1, skillHistoryTeam2 } = props;
+  const {
+    skillHistoryTeam1,
+    skillHistoryTeam2,
+    luckyHistory,
+    listTeam1,
+    listTeam2,
+  } = props;
+  const history = {
+    skillHistoryTeam1: skillHistoryTeam1,
+    skillHistoryTeam2: skillHistoryTeam2,
+    luckyHistory: luckyHistory,
+    listTeam1: listTeam1,
+    listTeam2: listTeam2,
+  };
+
+  let lsHistory: any = localStorage.getItem("history")
+    ? JSON.parse(localStorage.history)
+    : null;
+
+  const [listHistory, setListHistory] = useState(
+    lsHistory !== null ? lsHistory : []
+  );
   useEffect(() => {
-    localStorage.setItem(
-      "skillHistoryTeam1",
-      JSON.stringify(skillHistoryTeam1)
-    );
-    localStorage.setItem(
-      "skillHistoryTeam2",
-      JSON.stringify(skillHistoryTeam2)
-    );
+    if (lsHistory === null) {
+      setListHistory([history]);
+    } else {
+      setListHistory([...listHistory, history]);
+    }
   }, []);
+  sessionStorage.setItem("history", JSON.stringify(listHistory));
+
 
   return (
     <>
+      {console.log(listHistory)}
       <div className="game-over">
         <img
           src="image/player2.gif"

@@ -204,7 +204,6 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
         } else {
           openNotificationError();
         }
-        console.log(listTeam1);
       })
       .catch((err) => {
         console.log("Đã xảy ra lỗi");
@@ -325,7 +324,6 @@ const PokemonCollection: React.FC<Props> = (props) => {
             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             .then((res) => res.data)
             .catch((err) => {
-              console.log("Lỗi ở Search");
               return null;
             })
         );
@@ -1120,15 +1118,12 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   };
 
   const removeSkill = (index: number) => {
-    console.log(skillPoke);
     skillPoke.splice(index, 1);
     setSkillPoke([...skillPoke]);
-    console.log(skillPoke);
   };
 
   const openListPokeEdit = () => {
     setIsOpenDrawer(true);
-    console.log(valueSearch);
   };
 
   const editPokemonTeam1 = (value: any) => {
@@ -1213,7 +1208,6 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
             .get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             .then((res) => res.data)
             .catch((err) => {
-              console.log("Lỗi ở Search");
               return null;
             })
         );
