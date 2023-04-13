@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./location.css";
 import { Button, Col, Row } from "antd";
 import { DatabaseOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import ReplyIcon from "@mui/icons-material/Reply";
+import UndoIcon from "@mui/icons-material/Undo";
+import { ChildProcess } from "child_process";
 
 const Location: React.FC = () => {
   var team1: any = localStorage.getItem("team1")
@@ -309,6 +312,15 @@ const Location: React.FC = () => {
   const start2 = () => {
     setNumber(number - 1);
   };
+  const navigate = useNavigate();
+  const backToListPokemon = useCallback(
+    () => navigate("/", { replace: true }),
+    [navigate]
+  );
+  const toHistoryPage = useCallback(
+    () => navigate("/history", { replace: true }),
+    [navigate]
+  );
 
   return (
     <>
@@ -368,19 +380,31 @@ const Location: React.FC = () => {
                 : "container1"
             }
           >
-            <Link
-              to={"/history"}
-              style={{
-                marginRight: "95%",
-                marginTop: "3%",
-                color: "#fff",
-                cursor: "pointer",
-                fontSize: 35,
-              }}
-            >
-              <DatabaseOutlined />
-            </Link>
-
+            <Row style={{ display: "flex", marginRight: "85%" }}>
+              <Col span={12}>
+                <Button
+                  className="btn-history"
+                  style={{ width: 70 }}
+                  icon={
+                    <UndoIcon
+                      style={{ fontSize: 60, transform: "rotate(45deg)" }}
+                    />
+                  }
+                  onClick={backToListPokemon}
+                ></Button>
+              </Col>
+              <Col span={12}>
+                <Button
+                  className="btn-history"
+                  style={{
+                    marginLeft: "50%",
+                    width: 70,
+                  }}
+                  icon={<DatabaseOutlined style={{ fontSize: 40 }} />}
+                  onClick={toHistoryPage}
+                ></Button>
+              </Col>
+            </Row>
             <section
               className="pokemon-player1"
               style={{ border: "4px solid #EAE61A", opacity: 0.9 }}
@@ -617,7 +641,7 @@ const Location: React.FC = () => {
               <img
                 style={{
                   cursor: "pointer",
-                  marginTop: "20%",
+                  marginTop: "13%",
                   marginLeft: "4%",
                 }}
                 onClick={start}
