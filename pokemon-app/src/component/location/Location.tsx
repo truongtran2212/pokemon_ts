@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./location.css";
-import { Button, Col, Row } from "antd";
+import { Button, Col, Row, Tooltip } from "antd";
 import { DatabaseOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
-import ReplyIcon from "@mui/icons-material/Reply";
 import UndoIcon from "@mui/icons-material/Undo";
+
 import { ChildProcess } from "child_process";
 
 const Location: React.FC = () => {
@@ -382,27 +382,42 @@ const Location: React.FC = () => {
           >
             <Row style={{ display: "flex", marginRight: "85%" }}>
               <Col span={12}>
-                <Button
-                  className="btn-history"
-                  style={{ width: 70 }}
-                  icon={
-                    <UndoIcon
-                      style={{ fontSize: 60, transform: "rotate(45deg)" }}
-                    />
-                  }
-                  onClick={backToListPokemon}
-                ></Button>
+                <Tooltip
+                  placement="bottomRight"
+                  color="#fff"
+                  title={<span style={{ color: "black" }}>Quay về</span>}
+                  arrow={false}
+                >
+                  <Button
+                    className="btn-history"
+                    style={{ width: 60, height: 60 }}
+                    icon={
+                      <UndoIcon
+                        style={{ fontSize: 50, transform: "rotate(45deg)" }}
+                      />
+                    }
+                    onClick={backToListPokemon}
+                  ></Button>
+                </Tooltip>
               </Col>
               <Col span={12}>
-                <Button
-                  className="btn-history"
-                  style={{
-                    marginLeft: "50%",
-                    width: 70,
-                  }}
-                  icon={<DatabaseOutlined style={{ fontSize: 40 }} />}
-                  onClick={toHistoryPage}
-                ></Button>
+                <Tooltip
+                  placement="bottomRight"
+                  color="#fff"
+                  title={<span style={{ color: "black" }}>Lịch sử đấu</span>}
+                  arrow={false}
+                >
+                  <Button
+                    className="btn-history"
+                    style={{
+                      marginLeft: "50%",
+                      width: 60,
+                      height: 60,
+                    }}
+                    icon={<DatabaseOutlined style={{ fontSize: 35 }} />}
+                    onClick={toHistoryPage}
+                  ></Button>
+                </Tooltip>
               </Col>
             </Row>
             <section
@@ -896,9 +911,8 @@ const Team1Win: React.FC<HistorySkill> = (props) => {
   // }, []);
   // sessionStorage.setItem("history", JSON.stringify(listHistory));
   useEffect(() => {
-      localStorage.setItem("history", JSON.stringify(history))
-  }, [])
-  
+    localStorage.setItem("history", JSON.stringify(history));
+  }, []);
 
   return (
     <>
@@ -947,9 +961,8 @@ const Team2Win: React.FC<HistorySkill> = (props) => {
   // }, []);
   // sessionStorage.setItem("history", JSON.stringify(listHistory));
   useEffect(() => {
-    localStorage.setItem("history", JSON.stringify(history))
-}, [])
-
+    localStorage.setItem("history", JSON.stringify(history));
+  }, []);
 
   return (
     <>

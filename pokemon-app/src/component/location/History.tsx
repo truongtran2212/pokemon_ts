@@ -5,10 +5,9 @@ import { DatabaseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 const History: React.FC = () => {
-
   var historyFight: any = localStorage.getItem("history")
-  ? JSON.parse(localStorage.history)
-  : null;
+    ? JSON.parse(localStorage.history)
+    : null;
 
   var team1: any = localStorage.getItem("history")
     ? historyFight.listTeam1
@@ -20,12 +19,16 @@ const History: React.FC = () => {
 
   const [listTeam1, setListTeam1] = useState<any>(team1 !== null ? team1 : []);
   const [listSkillHistoryTeam1, setListSkillHistoryTeam1] = useState<any>(
-    historyFight.skillHistoryTeam1 !== null ? historyFight.skillHistoryTeam1 : []
+    historyFight.skillHistoryTeam1 !== null
+      ? historyFight.skillHistoryTeam1
+      : []
   );
 
   const [listTeam2, setListTeam2] = useState<any>(team2 !== null ? team2 : []);
   const [listSkillHistoryTeam2, setListSkillHistoryTeam2] = useState<any>(
-    historyFight.skillHistoryTeam2 !== null ? historyFight.skillHistoryTeam2 : []
+    historyFight.skillHistoryTeam2 !== null
+      ? historyFight.skillHistoryTeam2
+      : []
   );
 
   const [manaTeam1, setManaTeam1] = useState<number>(
@@ -369,19 +372,6 @@ const History: React.FC = () => {
                 : "container1"
             }
           >
-            <Link
-              to={"/history"}
-              style={{
-                marginRight: "95%",
-                marginTop: "3%",
-                color: "#fff",
-                cursor: "pointer",
-                fontSize: 35,
-              }}
-            >
-              <DatabaseOutlined />
-            </Link>
-
             <section
               className="pokemon-player1"
               style={{ border: "4px solid #EAE61A", opacity: 0.9 }}

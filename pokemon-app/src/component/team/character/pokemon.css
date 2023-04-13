@@ -8,14 +8,6 @@
   flex-wrap: wrap;
 }
 
-.custom-background {
-  background-image: url("https://img.freepik.com/free-vector/space-game-background-neon-night-alien-landscape_107791-1624.jpg");
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
 .collection-container-active {
   overflow-y: hidden;
   display: flex;
@@ -223,7 +215,7 @@
   z-index: 3;
 }
 
-:where(.css-dev-only-do-not-override-1me4733).ant-modal .ant-modal-content {
+.custom-modal.ant-modal .ant-modal-content {
   position: relative;
   background-image: url("https://i.pinimg.com/originals/ee/c5/5f/eec55f9c4824e8fa8128e06c7b302309.gif");
   background-size: cover;
@@ -318,4 +310,17 @@
     height: 50px;
     background: rgb(0, 0, 0, 0);
     border: 2px solid yellow;
+}
+
+.bg-choose-team.ant-modal .ant-modal-content {
+  position: relative;
+  background-image: url("https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80");
+  /* background-size: cover; */
+  background-clip: padding-box;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  pointer-events: auto;
+  padding: 20px 24px;
 }

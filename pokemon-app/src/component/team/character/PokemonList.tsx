@@ -20,7 +20,7 @@ import {
   useMemo,
 } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
 import "./pokemon.css";
 import { withErrorBoundary } from "react-error-boundary";
@@ -28,6 +28,7 @@ import {
   LineOutlined,
   LoadingOutlined,
   SearchOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { localhost } from "../../../localhost";
 // import Mana from "image/skill_mana.jpg"
@@ -270,8 +271,10 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
         width={"40%"}
         style={{ marginTop: "9%" }}
         getContainer={false}
+        className="bg-choose-team"
+        closeIcon={<CloseOutlined style={{ color: "#fff", fontSize: 24 }} />}
       >
-        <h1 style={{ color: "#fff", textAlign: "center", fontSize: 35 }}>
+        <h1 style={{ color: "#fff", textAlign: "center", fontSize: 30 }}>
           CHỌN TEAM
         </h1>
         <Row style={{ height: 150, display: "flex" }}>
@@ -549,8 +552,9 @@ const ListTeam: React.FC<ListTeam> = (props) => {
     setIsModalDetail(true);
     setDetailPokemon(value);
   };
+  const navigate = useNavigate();
 
-  const goToArena = () => {
+  const goToArena = useCallback(() => {
     let flagTeam1 = false;
     let flagTeam2 = false;
 
@@ -584,9 +588,9 @@ const ListTeam: React.FC<ListTeam> = (props) => {
     }
 
     if (flagTeam2 === true && flagTeam1 === true) {
-      window.location.href = localhost + "location";
+      navigate("/location", { replace: false });
     }
-  };
+  }, [navigate]);
 
   return (
     <>
@@ -1235,6 +1239,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
         zIndex={1}
         style={{ overflow: "hidden" }}
         width={"60%"}
+        className="custom-modal"
       >
         <Drawer
           title={

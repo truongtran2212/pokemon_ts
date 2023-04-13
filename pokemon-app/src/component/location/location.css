@@ -391,7 +391,7 @@
   margin-top: 50%;
   cursor: pointer;
   border-radius: 100%;
-  height: 70px;
-  background-color: #ecefe2;
+  background: #effdff;
+  color: black;
   border: "none";
 }

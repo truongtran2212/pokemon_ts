@@ -4,7 +4,6 @@ import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Location from "./component/location/Location";
 import History from "./component/location/History";
-// import PokemonList from "./component/team/character/PokemonList";
 
 const PokemonList = React.lazy(() => import("./component/team/character/PokemonList"));
 const App: React.FC = () => {
