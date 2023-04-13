@@ -5,30 +5,27 @@ import { DatabaseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 const History: React.FC = () => {
-  var team1: any = localStorage.getItem("team1")
-    ? JSON.parse(localStorage.team1)
+
+  var historyFight: any = localStorage.getItem("history")
+  ? JSON.parse(localStorage.history)
+  : null;
+
+  var team1: any = localStorage.getItem("history")
+    ? historyFight.listTeam1
     : null;
 
-  var skillHistoryTeam1: any = localStorage.getItem("skillHistoryTeam1")
-    ? JSON.parse(localStorage.skillHistoryTeam1)
-    : null;
-
-  var team2: any = localStorage.getItem("team2")
-    ? JSON.parse(localStorage.team2)
-    : null;
-
-  var skillHistoryTeam2: any = localStorage.getItem("skillHistoryTeam2")
-    ? JSON.parse(localStorage.skillHistoryTeam2)
+  var team2: any = localStorage.getItem("history")
+    ? historyFight.listTeam2
     : null;
 
   const [listTeam1, setListTeam1] = useState<any>(team1 !== null ? team1 : []);
   const [listSkillHistoryTeam1, setListSkillHistoryTeam1] = useState<any>(
-    skillHistoryTeam1 !== null ? skillHistoryTeam1 : []
+    historyFight.skillHistoryTeam1 !== null ? historyFight.skillHistoryTeam1 : []
   );
 
   const [listTeam2, setListTeam2] = useState<any>(team2 !== null ? team2 : []);
   const [listSkillHistoryTeam2, setListSkillHistoryTeam2] = useState<any>(
-    skillHistoryTeam2 !== null ? skillHistoryTeam2 : []
+    historyFight.skillHistoryTeam2 !== null ? historyFight.skillHistoryTeam2 : []
   );
 
   const [manaTeam1, setManaTeam1] = useState<number>(
@@ -62,11 +59,11 @@ const History: React.FC = () => {
   // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber === 1) {
-      setTimeout(team1Fight, 2000);
+      setTimeout(team1Fight, 1000);
     }
 
     if (luckyNumber === 2) {
-      setTimeout(team2Fight, 2000);
+      setTimeout(team2Fight, 1000);
     }
 
     if (luckyNumber === 3) {

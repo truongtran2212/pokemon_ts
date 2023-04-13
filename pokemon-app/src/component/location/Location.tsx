@@ -855,26 +855,29 @@ const Team1Win: React.FC<HistorySkill> = (props) => {
     listTeam1,
     listTeam2,
   };
-  let lsHistory: any = sessionStorage.getItem("history")
-    ? JSON.parse(sessionStorage.history)
-    : null;
+  // let lsHistory: any = sessionStorage.getItem("history")
+  //   ? JSON.parse(sessionStorage.history)
+  //   : null;
 
-  const [listHistory, setListHistory] = useState(
-    lsHistory !== null ? lsHistory : []
-  );
+  // const [listHistory, setListHistory] = useState(
+  //   lsHistory !== null ? lsHistory : []
+  // );
 
+  // useEffect(() => {
+  //   if (lsHistory === null) {
+  //     setListHistory([history]);
+  //   } else {
+  //     setListHistory([...listHistory, history]);
+  //   }
+  // }, []);
+  // sessionStorage.setItem("history", JSON.stringify(listHistory));
   useEffect(() => {
-    if (lsHistory === null) {
-      setListHistory([history]);
-    } else {
-      setListHistory([...listHistory, history]);
-    }
-  }, []);
-  sessionStorage.setItem("history", JSON.stringify(listHistory));
+      localStorage.setItem("history", JSON.stringify(history))
+  }, [])
+  
 
   return (
     <>
-      {console.log(listHistory)}
       <div className="game-over">
         <img
           src="image/player1.gif"
@@ -904,26 +907,28 @@ const Team2Win: React.FC<HistorySkill> = (props) => {
     listTeam2: listTeam2,
   };
 
-  let lsHistory: any = localStorage.getItem("history")
-    ? JSON.parse(localStorage.history)
-    : null;
+  // let lsHistory: any = localStorage.getItem("history")
+  //   ? JSON.parse(localStorage.history)
+  //   : null;
 
-  const [listHistory, setListHistory] = useState(
-    lsHistory !== null ? lsHistory : []
-  );
+  // const [listHistory, setListHistory] = useState(
+  //   lsHistory !== null ? lsHistory : []
+  // );
+  // useEffect(() => {
+  //   if (lsHistory === null) {
+  //     setListHistory([history]);
+  //   } else {
+  //     setListHistory([...listHistory, history]);
+  //   }
+  // }, []);
+  // sessionStorage.setItem("history", JSON.stringify(listHistory));
   useEffect(() => {
-    if (lsHistory === null) {
-      setListHistory([history]);
-    } else {
-      setListHistory([...listHistory, history]);
-    }
-  }, []);
-  sessionStorage.setItem("history", JSON.stringify(listHistory));
+    localStorage.setItem("history", JSON.stringify(history))
+}, [])
 
 
   return (
     <>
-      {console.log(listHistory)}
       <div className="game-over">
         <img
           src="image/player2.gif"
