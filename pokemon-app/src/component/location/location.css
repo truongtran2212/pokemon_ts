@@ -395,3 +395,20 @@
   color: black;
   border: "none";
 }
+
+.btn-faster {
+  margin-top: 50%;
+  cursor: pointer;
+  border-radius: 15px;
+  background: #effdff;
+  color: black;
+  border: "none";
+}
+
+.row-faster {
+  display: flex;
+  width: 250px;
+  margin-left: 65%;
+  margin-top: 40%;
+  position: fixed;
+}

@@ -554,7 +554,7 @@ const ListTeam: React.FC<ListTeam> = (props) => {
   };
   const navigate = useNavigate();
 
-  const goToArena = useCallback(() => {
+  const goToArena = () => {
     let flagTeam1 = false;
     let flagTeam2 = false;
 
@@ -588,9 +588,10 @@ const ListTeam: React.FC<ListTeam> = (props) => {
     }
 
     if (flagTeam2 === true && flagTeam1 === true) {
-      navigate("/location", { replace: false });
+      navigate("/location", { replace: true });
+      console.log("Check navigate");
     }
-  }, [navigate]);
+  };
 
   return (
     <>

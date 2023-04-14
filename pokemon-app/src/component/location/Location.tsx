@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./location.css";
 import { Button, Col, Row, Tooltip } from "antd";
-import { DatabaseOutlined } from "@ant-design/icons";
+import { DatabaseOutlined, ForwardOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import UndoIcon from "@mui/icons-material/Undo";
 
@@ -41,6 +41,8 @@ const Location: React.FC = () => {
   const [statusTeam2, setStatusTeam2] = useState<string>("Bình thường");
 
   const [isCloseStart, setIsCloseStart] = useState<boolean>(false);
+
+  const [speed, setSpeed] = useState(false);
 
   // Bắt đầu trận đấu
   useEffect(() => {
@@ -305,7 +307,6 @@ const Location: React.FC = () => {
       let lucky = Math.floor(Math.random() * 2) + 1;
       setLuckyHistory(lucky);
       setLuckyNumber(lucky);
-      localStorage.setItem("luckyNumber", JSON.stringify(lucky));
     }
   };
 
@@ -651,7 +652,7 @@ const Location: React.FC = () => {
                 ) : null} */}
               </div>
             </section>
-            {/* <NotificationPlayer2 skillNameTeam1={skillNameTeam1} /> */}
+
             {isCloseStart === false ? (
               <img
                 style={{
@@ -859,7 +860,33 @@ const Location: React.FC = () => {
                   </div>
                 ) : null}
               </div>
+
+
             </section>
+            <Row className="row-faster">
+                <Col span={5}>
+                  <Button
+                    className="btn-faster"
+                    style={{
+                      width: 80,
+                      height: 70,
+                    }}
+                    icon={<ForwardOutlined style={{ fontSize: 50 }} />}
+                    onClick={() => setSpeed(!speed)}
+                  ></Button>
+                </Col>
+                <Col span={5} offset={4}>
+                  <h1
+                    style={{
+                      fontSize: 60,
+                      color: "#FFFF66",
+                      marginTop: 10,
+                    }}
+                  >
+                    {speed === true ? "x2" : null}
+                  </h1>
+                </Col>
+              </Row>
           </div>
         </div>
       </div>
