@@ -44,14 +44,16 @@ const Location: React.FC = () => {
 
   const [speed, setSpeed] = useState(false);
 
+  const [time, setTime] = useState(speed === true ? 10 : 2000)
+
   // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber === 1) {
-      setTimeout(team1Fight, 500);
+      setTimeout(team1Fight, time);
     }
 
     if (luckyNumber === 2) {
-      setTimeout(team2Fight, 500);
+      setTimeout(team2Fight, time);
     }
 
     if (luckyNumber === 3) {
@@ -894,7 +896,7 @@ const Location: React.FC = () => {
   );
 };
 
-// LocalStorage hay SessionStorage đều không chịu nổi
+// LocalStorage hay SessionStorage đều không đủ dung lượng
 // Lỗi Failed to execute 'setItem' on 'Storage': Setting the value of 'history' exceeded the quota.
 
 interface HistorySkill {
