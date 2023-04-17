@@ -2,10 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./location.css";
 import { Button, Col, Row, Tooltip } from "antd";
 import { DatabaseOutlined, ForwardOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import UndoIcon from "@mui/icons-material/Undo";
-
-import { ChildProcess } from "child_process";
 
 const Location: React.FC = () => {
   var team1: any = localStorage.getItem("team1")
@@ -44,16 +42,14 @@ const Location: React.FC = () => {
 
   const [speed, setSpeed] = useState(false);
 
-  const [time, setTime] = useState(speed === true ? 10 : 2000)
-
   // Bắt đầu trận đấu
   useEffect(() => {
     if (luckyNumber === 1) {
-      setTimeout(team1Fight, time);
+      setTimeout(team1Fight, speed === true ? 1000 : 2000);
     }
 
     if (luckyNumber === 2) {
-      setTimeout(team2Fight, time);
+      setTimeout(team2Fight, speed === true ? 1000 : 2000);
     }
 
     if (luckyNumber === 3) {

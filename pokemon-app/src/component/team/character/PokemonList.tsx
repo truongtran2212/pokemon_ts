@@ -23,15 +23,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Abilities, Detail, IPokemonDetail, Pokemon } from "../../../interface";
 import "./pokemon.css";
-import { withErrorBoundary } from "react-error-boundary";
 import {
   LineOutlined,
   LoadingOutlined,
-  SearchOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
-import { localhost } from "../../../localhost";
-// import Mana from "image/skill_mana.jpg"
 
 const { Search } = Input;
 const UserContext = createContext<IPokemonDetail[]>([]);
@@ -39,8 +35,6 @@ notification.config({
   placement: "top",
   duration: 1.5,
 });
-
-const mana = "image/skill_mana.jpg";
 
 interface Props {
   pokemons: IPokemonDetail[];
