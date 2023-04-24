@@ -28,6 +28,7 @@ import {
   LoadingOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
+import { manageAbilities } from "../../../constants";
 
 const { Search } = Input;
 const UserContext = createContext<IPokemonDetail[]>([]);
@@ -1033,6 +1034,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   const pokemons = useContext(UserContext);
   const [idPokemon, setIdPokemon] = useState<number>(0);
   const [search, setSearch] = useState<Pokemon[]>([]);
+  const [c, setListAbilities] = useState([])
 
   let team1: any = [];
   let team2: any = [];
@@ -1105,11 +1107,20 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
     }
   };
 
+  const getListAbilities = () => {
+    axios.get(manageAbilities).then(res => {
+      setListAbilities(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
   useEffect(() => {
     setSkillPoke(detailPokemon ? detailPokemon.abilities : []);
     setIsOpenDrawer(false);
     setValueSearch("");
     onSearch(valueSearch);
+    getListAbilities();
   }, [isOpenModalDetail]);
 
   const onCloseModal = () => {
@@ -1349,11 +1360,11 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginLeft: "55%",
                   }}
                   onClick={() =>
-                    addSkill(JSON.parse(localStorage.abilities)[0])
+                    addSkill(listAbilities[0])
                   }
-                >
+                >           
                   <img
-                    src={JSON.parse(localStorage.abilities)[0].image}
+                    src={listAbilities[0].image}
                     alt=""
                     width={70}
                   />
@@ -1385,11 +1396,11 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginTop: "7%",
                   }}
                   onClick={() =>
-                    addSkill(JSON.parse(localStorage.abilities)[1])
+                    addSkill(listAbilities[1])
                   }
                 >
                   <img
-                    src={JSON.parse(localStorage.abilities)[1].image}
+                    src={listAbilities[1].image}
                     alt=""
                     width={70}
                     height={70}
@@ -1421,11 +1432,11 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginTop: "7%",
                   }}
                   onClick={() =>
-                    addSkill(JSON.parse(localStorage.abilities)[2])
+                    addSkill(listAbilities[2])
                   }
                 >
                   <img
-                    src={JSON.parse(localStorage.abilities)[2].image}
+                    src={listAbilities[2].image}
                     alt=""
                     width={70}
                     height={70}
@@ -1458,11 +1469,11 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   }}
                   // disabled={true}
                   onClick={() =>
-                    addSkill(JSON.parse(localStorage.abilities)[3])
+                    addSkill(listAbilities[3])
                   }
                 >
                   <img
-                    src={JSON.parse(localStorage.abilities)[3].image}
+                    src={listAbilities[3].image}
                     alt=""
                     width={70}
                     height={70}
@@ -1548,11 +1559,11 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginLeft: "20%",
                   }}
                   onClick={() =>
-                    addSkill(JSON.parse(localStorage.abilities)[4])
+                    addSkill(listAbilities[4])
                   }
                 >
                   <img
-                    src={JSON.parse(localStorage.abilities)[4].image}
+                    src={listAbilities[4].image}
                     alt=""
                     width={70}
                     height={70}
@@ -1584,11 +1595,11 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginLeft: "35%",
                   }}
                   onClick={() =>
-                    addSkill(JSON.parse(localStorage.abilities)[5])
+                    addSkill(listAbilities[5])
                   }
                 >
                   <img
-                    src={JSON.parse(localStorage.abilities)[5].image}
+                    src={listAbilities[5].image}
                     alt=""
                     width={70}
                     height={70}
@@ -1620,11 +1631,11 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginLeft: "35%",
                   }}
                   onClick={() =>
-                    addSkill(JSON.parse(localStorage.abilities)[6])
+                    addSkill(listAbilities[6])
                   }
                 >
                   <img
-                    src={JSON.parse(localStorage.abilities)[6].image}
+                    src={listAbilities[6].image}
                     alt=""
                     width={70}
                     height={70}
@@ -1656,11 +1667,11 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginLeft: "20%",
                   }}
                   onClick={() =>
-                    addSkill(JSON.parse(localStorage.abilities)[7])
+                    addSkill(listAbilities[7])
                   }
                 >
                   <img
-                    src={JSON.parse(localStorage.abilities)[7].image}
+                    src={listAbilities[7].image}
                     alt=""
                     width={70}
                     height={70}

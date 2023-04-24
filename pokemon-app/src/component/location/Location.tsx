@@ -313,7 +313,7 @@ const Location: React.FC = () => {
   };
   const navigate = useNavigate();
   const backToListPokemon = useCallback(
-    () => navigate("/", { replace: true }),
+    () => navigate("/pokemonList", { replace: true }),
     [navigate]
   );
   const toHistoryPage = useCallback(
