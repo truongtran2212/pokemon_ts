@@ -1,17 +1,72 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import axios from "axios";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { manageAbilities, managePlayer1 } from "../../constants";
+import {
+  manageAbilities,
+  managePlayer1,
+  managePlayer2,
+  manageRoom,
+} from "../../constants";
 import "./HomePage.css";
 const HomePage = () => {
   const [pokemonList, setPokemonList] = useState([]);
+  const [player1List, setPlayer1List] = useState([]);
+  const [roomList, setRoomList] = useState([]);
   const [form] = Form.useForm();
 
-  const getListPokemon = () => {
+  // const getListPokemon = () => {
+  //   axios
+  //     .get(manageAbilities)
+  //     .then((res: any) => {
+  //       setPokemonList(res.data);
+  //     })
+  //     .catch((err: any) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  const getListPlayer1 = () => {
     axios
-      .get(manageAbilities)
+      .get(managePlayer1)
       .then((res: any) => {
-        setPokemonList(res.data);
+        setPlayer1List(res.data);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
+
+  const addRoom = (id: any) => {
+    const inforRoom = {
+      player_1: id,
+      description: null,
+      time_start: null,
+      time_end: null,
+    };
+    axios
+      .post(manageRoom, inforRoom)
+      .then((res: any) => {
+        console.log(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
+
+  const updateRoom = (id: number, idRoom: number) => {
+    const inforRoom = {
+      id: idRoom,
+      player_2: id,
+      description: null,
+      time_start: null,
+      time_end: null,
+    };
+    console.log("Vô P2")
+    axios
+      .put(manageRoom, inforRoom)
+      .then((res: any) => {
+        console.log(res);
       })
       .catch((err: any) => {
         console.log(err);
@@ -19,7 +74,7 @@ const HomePage = () => {
   };
 
   const onFinish = (values: any) => {
-    const player = {
+    const player1 = {
       skill_1_1: null,
       skill_2_1: null,
       skill_3_1: null,
@@ -41,23 +96,70 @@ const HomePage = () => {
       is_win: false,
       is_active: false,
     };
+
+    const player2 = {
+      skill_1_1: null,
+      skill_2_1: null,
+      skill_3_1: null,
+      skill_4_1: null,
+      skill_1_2: null,
+      skill_2_2: null,
+      skill_3_2: null,
+      skill_4_2: null,
+      skill_1_3: null,
+      skill_2_3: null,
+      skill_3_3: null,
+      skill_4_3: null,
+      name: values.name,
+      name_pokemon_1: null,
+      name_pokemon_2: null,
+      name_pokemon_3: null,
+      address_mac: null,
+      is_status: false,
+      is_win: false,
+      is_active: false,
+    };
+
     axios
-      .post(managePlayer1, player)
-      .then((res) => {
-        console.log(res);
+      .get(manageRoom)
+      .then((res: any) => {
+        setRoomList(res.data);
+        
+        if (res.data.length === 0) {
+          axios
+            .post(managePlayer1, player1)
+            .then((resp1) => {
+              form.resetFields();
+              addRoom(resp1.data.id_player1);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+        if (res.data.length !== 0) {
+          axios
+            .post(managePlayer2, player2)
+            .then((resp2) => {
+              form.resetFields();
+              updateRoom(resp2.data.id_player2,res.data[0].id);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
       });
   };
 
   useEffect(() => {
-    getListPokemon();
+    getListPlayer1();
   }, []);
 
   return (
     <>
-      {console.log(pokemonList)}
+      {console.log(player1List)}
       <Form
         form={form}
         // layout="vertical"
@@ -82,7 +184,7 @@ const HomePage = () => {
             />
             <Row>
               <Col span={8}></Col>
-              <Col span={8}>
+              <Col span={11}>
                 {" "}
                 <Form.Item
                   name="name"
@@ -100,13 +202,13 @@ const HomePage = () => {
                     placeholder="Nickname"
                   ></Input>
                 </Form.Item>
-                <Form.Item style={{ marginTop: "20px", textAlign: "center" }}>
-                  <Button htmlType="submit" className={"m-2"} style={{ marginRight: "20px" }}>
-                    Đăng ký
-                  </Button>
+                <Form.Item style={{ marginTop: "20px" }}>
+                  <button type="submit" className="btn-22">
+                    TAP TO START
+                  </button>
                 </Form.Item>
               </Col>
-              <Col span={8}></Col>
+              <Col span={5}></Col>
             </Row>
           </Col>
           <Col span={8}></Col>
