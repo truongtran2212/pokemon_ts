@@ -1,19 +1,28 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import axios from "axios";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
+  getIP,
   manageAbilities,
   managePlayer1,
   managePlayer2,
   manageRoom,
 } from "../../constants";
 import "./HomePage.css";
+import { useNavigate } from "react-router-dom";
+import { localhost } from "../../server";
+import PokemonList from "../team/character/PokemonList";
+
+
 const HomePage = () => {
   const [pokemonList, setPokemonList] = useState([]);
   const [player1List, setPlayer1List] = useState([]);
   const [roomList, setRoomList] = useState([]);
   const [form] = Form.useForm();
+  const [idRoom, setIdRoom] = useState(0)
+  const [ipAddress, setIpAddress] = useState();
+
 
   // const getListPokemon = () => {
   //   axios
@@ -62,7 +71,7 @@ const HomePage = () => {
       time_start: null,
       time_end: null,
     };
-    console.log("Vô P2")
+    console.log("Vô P2");
     axios
       .put(manageRoom, inforRoom)
       .then((res: any) => {
@@ -73,6 +82,12 @@ const HomePage = () => {
       });
   };
 
+
+  const navigate = useNavigate();
+  const toPokemonList = useCallback(
+    () => navigate("/pokemonList", { replace: true }),
+    [navigate]
+  );
   const onFinish = (values: any) => {
     const player1 = {
       skill_1_1: null,
@@ -91,7 +106,7 @@ const HomePage = () => {
       name_pokemon_1: null,
       name_pokemon_2: null,
       name_pokemon_3: null,
-      address_mac: null,
+      address_mac: ipAddress,
       is_status: false,
       is_win: false,
       is_active: false,
@@ -114,7 +129,7 @@ const HomePage = () => {
       name_pokemon_1: null,
       name_pokemon_2: null,
       name_pokemon_3: null,
-      address_mac: null,
+      address_mac: ipAddress,
       is_status: false,
       is_win: false,
       is_active: false,
@@ -124,13 +139,14 @@ const HomePage = () => {
       .get(manageRoom)
       .then((res: any) => {
         setRoomList(res.data);
-        
+
         if (res.data.length === 0) {
           axios
             .post(managePlayer1, player1)
             .then((resp1) => {
               form.resetFields();
               addRoom(resp1.data.id_player1);
+              toPokemonList()
             })
             .catch((err) => {
               console.log(err);
@@ -141,7 +157,9 @@ const HomePage = () => {
             .post(managePlayer2, player2)
             .then((resp2) => {
               form.resetFields();
-              updateRoom(resp2.data.id_player2,res.data[0].id);
+              updateRoom(resp2.data.id_player2, res.data[0].id);
+              setIdRoom(res.data[0].id)
+              toPokemonList()
             })
             .catch((err) => {
               console.log(err);
@@ -154,12 +172,18 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    axios.get(getIP).then((res) => {
+      setIpAddress(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
     getListPlayer1();
+
   }, []);
 
   return (
     <>
-      {console.log(player1List)}
+      {console.log(ipAddress)}
       <Form
         form={form}
         // layout="vertical"

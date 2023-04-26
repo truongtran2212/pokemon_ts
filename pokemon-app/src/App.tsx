@@ -14,7 +14,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/history" element={<History />} />
           <Route path="/location" element={<Location />} />
-          <Route path="/pokemonList" element={<PokemonList />} />
+          <Route path="/pokemonList" element={<PokemonList/>} />
           <Route path="/" element={<HomePage />} />
         </Routes>
       </Suspense>

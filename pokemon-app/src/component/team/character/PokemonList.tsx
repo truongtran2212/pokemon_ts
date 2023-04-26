@@ -18,6 +18,7 @@ import {
   memo,
   useCallback,
   useMemo,
+  useRef,
 } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,7 +29,13 @@ import {
   LoadingOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
-import { manageAbilities } from "../../../constants";
+import {
+  allRoom,
+  chooseP2,
+  manageAbilities,
+  manageRoom,
+} from "../../../constants";
+// import socketIOClient from "socket.io-client";
 
 const { Search } = Input;
 const UserContext = createContext<IPokemonDetail[]>([]);
@@ -445,7 +452,7 @@ const PokemonList: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [detail, setDetail] = useState<Detail>({ id: 0, isOpened: false });
-  const limit: number = 600;
+  const limit: number = 300;
 
   const getPokemon = useCallback(async () => {
     const res = await axios.get(
@@ -542,11 +549,51 @@ const ListTeam: React.FC<ListTeam> = (props) => {
   const [isOpenModalDetail, setIsModalDetail] = useState<boolean>(false);
   const [detailPokemon, setDetailPokemon] = useState();
   const [team, setTeam] = useState<number>(0);
+  const [detailRoom, setDetailRoom] = useState<any>();
+  const [player2, setPlayer2] = useState<any>();
 
+  const [check, setCheck] = useState(false);
+  const host = "http://localhost:90";
   const onShowModalDetail = (value: any) => {
     setIsModalDetail(true);
     setDetailPokemon(value);
   };
+
+  const getDetailRoom = async () => {
+    await axios
+      .get(allRoom)
+      .then((res) => {
+        let data = res.data.filter(
+          (room: any, index: number) => index === res.data.length - 1
+        );
+        setDetailRoom(data);
+        getChooseP2(data[0].id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getChooseP2 = async (id: any) => {
+    await axios
+      .get(chooseP2, {
+        params: {
+          id: id,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setPlayer2(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getDetailRoom();
+  }, []);
+
   const navigate = useNavigate();
 
   const goToArena = () => {
@@ -590,22 +637,27 @@ const ListTeam: React.FC<ListTeam> = (props) => {
 
   return (
     <>
+      {/* {console.log(detailRoom)} */}
       <Row
         style={{
           height: "42%",
+          margin: "0px 0px 0px 0px",
         }}
       >
         <Col span={1}></Col>
         <Col span={22} className="template-list-team1">
-          <img
-            src="https://static.wikia.nocookie.net/animated_inanimate_battle/images/b/b9/Team_1_Logo.png"
-            style={{ marginLeft: "36%" }}
-            width={170}
-            height={40}
-            alt=""
-          />
+          {/* Tên player 1 */}
+
+          <div style={{ height: 40, display: "flex", marginTop: 10}}>
+            {detailRoom !== undefined && detailRoom[0].player_1.length !== 0 ? (
+              <h1 style={{margin: "auto", fontSize: 35}}>{detailRoom[0].player_1[0].name}</h1>
+            ) : (
+              null
+            )}
+          </div>
+
           {localStorage.getItem("team1") !== null ? (
-            <Row style={{ marginLeft: 35, marginTop: " 4%" }}>
+            <Row style={{ marginLeft: 35, marginTop: "1%" }}>
               {/* Ô 1 */}
               {JSON.parse(localStorage.team1)[0] ? (
                 <>
@@ -815,15 +867,17 @@ const ListTeam: React.FC<ListTeam> = (props) => {
       >
         <Col span={1}></Col>
         <Col span={22} className="template-list-team2">
-          <img
-            src="https://static.wikia.nocookie.net/animated_inanimate_battle/images/4/49/Team_2_Logo.png"
-            style={{ marginLeft: "36%" }}
-            width={170}
-            height={40}
-            alt=""
-          />
+          {/* Tên player 2 */}
+          <div style={{ height: 40, display: "flex", marginTop: 10}}>
+            {player2 !== undefined && player2[0].player_1.length !== 0 ? (
+              <h1 style={{margin: "auto", fontSize: 35}}>{player2[0].player_2[0].name}</h1>
+            ) : (
+              null
+            )}
+          </div>
+
           {localStorage.getItem("team2") !== null ? (
-            <Row style={{ marginLeft: 35, marginTop: " 4%" }}>
+            <Row style={{ marginLeft: 35, marginTop: " 1%" }}>
               {/* Ô 1 */}
               {JSON.parse(localStorage.team2)[0] ? (
                 <>
@@ -1034,7 +1088,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   const pokemons = useContext(UserContext);
   const [idPokemon, setIdPokemon] = useState<number>(0);
   const [search, setSearch] = useState<Pokemon[]>([]);
-  const [c, setListAbilities] = useState([])
+  const [c, setListAbilities] = useState([]);
 
   let team1: any = [];
   let team2: any = [];
@@ -1108,12 +1162,15 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
   };
 
   const getListAbilities = () => {
-    axios.get(manageAbilities).then(res => {
-      setListAbilities(res.data)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+    axios
+      .get(manageAbilities)
+      .then((res) => {
+        setListAbilities(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     setSkillPoke(detailPokemon ? detailPokemon.abilities : []);
@@ -1359,15 +1416,9 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   style={{
                     marginLeft: "55%",
                   }}
-                  onClick={() =>
-                    addSkill(listAbilities[0])
-                  }
-                >           
-                  <img
-                    src={listAbilities[0].image}
-                    alt=""
-                    width={70}
-                  />
+                  onClick={() => addSkill(listAbilities[0])}
+                >
+                  <img src={listAbilities[0].image} alt="" width={70} />
                 </button>
               </Tooltip>
             </div>
@@ -1395,9 +1446,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginLeft: "40%",
                     marginTop: "7%",
                   }}
-                  onClick={() =>
-                    addSkill(listAbilities[1])
-                  }
+                  onClick={() => addSkill(listAbilities[1])}
                 >
                   <img
                     src={listAbilities[1].image}
@@ -1431,9 +1480,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginLeft: "40%",
                     marginTop: "7%",
                   }}
-                  onClick={() =>
-                    addSkill(listAbilities[2])
-                  }
+                  onClick={() => addSkill(listAbilities[2])}
                 >
                   <img
                     src={listAbilities[2].image}
@@ -1468,9 +1515,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginTop: "7%",
                   }}
                   // disabled={true}
-                  onClick={() =>
-                    addSkill(listAbilities[3])
-                  }
+                  onClick={() => addSkill(listAbilities[3])}
                 >
                   <img
                     src={listAbilities[3].image}
@@ -1558,9 +1603,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                   style={{
                     marginLeft: "20%",
                   }}
-                  onClick={() =>
-                    addSkill(listAbilities[4])
-                  }
+                  onClick={() => addSkill(listAbilities[4])}
                 >
                   <img
                     src={listAbilities[4].image}
@@ -1594,9 +1637,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginTop: "7%",
                     marginLeft: "35%",
                   }}
-                  onClick={() =>
-                    addSkill(listAbilities[5])
-                  }
+                  onClick={() => addSkill(listAbilities[5])}
                 >
                   <img
                     src={listAbilities[5].image}
@@ -1630,9 +1671,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginTop: "7%",
                     marginLeft: "35%",
                   }}
-                  onClick={() =>
-                    addSkill(listAbilities[6])
-                  }
+                  onClick={() => addSkill(listAbilities[6])}
                 >
                   <img
                     src={listAbilities[6].image}
@@ -1666,9 +1705,7 @@ const DetailPokemon: React.FC<DetailPokemon> = (props) => {
                     marginTop: "7%",
                     marginLeft: "20%",
                   }}
-                  onClick={() =>
-                    addSkill(listAbilities[7])
-                  }
+                  onClick={() => addSkill(listAbilities[7])}
                 >
                   <img
                     src={listAbilities[7].image}
