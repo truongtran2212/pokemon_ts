@@ -33,6 +33,7 @@ import {
   allRoom,
   chooseP2,
   manageAbilities,
+  managePlayer1,
   manageRoom,
 } from "../../../constants";
 // import socketIOClient from "socket.io-client";
@@ -162,6 +163,38 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
     // setSkillPoke([]);
   };
 
+  const updatePlayer = async (namePokemon: string) => {
+    const player1 = {
+      id: localStorage.getItem('idPlayer') !== undefined ? localStorage.getItem('idPlayer') : null ,
+      skill_1_1: null,
+      skill_2_1: null,
+      skill_3_1: null,
+      skill_4_1: null,
+      skill_1_2: null,
+      skill_2_2: null,
+      skill_3_2: null,
+      skill_4_2: null,
+      skill_1_3: null,
+      skill_2_3: null,
+      skill_3_3: null,
+      skill_4_3: null,
+      name_pokemon_1: namePokemon,
+      name_pokemon_2: null,
+      name_pokemon_3: null,
+      // name: localStorage.getItem('namePlayer1') !== undefined ? localStorage.getItem('namePlayer1') : null,
+      // address_mac: localStorage.getItem('IP_Player1') !== undefined ? localStorage.getItem('IP_Player1') : null,
+      is_status: false,
+      is_win: false,
+      is_active: false,
+    };
+
+   await axios.put(managePlayer1, player1).then((res) => {
+        console.log(res)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
   const chooseTeam1 = async () => {
     await axios
       .get(`https://pokeapi.co/api/v2/pokemon/${idPokemon}`)
@@ -179,8 +212,10 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
             abilities: [],
           });
           localStorage.setItem("team1", JSON.stringify(listTeam1));
+          sessionStorage.setItem("team1", JSON.stringify(listTeam1));
           openNotificationSuccessTeam1();
           handleCancel();
+          // updatePlayer(res.data.name);
         } else if (listTeam1.length < 3) {
           for (let i = 0; i < listTeam1.length; i++) {
             if (listTeam1[i].pokemon.name !== pokemon.name) {
@@ -211,6 +246,7 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
       .catch((err) => {
         console.log("Đã xảy ra lỗi");
       });
+      console.log("Team 1")
   };
 
   const chooseTeam2 = async () => {
@@ -262,6 +298,8 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
       .catch((err) => {
         console.log("Đã xảy ra lỗi");
       });
+      console.log("Team 2")
+
   };
 
   return (
@@ -286,18 +324,18 @@ const ModalChooseTeam: React.FC<ChooseTeam> = (props) => {
               src="image/team1.gif"
               alt=""
               className="btn-team"
-              onClick={chooseTeam1}
+              onClick={() => localStorage.getItem('idPlayer1 ') !== undefined ? chooseTeam1() : localStorage.getItem('idPlayer2') !== undefined ? chooseTeam2() : null}
             />
           </Col>
           <Col span={5}></Col>
-          <Col span={4} style={{ margin: "auto" }}>
+          {/* <Col span={4} style={{ margin: "auto" }}>
             <img
               src="image/team2.gif"
               alt=""
               className="btn-team"
               onClick={chooseTeam2}
             />
-          </Col>
+          </Col> */}
           <Col span={4}></Col>
         </Row>
       </Modal>
@@ -552,8 +590,6 @@ const ListTeam: React.FC<ListTeam> = (props) => {
   const [detailRoom, setDetailRoom] = useState<any>();
   const [player2, setPlayer2] = useState<any>();
 
-  const [check, setCheck] = useState(false);
-  const host = "http://localhost:90";
   const onShowModalDetail = (value: any) => {
     setIsModalDetail(true);
     setDetailPokemon(value);

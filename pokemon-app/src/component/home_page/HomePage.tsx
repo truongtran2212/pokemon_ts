@@ -14,15 +14,13 @@ import { useNavigate } from "react-router-dom";
 import { localhost } from "../../server";
 import PokemonList from "../team/character/PokemonList";
 
-
 const HomePage = () => {
   const [pokemonList, setPokemonList] = useState([]);
   const [player1List, setPlayer1List] = useState([]);
   const [roomList, setRoomList] = useState([]);
   const [form] = Form.useForm();
-  const [idRoom, setIdRoom] = useState(0)
-  const [ipAddress, setIpAddress] = useState();
-
+  const [idRoom, setIdRoom] = useState(0);
+  const [ipAddress, setIpAddress] = useState("");
 
   // const getListPokemon = () => {
   //   axios
@@ -82,12 +80,18 @@ const HomePage = () => {
       });
   };
 
-
   const navigate = useNavigate();
   const toPokemonList = useCallback(
     () => navigate("/pokemonList", { replace: true }),
     [navigate]
   );
+
+  const [localPlayer1, setLocalPlayer1] = useState({
+    id: null,
+    name: null,
+    IP: null,
+  });
+
   const onFinish = (values: any) => {
     const player1 = {
       skill_1_1: null,
@@ -146,7 +150,15 @@ const HomePage = () => {
             .then((resp1) => {
               form.resetFields();
               addRoom(resp1.data.id_player1);
-              toPokemonList()
+              localStorage.setItem("idPlayer1", resp1.data.id_player1);
+              // localStorage.setItem("namePlayer1", values.name);
+              // localStorage.setItem("IP_Player1", ipAddress);
+              if (localStorage.idPlayer2 !== undefined) {
+                localStorage.removeItem("idPlayer2");
+                // localStorage.removeItem("namePlayer2");
+                // localStorage.removeItem("IP_Player2");
+              }
+              toPokemonList();
             })
             .catch((err) => {
               console.log(err);
@@ -158,8 +170,17 @@ const HomePage = () => {
             .then((resp2) => {
               form.resetFields();
               updateRoom(resp2.data.id_player2, res.data[0].id);
-              setIdRoom(res.data[0].id)
-              toPokemonList()
+              setIdRoom(res.data[0].id);
+
+              localStorage.setItem("idPlayer2", resp2.data.id_player2);
+              // localStorage.setItem("namePlayer2", values.name);
+              // localStorage.setItem("IP_Player2", ipAddress);
+              if (localStorage.idPlayer1 !== undefined) {
+                localStorage.removeItem("idPlayer1");
+                // localStorage.removeItem("namePlayer1");
+                // localStorage.removeItem("IP_Player1");
+              }
+              toPokemonList();
             })
             .catch((err) => {
               console.log(err);
@@ -172,13 +193,15 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    axios.get(getIP).then((res) => {
-      setIpAddress(res.data)
-    }).catch((err) => {
-      console.log(err)
-    })
+    axios
+      .get(getIP)
+      .then((res) => {
+        setIpAddress(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     getListPlayer1();
-
   }, []);
 
   return (
